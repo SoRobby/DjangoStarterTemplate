@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block body %}
+
+    {# Header #}
+    {% block header %}
+        {% include 'components/header.html' %}
+        <div>{{ GOOGLE_ANALYTICS_ID }}</div>
+    {% endblock header %}
+
+
+    {# Page content #}
+    {% block main %}
+        <main class="px-4 mx-auto sm:px-6 lg:px-8 py-4 sm:py-6">
+            {% block content %}
+                <p class="text-xl text-gray-700">My content goes here</p>
+            {% endblock content %}
+        </main>
+    {% endblock main %}
+
+
+    {# Footer #}
+    {% block footer %}
+        {% include 'components/footer.html' %}
+    {% endblock footer %}
+
+    {# Feedback modal #}
+    {% include 'components/forms/feedback/feedback-form.html' %}
+
+{% endblock body %}
+

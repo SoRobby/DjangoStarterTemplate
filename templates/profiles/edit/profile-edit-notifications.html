@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}<title>Edit Notifications</title>{% endblock title %}
+
+
+{% block meta %}
+{% endblock meta %}
+
+
+{% block style %}
+{% endblock style %}
+
+
+{% block head_script %}
+{% endblock head_script %}
+
+
+{% block content %}
+    <div>
+        <form action="" method="POST">
+            {% csrf_token %}
+            {% include 'profiles/components/profile-header.html' with mode="edit" %}
+
+            <div class="lg:flex lg:gap-x-16">
+                {% include 'profiles/edit/components/sidebar.html' %}
+
+                <div class="px-4 py-2 sm:px-6 lg:flex-auto lg:px-0">
+                    <div class="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
+                        <div class="text-2xl text-gray-800 font-semibold pb-4">
+                            Notifications
+                        </div>
+                        <div class="space-y-16 sm:space-y-20">
+
+                            {# Notification section 2 #}
+                            <div>
+                                <h2 class="text-base font-semibold leading-7 text-gray-900">Notifications</h2>
+                                <p class="mt-1 text-sm leading-6 text-gray-500">This information will be displayed
+                                    publicly so be careful what you share.</p>
+                                <div class="mt-4 space-y-4 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
+
+                                    <div class="grid grid-cols-12 pt-4 gap-12">
+                                        <div class="col-span-6">
+                                            <div class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                Inbox messages
+                                            </div>
+                                            <div class="text-xs text-gray-600 font-normal sr-only">
+                                                Get notifications when you receive messages
+                                            </div>
+                                        </div>
+                                        <div class="col-span-6 flex justify-end">
+                                            <label for="receive_inbox_messages" class="sr-only">Inbox messages</label>
+                                            {% include 'components/forms/toggles/toggle.html' with state=user.receive_inbox_messages id="receive_inbox_messages" name="receive_inbox_messages" %}
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-12 pt-4 gap-12">
+                                        <div class="col-span-6">
+                                            <div class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                Announcements
+                                            </div>
+                                            <div class="text-xs text-gray-600 font-normal sr-only">
+                                                Get announcement related notifications
+                                            </div>
+                                        </div>
+                                        <div class="col-span-6 flex justify-end">
+                                            <label for="receive_announcements" class="sr-only">Announcements</label>
+                                            {% include 'components/forms/toggles/toggle.html' with state=user.receive_announcements id="receive_announcements" name="receive_announcements" %}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            {# Notification section 2 #}
+                            <div>
+                                <h2 class="text-base font-semibold leading-7 text-gray-900">Emails</h2>
+                                <p class="mt-1 text-sm leading-6 text-gray-500">This information will be displayed
+                                    publicly so be careful what you share.</p>
+                                <div class="mt-4 space-y-4 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
+
+                                    <div class="grid grid-cols-12 pt-4 gap-12">
+                                        <div class="col-span-6">
+                                            <div class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                Marketing emails
+                                            </div>
+                                            <div class="text-xs text-gray-600 font-normal sr-only">
+                                                Emails of promotions and discounts
+                                            </div>
+                                        </div>
+                                        <div class="col-span-6 flex justify-end">
+                                            <label for="receive_marketing_emails" class="sr-only">
+                                                Marketing emails
+                                            </label>
+                                            {% include 'components/forms/toggles/toggle.html' with state=user.receive_marketing_emails id="receive_marketing_emails" name="receive_marketing_emails" %}
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-12 pt-4 gap-12">
+                                        <div class="col-span-6">
+                                            <div class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                Weekly recap
+                                            </div>
+                                            <div class="text-xs text-gray-600 font-normal sr-only">Weekly recap</div>
+                                        </div>
+                                        <div class="col-span-6 flex justify-end">
+                                            <label for="receive_weekly_recap" class="sr-only">Weekly recap</label>
+                                            {% include 'components/forms/toggles/toggle.html' with state=user.receive_weekly_recap id="receive_weekly_recap" name="receive_weekly_recap" %}
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-12 pt-4 gap-12">
+                                        <div class="col-span-6">
+                                            <div class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                Discovery emails
+                                            </div>
+                                            <div class="text-xs text-gray-600 font-normal sr-only">
+                                                Receive emails about new features, tips, hints, and tricks
+                                            </div>
+                                        </div>
+                                        <div class="col-span-6 flex justify-end">
+                                            <label for="receive_discovery_emails" class="sr-only">Discovery
+                                                emails</label>
+                                            {% include 'components/forms/toggles/toggle.html' with state=user.receive_discovery_emails id="receive_discovery_emails" name="receive_discovery_emails" %}
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-12 pt-4 gap-12">
+                                        <div class="col-span-6">
+                                            <div class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                Website updates
+                                            </div>
+                                            <div class="text-xs text-gray-600 font-normal sr-only">
+                                                Receive important website changes and updates
+                                            </div>
+                                        </div>
+                                        <div class="col-span-6 flex justify-end">
+                                            <label for="receive_website_updates" class="sr-only">Website updates</label>
+                                            {% include 'components/forms/toggles/toggle.html' with state=user.receive_website_updates id="receive_website_updates" name="receive_website_updates" %}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+{% endblock content %}
+
+
+{% block scripts %}
+{% endblock scripts %}

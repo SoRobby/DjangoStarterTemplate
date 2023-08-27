@@ -1,0 +1,335 @@
+{% extends 'base-ultrawide.html' %}
+{% load static %}
+
+{# Title #}
+{% block title %}
+    <title>Untitled</title>
+{% endblock title %}
+
+
+{# General meta information (i.e. Description, tags, etc...) #}
+{% block meta %}
+{% endblock meta %}
+
+
+{# Stylesheets #}
+{% block style %}
+    <style>
+        .ck.ck-balloon-panel.ck-powered-by-balloon[class*=position_border] {
+            display: none;
+        }
+
+        .ck-editor__editable_inline {
+            min-height: 20rem;
+        {#border-bottom-left-radius: 0.5rem !important;#}{#border-bottom-right-radius: 0.5rem !important;#}
+        }
+
+        .ck-rounded-corners .ck.ck-editor__main > .ck-editor__editable, .ck.ck-editor__main > .ck-editor__editable.ck-rounded-corners {
+            border-bottom-left-radius: 0.5rem !important;
+            border-bottom-right-radius: 0.5rem !important;
+        }
+
+        .ck-rounded-corners .ck.ck-editor__top .ck-sticky-panel .ck-toolbar, .ck.ck-editor__top .ck-sticky-panel .ck-toolbar.ck-rounded-corners {
+            border-top-left-radius: 0.5rem !important;
+            border-top-right-radius: 0.5rem !important;
+        }
+
+        .ck-content > h2 {
+            font-size: 1.5rem;
+            line-height: 2.25rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 2px;
+        }
+
+        .ck-content > h3 {
+            font-size: 1.25rem;
+            line-height: 1.75rem;
+        }
+
+        .ck-content > h4 {
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+        }
+
+        .ck-content > p {
+            font-size: 1rem;
+            line-height: 1.5rem;
+        }
+
+        .ck-content > a {
+            color: #2563eb !important;
+            text-decoration-line: underline !important;
+        }
+
+    </style>
+{% endblock style %}
+
+
+{# Head Scripts #}
+{% block head_script %}
+    <script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>
+{% endblock head_script %}
+
+
+{# Header #}
+{% block header %}
+    {% include 'components/header.html' %}
+{% endblock header %}
+
+
+{# Page content #}
+{% block main %}
+    <main class="mx-auto">
+        {% block content %}
+            <div class="sticky top-0 z-10 mx-auto bg-white border-b border-gray-300">
+                <div class="px-4 mx-auto sm:px-6 lg:px-8 py-4">
+                    <div class="sm:flex sm:items-center sm:justify-between">
+                        <div>
+                            <h2 class="text-2xl text-gray-800">Add title</h2>
+                        </div>
+                        <div class="flex gap-4">
+                            <button type="button"
+                                    class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                Save draft
+                            </button>
+                            <button type="button"
+                                    class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                Publish
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mx-auto">
+                <div class="flex w-full items-stretch gap-x-8">
+
+                    <div class="flex-1 px-4 mx-auto max-w-7xl py-4 sm:py-6 sm:px-6 lg:px-8 space-y-4">
+                        <div class="sm:col-span-6">
+                            <label for="title"
+                                   class="block text-sm font-medium leading-6 text-gray-900 sr-only">
+                                Title
+                            </label>
+                            <div class="mt-2">
+                                <input type="text" name="title" id="title" placeholder="Add title..."
+                                       class="block w-full rounded-md border-0 py-3 font-bold text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-2xl sm:leading-6">
+                            </div>
+                        </div>
+
+                        <div class="sm:col-span-6 mt-2">
+                            <label for="editor"
+                                   class="block text-sm font-medium leading-6 text-gray-900 sr-only">
+                                Editor
+                            </label>
+                            <div class="mt-2">
+                                    <textarea name="editor" id="editor"
+                                              class="min-h-32">This is some sample content</textarea>
+                            </div>
+                        </div>
+
+                        <div class="pt-8">
+                            <div class="flex w-full items-start gap-x-8" x-data="{ selectedNav: 'seo-properties' }">
+                                <nav class="w-64 flex flex-col border-r border-gray-200" aria-label="Sidebar">
+                                    <ul role="list" class="space-y-1 pr-2">
+                                        <li>
+                                            <a href="#" @click="selectedNav='main'"
+                                               class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                               :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='main' }">Main</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" @click="selectedNav='authors'"
+                                               class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                               :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='authors' }">Authors</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" @click="selectedNav='attach-documents'"
+                                               class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                               :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='attach-documents' }">Attach
+                                                Documents</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" @click="selectedNav='social-media'"
+                                               class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                               :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='social-media' }">Social
+                                                Media</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" @click="selectedNav='seo-properties'"
+                                               class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                               :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='seo-properties' }">SEO
+                                                Properties</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" @click="selectedNav='metrics'"
+                                               class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                               :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='metrics' }">Metrics</a>
+                                        </li>
+
+
+                                    </ul>
+                                </nav>
+                                <div class="flex-1">
+                                    <div x-show="selectedNav === 'main'">
+                                        Main area
+                                    </div>
+                                    <div x-show="selectedNav === 'authors'">
+                                        Add authors
+                                    </div>
+                                    <div x-show="selectedNav === 'attach-documents'">
+                                        attach-documents
+                                    </div>
+                                    <div x-show="selectedNav === 'social-media'">
+                                        social-media
+                                    </div>
+                                    <div x-show="selectedNav === 'seo-properties'" x-transition
+                                         class="space-y-4 divide-y divide-gray-100 text-sm leading-6">
+
+                                        {# Name (centered) #}
+                                        <div class="grid grid-cols-12 pt-4 gap-12" x-data="{ showError: false }">
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <div class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                        Meta title
+                                                    </div>
+                                                    <div class="text-xs text-gray-600 font-normal">
+                                                        The title of the post as it will appear on the site.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <label for="name" class="sr-only">First
+                                                        name</label>
+                                                    <input type="text" id="name" name="name"
+                                                           maxlength="150"
+                                                           value="My post title"
+                                                           class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {# Meta description (centered) #}
+                                        <div class="grid grid-cols-12 pt-4 gap-12">
+                                            <div class="col-span-6">
+                                                <div class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Meta description
+                                                </div>
+                                                <div class="text-xs text-gray-600 font-normal">High level summary that
+                                                    describes the post
+                                                </div>
+                                            </div>
+                                            <div class="col-span-6">
+                                                <label for="description" class="sr-only"></label>
+                                                <textarea type="text" name="description" id="description"
+                                                          maxlength="{{ form.description.field.max_length }}"
+                                                          class="resize-y-auto block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{{ user.description }}</textarea>
+                                            </div>
+                                        </div>
+
+                                        {# Meta keywords (centered) #}
+                                        <div class="grid grid-cols-12 pt-4 gap-12" x-data="{ showError: false }">
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <div class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                        Meta keywords
+                                                    </div>
+                                                    <div class="text-xs text-gray-600 font-normal">
+                                                        Keywords that describe the post
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <label for="name" class="sr-only">First
+                                                        name</label>
+                                                    <input type="text" id="name" name="name"
+                                                           maxlength="{{ form.name.field.max_length }}"
+                                                           value="blog, test, name"
+                                                           class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                    <p class="text-xs text-gray-600 font-normal">Separate keywords by a
+                                                        comma</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div x-show="selectedNav === 'metrics'">
+                                        metrics
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <aside class="border-l border-gray-200 bg-gray-50 w-64 space-y-4 divide-y divide-gray-200">
+                        <div class="space-y-4 pt-4 px-4 sm:px-6">
+                            <h3 class="text-base font-medium leading-6 text-gray-800">Status & visibility</h3>
+                            <div class="grid grid-cols-2 items-center">
+                                <p class="text-sm text-gray-700">Visibility</p>
+                                {% include 'components/forms/select/custom-select.html' with id="visibility" name="visibility" selected_option='public' options="[{'id': 'public', 'name': 'Public'}, {'id': 'private', 'name': 'Private'}]" %}
+                            </div>
+                            <div class="grid grid-cols-2 items-center">
+                                <p class="text-sm text-gray-700">Visibility</p>
+                                {% include 'components/forms/select/custom-select.html' with id="visibility" name="visibility" selected_option='public' options="[{'id': 'public', 'name': 'Public'}, {'id': 'private', 'name': 'Private'}]" %}
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 pt-4 px-4 sm:px-6">
+                            <h3 class="text-base font-medium leading-6 text-gray-800">Featured image</h3>
+
+                            <label for="featured_image"
+                                   class="block text-sm font-medium leading-6 text-gray-900 sr-only">
+                                Cover photo
+                            </label>
+                            <svg class="aspect-video rounded text-gray-300 border border-gray-200 bg-white"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                 stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
+                            </svg>
+                            <button type="button"
+                                    class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                Upload image
+                            </button>
+
+
+                        </div>
+
+
+                    </aside>
+                </div>
+
+
+            </div>
+
+
+
+
+
+
+
+
+        {% endblock content %}
+    </main>
+{% endblock main %}
+
+
+{# Footer #}
+{% block footer %}
+    {% include 'components/footer.html' %}
+{% endblock footer %}
+
+
+{# Scripts #}
+{% block scripts %}
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+{% endblock scripts %}

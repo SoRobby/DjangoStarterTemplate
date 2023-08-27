@@ -1,0 +1,16 @@
+<footer class="border-gray-200 bg-gray-50 border-y">
+    <div class="px-4 sm:px-6 py-12 mx-auto overflow-hidden {% if style != 'ultrawide' %}max-w-7xl{% endif %} lg:px-8">
+        {% comment %} Footer navigation {% endcomment %}
+        <nav class="columns-2 sm:flex sm:justify-center sm:space-x-12" aria-label="Footer">
+            <a href="{% url 'home' %}" class="text-sm leading-6 text-gray-600 hover:text-gray-800">Home</a>
+            <a href="#" class="text-sm leading-6 text-gray-600 hover:text-gray-800">Page 1</a>
+            <a href="#" class="text-sm leading-6 text-gray-600 hover:text-gray-800">Page 2</a>
+            <a href="#" class="text-sm leading-6 text-gray-600 hover:text-gray-800">Page 3</a>
+        </nav>
+
+        {% comment %} Trademark {% endcomment %}
+        <p class="mt-6 text-xs leading-5 text-center text-gray-500">&copy; {% now "Y" %} SoRobby, Inc. All rights
+            reserved.
+        </p>
+    </div>
+</footer>

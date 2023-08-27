@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}<title>Untitled</title>{% endblock title %}
+
+
+{% block meta %}
+{% endblock meta %}
+
+
+{% block style %}
+    <style>
+        html {
+            height: 100%;
+            background-color: rgb(249 250 251);
+        }
+
+        body {
+            height: 100%;
+        }
+    </style>
+{% endblock style %}
+
+
+{% block head_script %}
+{% endblock head_script %}
+
+
+{% block header %}
+{% endblock header %}
+
+
+{% block body %}
+    <main class="grid min-h-full px-6 py-24 bg-white place-items-center sm:py-32 lg:px-8">
+        <div class="text-center">
+            <p class="text-xl font-semibold text-indigo-600 sm:text-3xl">
+                {% block status_code %}
+                {% endblock status_code %}
+            </p>
+            <h1 class="mt-4 text-3xl font-bold tracking-tight text-gray-800 sm:text-5xl">
+                {% block status_title %}
+                {% endblock status_title %}
+            </h1>
+            <p class="mt-6 text-base leading-7 text-gray-600">
+                {% block status_description %}
+                {% endblock status_description %}
+            </p>
+            <div class="flex items-center justify-center mt-10 gap-x-6">
+                <a href="{% url 'home' %}"
+                   class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Go
+                    back home</a>
+                <a href="#" class="text-sm font-semibold text-gray-800">Contact support <span
+                        aria-hidden="true">&rarr;</span></a>
+            </div>
+
+            {% if user.is_superuser and exception %}
+                <div class="mt-6 text-xs text-left border border-gray-200 rounded-md p-2 bg-gray-100">
+                    <div class="font-semibold text-gray-600">Debug error message</div>
+                    <code class="text-gray-600">
+                        {% block debug_error_message %}
+                            {{ exception }}
+                        {% endblock debug_error_message %}
+                    </code>
+                </div>
+            {% endif %}
+
+        </div>
+    </main>
+{% endblock body %}
+
+
+{% block footer %}
+{% endblock footer %}
+
+
+{% block scripts %}
+{% endblock scripts %}

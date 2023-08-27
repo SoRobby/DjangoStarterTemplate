@@ -1,0 +1,12 @@
+{% autoescape off %}
+Hi {{ user.name }},
+
+Please click on the link below to verify your email and activate your account:
+
+http://{{ domain }}{% url 'verify-email' token=token %}
+
+If you didn't make this request, you can ignore this email.
+
+Thanks,
+Your website team
+{% endautoescape %}

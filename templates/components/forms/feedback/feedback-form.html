@@ -1,0 +1,61 @@
+<div aria-live="assertive" class="pointer-events-none fixed inset-0 md:flex md:items-end px-4 py-6 sm:p-4 hidden z-50"
+     x-data="{ isFeedbackExpanded: false, isProcessing: false }">
+    <div class="flex w-full flex-col space-y-4 items-end">
+
+        <button type="button" @click="isFeedbackExpanded=true" x-transition:enter x-show="!isFeedbackExpanded"
+                class="pointer-events-auto rounded-md bg-gray-600 px-3 py-2 text-xs font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900">
+            Feedback
+        </button>
+
+        <div x-show="isFeedbackExpanded" x-transition:enter x-cloak
+             class="pointer-events-auto w-full max-w-lg overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+            <div class="p-4">
+
+                <div id="feedbackFormPartial" class="flex items-start">
+                    <form id="feedbackForm" hx-post="{% url 'feedback:submit-feedback' %}"
+                          hx-target="#feedbackFormPartial" hx-swap="outerHTML"
+                          @submit="isProcessing = validateForm('feedbackForm')"
+                          class="ml-3 w-0 flex-1 pt-0.5">
+                        {% csrf_token %}
+                        <input type="hidden" name="current_url" x-data="{ url: window.location.href }" :value="url">
+                        <div class="flex justify-between">
+                            <p class="text-sm font-medium text-gray-900">Feedback</p>
+                            <div class="ml-4 flex flex-shrink-0 float-right">
+                                <button type="button" @click="isFeedbackExpanded=false"
+                                        class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none">
+                                    <span class="sr-only">Close</span>
+                                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <p class="text-sm text-gray-900">Your feedback helps us create a better platform.</p>
+                        <div class="mt-2">
+                            <label for="feedback" class="block text-sm leading-6 text-gray-900">Add your
+                                feedback</label>
+                            <div class="mt-1">
+                                <textarea rows="3" name="feedback" id="feedback" maxlength="1000" required
+                                          class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                            </div>
+                            <div class="mt-4 flex items-center justify-end gap-x-5">
+                                <button x-show="!isProcessing" @click="isFeedbackExpanded=false" type="button"
+                                        class="text-sm font-semibold leading-6 text-gray-500 hover:text-gray-900">Cancel
+                                </button>
+                                <button x-show="!isProcessing" @click="sendingFeedback=true" type="submit"
+                                        class="rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900">
+                                    Submit
+                                </button>
+                                <div x-show="isProcessing" class="mt-2">
+                                    {% include 'components/processing/processing-sm.html' with text="Sending..." padding='none' %}
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

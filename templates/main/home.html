@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}<title>Home</title>{% endblock title %}
+
+
+{% block meta %}
+{% endblock meta %}
+
+
+{% block style %}
+{% endblock style %}
+
+
+{% block head_script %}
+{% endblock head_script %}
+
+
+{% block content %}
+    <div>
+        <div class="text-xl text-gray-800">Content block goes here...</div>
+        <div class="block">
+            <div>
+                <a href="{% url 'home' %}">Home</a>
+            </div>
+            <div>
+                <a href="{% url 'login' %}">Login</a>
+            </div>
+            <div>
+                <a href="{% url 'logout' %}">Logout</a>
+            </div>
+            <div>
+                <a href="{% url 'register' %}">Register</a>
+            </div>
+            <div>
+                <a href="#">Change password</a>
+            </div>
+            <div>
+                <a href="#">Reset password</a>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+
+{% block scripts %}
+{% endblock scripts %}

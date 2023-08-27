@@ -1,0 +1,47 @@
+<div class="relative z-10 hidden cropper-modal-container" aria-labelledby="modal-title" role="dialog" aria-modal="true"
+     id="modal-cropper">
+    <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"></div>
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex items-end justify-center min-h-full p-4 text-center sm:items-center sm:p-0">
+            <div
+                    class="relative px-4 pt-5 pb-4 overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:w-full sm:max-w-3xl sm:p-6">
+                <div class="absolute top-0 right-0 hidden pt-4 pr-4 sm:block">
+                    <button type="button"
+                            class="text-gray-400 bg-white rounded-md hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                        <span class="sr-only">Close</span>
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                             stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <div>
+                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                        <h3 class="text-lg font-medium leading-6 text-gray-800">Profile image</h3>
+                        <div class="mt-2">
+                            <p class="pb-2 text-sm text-gray-500">Recommend image size is (400 x 400 px).</p>
+                            <div>
+                                <div class="object-center rounded-md cropper-edit-container"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="justify-end mt-5 sm:mt-4 sm:flex space-x-4">
+                    <button type="button"
+                            class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm cropper-close">
+                        Cancel
+                    </button>
+                    <button type="button"
+                            class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto sm:text-sm crop-image">
+                        Crop
+                        image
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" step="any" id="cropper-distance-x" name="cropper-distance-x">
+    <input type="hidden" step="any" id="cropper-distance-y" name="cropper-distance-y">
+    <input type="hidden" step="any" id="cropper-width" name="cropper-width">
+    <input type="hidden" step="any" id="cropper-height" name="cropper-height">
+</div>

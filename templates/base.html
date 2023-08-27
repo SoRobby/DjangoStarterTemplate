@@ -1,0 +1,100 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% block title %}<title>Untitled</title>{% endblock title %}
+
+    <meta name="robots" content="noindex">
+    {#<meta name="robots" content="index, follow">#}
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+    {# Site favicon #}
+    <link rel="icon" href="#">
+
+    {# General meta information (i.e. Description, tags, etc...) #}
+    {% block meta %}
+    {% endblock meta %}
+
+    {# Stylesheets #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/css/custom.css' %}">
+    {#<script src="https://cdn.tailwindcss.com"></script>#}
+
+    {% block style %}
+    {% endblock style %}
+
+    {# Script packages #}
+    {% if GOOGLE_ANALYTICS_ID %}
+        {% include "components/google-analytics.html" %}
+    {% endif %}
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.1/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.2"
+            integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h"
+            crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.5"></script>
+
+    {# Head Scripts #}
+    {% block head_script %}
+    {% endblock head_script %}
+
+</head>
+<body>
+{% block body %}
+
+    {# Header #}
+    {% block header %}
+        {% include 'components/header.html' %}
+        <div>{{ GOOGLE_ANALYTICS_ID }}</div>
+    {% endblock header %}
+
+
+    {# Page content #}
+    {% block main %}
+        <main class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 py-4 sm:py-6">
+            {% block content %}
+                <p class="text-xl text-gray-700">My content goes here</p>
+            {% endblock content %}
+        </main>
+    {% endblock main %}
+
+
+    {# Footer #}
+    {% block footer %}
+        {% include 'components/footer.html' %}
+    {% endblock footer %}
+
+    {# Feedback modal #}
+    {% include 'components/forms/feedback/feedback-form.html' %}
+
+{% endblock body %}
+
+{# Notifications and messages #}
+<div aria-live="assertive" class="fixed inset-0 flex items-end px-4 py-6 pointer-events-none sm:items-start sm:p-6">
+    <div class="flex flex-col items-center w-full space-y-4 sm:items-end">
+        {% block notifications %}
+            {% if messages %}
+                {% for message in messages %}
+                    {% include 'components/notifications/notification.html' with tag=message.level_tag title=message.extra_tags message=message.message %}
+                {% endfor %}
+            {% endif %}
+        {% endblock notifications %}
+    </div>
+</div>
+
+
+{# Scripts #}
+<script src="{% static '/js/custom.js' %}"></script>
+{% block scripts %}
+{% endblock scripts %}
+</body>
+</html>

@@ -1,0 +1,142 @@
+{% extends 'accounts/accounts_base.html' %}
+{% load static %}
+
+
+{% block title %}<title>Login</title>{% endblock title %}
+
+
+{% block meta %}
+{% endblock meta %}
+
+
+{% block body %}
+    <div class="h-screen">
+        <div class="flex flex-col justify-center min-h-full py-12 px-6 lg:px-8">
+            <div class="flex justify-center items-center flex-col">
+                <a href="{% url 'home' %}" class="">
+                    <img class="h-10 mx-auto"
+                         src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                         alt="Your Company">
+                </a>
+                <h2 class="mt-6 text-2xl font-bold leading-9 tracking-tight text-center text-gray-900">Sign in to your
+                    account</h2>
+            </div>
+            <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
+                <div class="px-6 py-12 bg-white shadow rounded-lg sm:px-12" id="login-form-container">
+                    <form action="#" method="POST" x-data="{ isEmailValid: false, isPasswordValid: false }">
+                        {% csrf_token %}
+                        <div class="space-y-6">
+                            {% comment %} Email field {% endcomment %}
+                            <div x-data="{ email: '' }">
+                                <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email
+                                    address</label>
+                                <div class="relative mt-1">
+                                    <input id="email" name="email" type="email" autocomplete="email" required
+                                           x-model="email"
+                                           x-on:input="isEmailValid = isValidEmailCheck(email)"
+                                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                </div>
+                            </div>
+
+                            {% comment %} Password field {% endcomment %}
+                            <div>
+                                <label for="password"
+                                       class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+                                <div class="mt-1">
+                                    <input id="password" name="password" type="password" autocomplete="current-password"
+                                           required
+                                           x-on:input="isPasswordValid = String(password).trim().length > 0"
+                                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                </div>
+                            </div>
+
+                            {% comment %} Remember me checkbox & forgot password link {% endcomment %}
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <input id="remember-me" name="remember-me" type="checkbox"
+                                           class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-600">
+                                    <label for="remember-me" class="block ml-3 text-sm leading-6 text-gray-900">Remember
+                                        me</label>
+                                </div>
+
+                                <div class="text-sm leading-6">
+                                    <a href="{% url 'password_reset' %}"
+                                       class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot
+                                        password?</a>
+                                </div>
+                            </div>
+
+
+                            {% comment %} Submit form button {% endcomment %}
+                            <div x-data="{ isSigningIn: false }">
+                                <button type="submit" x-show="!isEmailValid || !isPasswordValid"
+                                        class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                    Sign
+                                    in
+                                </button>
+
+                                <button type="submit" @click="isSigningIn=true"
+                                        x-show="isEmailValid && isPasswordValid && !isSigningIn" x-cloak
+                                        class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                    Sign
+                                    in
+                                </button>
+
+                                <div class="flex justify-center" x-show="isSigningIn" x-cloak>
+                                    <div class="inline-flex items-center py-2 text-sm font-medium text-gray-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                             viewBox="0 0 24 24" stroke-width="1.5"
+                                             stroke="currentColor"
+                                             class="w-5 h-5 mr-2 -ml-1 animate-spin">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"></path>
+                                        </svg>
+                                        Signing in...
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </form>
+
+                    {% comment %} Form errors after POST request {% endcomment %}
+                    {% if login_error %}
+                        <div class="mt-6">
+                            <div class="px-2 py-2 border border-red-200 rounded-md bg-red-50">
+                                <div class="flex text-sm text-red-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                         class="w-4 h-4 mt-0.5 mr-1">
+                                        <path fill-rule="evenodd"
+                                              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
+                                              clip-rule="evenodd"/>
+                                    </svg>
+                                    <p>{{ login_error }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                </div>
+                <p class="mt-10 text-sm text-center text-gray-500">
+                    Don't have an account?
+                    <a href="{% url 'register' %}"
+                       class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Create an account</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function isValidEmailCheck(email) {
+            // Regular expression pattern for email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            // Check if the email matches the pattern
+            return emailRegex.test(email);
+        }
+    </script>
+
+{% endblock body %}
+
+

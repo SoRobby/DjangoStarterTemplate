@@ -1,0 +1,283 @@
+{% extends 'accounts/accounts_base.html' %}
+{% load static %}
+
+
+{% block title %}<title>Register</title>{% endblock title %}
+
+
+{% block meta %}
+{% endblock meta %}
+
+
+{% block body %}
+    <div class="h-screen">
+        <div class="flex flex-col justify-center min-h-full py-12 px-6 lg:px-8">
+
+            <div class="flex justify-center items-center flex-col">
+                <a href="{% url 'home' %}" class="">
+                    <img class="h-10 mx-auto"
+                         src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                         alt="Your Company">
+                </a>
+                <h2 class="mt-6 text-2xl font-bold leading-9 tracking-tight text-center text-gray-900">Create your
+                    account</h2>
+            </div>
+
+
+
+
+            <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
+                <div class="px-6 py-12 bg-white shadow rounded-lg sm:px-12">
+                    <form action="#" method="POST" x-data="{
+                    emailValid: false,
+                    usernameValid: false,
+                    termsValid: false,
+                    password1Valid: false,
+                    password2Valid: false,
+                    passwordMatch: false,
+                }">
+                        {% csrf_token %}
+                        <div class="space-y-6">
+                            {% comment %} Email field {% endcomment %}
+                            <div x-data="{
+                            email: '',
+                            timer: null,
+                            showError: false,
+                            checkEmail() {
+                                if(this.email.length > 0){
+                                    if(this.showError == true){
+                                        const emailRegex = /.+@.+/;
+                                        this.showError = !emailRegex.test(this.email);
+                                    } else {
+                                        clearTimeout(this.timer);
+                                        this.timer = setTimeout(() => {
+                                            const emailRegex = /.+@.+/;
+                                            this.showError = !emailRegex.test(this.email);
+                                        }, 1000);
+                                    }
+                                }
+                                if(this.email.length == 0 || this.showError == true){
+                                    this.emailValid = false
+                                } else {
+                                    this.emailValid = true
+                                }
+                            }
+                        }">
+                                <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email
+                                    address</label>
+                                <div class="relative mt-1">
+                                    <input id="email" name="email" type="email" autocomplete="email"
+                                           x-model="email" x-on:input="checkEmail" x-on:blur="checkEmail"
+                                           maxlength="254" required
+                                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    <div x-show="showError" x-cloak x-transition
+                                         class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                        <svg class="w-5 h-5 text-red-500" xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 0 20 20"
+                                             fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd"
+                                                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                  clip-rule="evenodd"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="mt-1 text-sm text-red-600">
+                                    <p x-show="showError" x-cloak x-collapse id="email-error">Not a valid email
+                                        address</p>
+                                </div>
+                            </div>
+
+                            {% comment %} Username field {% endcomment %}
+                            <div x-data="{
+                            showError: false,
+                            onChange(){
+                                username = event.target.value;
+                                if(/[^a-zA-Z0-9_]/.test(username)){
+                                    this.showError = true;
+                                } else {
+                                    this.showError = false;
+                                }
+                                if(username.length == 0 || this.showError == true){
+                                    this.usernameValid = false
+                                } else {
+                                    this.usernameValid = true
+                                }
+                            }
+                        }">
+                                <label for="username"
+                                       class="block text-sm font-medium leading-6 text-gray-900">Username</label>
+                                <div class="relative mt-1">
+                                    <input id="username" name="username" type="text" autocomplete="nickname"
+                                           minlength="4" maxlength="16" @keyup="onChange()" required
+                                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    <div x-show="showError" x-cloak x-transition
+                                         class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                        <svg class="w-5 h-5 text-red-500" xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 0 20 20"
+                                             fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd"
+                                                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                  clip-rule="evenodd"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="mt-1 text-sm text-red-600">
+                                    <p x-show="showError" x-cloak x-collapse id="email-error">Usernames must only
+                                        contain alphanumeric characters</p>
+                                </div>
+                            </div>
+
+                            {% comment %} Password field {% endcomment %}
+                            <div x-data="{
+                            showError: false,
+                            password1: '',
+                            checkPasswordLength(){
+                                if(this.password1.length === 0) {
+                                    this.password1Valid = false;
+                                } else {
+                                    this.password1Valid = true;
+                                }
+                            }
+                        }">
+                                <label for="password1" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+                                <div class="relative mt-1">
+                                    <input id="password1" name="password1" type="password" autocomplete="new-password"
+                                           minlength="8" maxlength="128" required
+                                           x-model="password1" x-on:input="checkPasswordLength"
+                                           x-on:blur="checkPasswordLength"
+                                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    <div x-show="showError" x-cloak x-transition
+                                         class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                        <svg class="w-5 h-5 text-red-500" xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 0 20 20"
+                                             fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd"
+                                                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                  clip-rule="evenodd"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="mt-1 text-sm text-red-600">
+                                    {% comment %} <p id="password1-error">Passwords must longer than 8 characters</p> {% endcomment %}
+                                    <p x-show="passwordMatch" x-cloak x-collapse id="password1-error">Passwords do not
+                                        match</p>
+                                </div>
+                            </div>
+
+                            {% comment %} Confirm password field {% endcomment %}
+                            <div x-data="{
+                            showError: false,
+                            password2: '',
+                            checkPasswordLength(){
+                                if(this.password2.length === 0) {
+                                    this.password2Valid = false;
+                                } else {
+                                    this.password2Valid = true;
+                                }
+                            }
+                        }">
+                                <label for="password2" class="block text-sm font-medium leading-6 text-gray-900">Confirm
+                                    Password</label>
+                                <div class="relative mt-1">
+                                    <input id="password2" name="password2" type="password" autocomplete="new-password"
+                                           minlength="8" maxlength="128" required
+                                           x-model="password2" x-on:input="checkPasswordLength"
+                                           x-on:blur="checkPasswordLength"
+                                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    <div x-show="showError" x-cloak x-transition
+                                         class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                        <svg class="w-5 h-5 text-red-500" xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 0 20 20"
+                                             fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd"
+                                                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                  clip-rule="evenodd"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="mt-1 text-sm text-red-600">
+                                    {% comment %} <p id="password2-error">Passwords must longer than 8 characters</p> {% endcomment %}
+                                    <p x-show="passwordMatch" x-cloak x-collapse id="password2-error">Passwords do not
+                                        match</p>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <div>
+                                <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Name <small
+                                        class="text-gray-500">(optional)</small></label>
+                                <div class="mt-1">
+                                    <input id="name" name="name" type="text" autocomplete="given-name" maxlength="120"
+                                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <input id="terms" name="terms" type="checkbox" x-model="termsValid"
+                                           class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-600">
+                                    <label for="terms" class="block ml-3 text-sm leading-6 text-gray-900">I have read
+                                        and
+                                        consent to the
+                                        <a href="{% url 'terms-of-service' %}" target="_blank"
+                                           class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Terms
+                                            of
+                                            Service</a>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div>
+                                {% comment %} Incompete form sign up button {% endcomment %}
+                                <button type="submit"
+                                        x-show="emailValid==false || usernameValid==false || password1Valid==false || password2Valid==false || termsValid==false"
+                                        class="flex w-full justify-center rounded-md bg-indigo-600 opacity-40 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm">
+                                    Sign up
+                                </button>
+
+                                {% comment %} Complete form sign up button {% endcomment %}
+                                <button type="submit"
+                                        x-show="emailValid && usernameValid && password1Valid && password2Valid && termsValid"
+                                        x-cloak
+                                        class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                    Sign
+                                    up
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    {% comment %} Form error response {% endcomment %}
+                    {% if registration_form %}
+                        <div class="mt-6">
+                            <div class="px-2 py-2 border border-red-200 rounded-md bg-red-50">
+                                <div class="flex font-semibold text-red-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                         class="w-5 h-5 mt-0.5 mr-2">
+                                        <path fill-rule="evenodd"
+                                              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
+                                              clip-rule="evenodd"/>
+                                    </svg>
+                                    Registration Error
+                                </div>
+                                <div class="mt-1 text-sm text-red-700">
+                                    {% for field in registration_form %}
+                                        {% for error in field.errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                <p class="mt-10 text-sm text-center text-gray-500">
+                    Already have an account?
+                    <a href="{% url 'login' %}" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Login
+                        here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock body %}
