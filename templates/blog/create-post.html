@@ -81,7 +81,7 @@
 {% block main %}
     <main class="mx-auto">
         {% block content %}
-            <div class="sticky top-0 z-10 mx-auto bg-white border-b border-gray-300">
+            <div class="sticky z-0 mx-auto bg-white border-b border-gray-300">
                 <div class="px-4 mx-auto sm:px-6 lg:px-8 py-4">
                     <div class="sm:flex sm:items-center sm:justify-between">
                         <div>
@@ -132,58 +132,55 @@
                                 <nav class="w-64 flex flex-col border-r border-gray-200" aria-label="Sidebar">
                                     <ul role="list" class="space-y-1 pr-2">
                                         <li>
-                                            <a href="#" @click="selectedNav='main'"
-                                               class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
-                                               :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='main' }">Main</a>
+                                            <button @click="selectedNav='main'" type="button"
+                                               class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                               :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='main' }">Main</button>
                                         </li>
                                         <li>
-                                            <a href="#" @click="selectedNav='authors'"
-                                               class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
-                                               :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='authors' }">Authors</a>
+                                            <button @click="selectedNav='authors'" type="button"
+                                               class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                               :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='authors' }">Authors</button>
                                         </li>
                                         <li>
-                                            <a href="#" @click="selectedNav='attach-documents'"
-                                               class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                            <button @click="selectedNav='attach-documents'" type="button"
+                                               class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
                                                :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='attach-documents' }">Attach
-                                                Documents</a>
+                                                Documents</button>
                                         </li>
                                         <li>
-                                            <a href="#" @click="selectedNav='social-media'"
-                                               class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                            <button @click="selectedNav='social-media'" type="button"
+                                               class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
                                                :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='social-media' }">Social
-                                                Media</a>
+                                                Media</button>
                                         </li>
                                         <li>
-                                            <a href="#" @click="selectedNav='seo-properties'"
-                                               class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                            <button @click="selectedNav='seo-properties'" type="button"
+                                               class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
                                                :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='seo-properties' }">SEO
-                                                Properties</a>
+                                                Properties</button>
                                         </li>
                                         <li>
-                                            <a href="#" @click="selectedNav='metrics'"
-                                               class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
-                                               :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='metrics' }">Metrics</a>
+                                            <button @click="selectedNav='metrics'" type="button"
+                                               class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                               :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='metrics' }">Metrics</button>
                                         </li>
-
-
                                     </ul>
                                 </nav>
                                 <div class="flex-1">
-                                    <div x-show="selectedNav === 'main'">
+                                    <div x-show="selectedNav === 'main'" x-transition:enter>
                                         Main area
                                     </div>
-                                    <div x-show="selectedNav === 'authors'">
+                                    <div x-show="selectedNav === 'authors'" x-transition:enter>
                                         Add authors
                                     </div>
-                                    <div x-show="selectedNav === 'attach-documents'">
+                                    <div x-show="selectedNav === 'attach-documents'" x-transition:enter>
                                         attach-documents
                                     </div>
-                                    <div x-show="selectedNav === 'social-media'">
+                                    <div x-show="selectedNav === 'social-media'" x-transition:enter>
                                         social-media
                                     </div>
-                                    <div x-show="selectedNav === 'seo-properties'" x-transition
+                                    <div x-show="selectedNav === 'seo-properties'" x-transition:enter
                                          class="space-y-4 divide-y divide-gray-100 text-sm leading-6">
-
                                         {# Name (centered) #}
                                         <div class="grid grid-cols-12 pt-4 gap-12" x-data="{ showError: false }">
                                             <div class="col-span-6 flex items-center">
@@ -251,13 +248,94 @@
                                                 </div>
                                             </div>
                                         </div>
-
-
-                                    </div>
-                                    <div x-show="selectedNav === 'metrics'">
-                                        metrics
                                     </div>
 
+                                    <div x-show="selectedNav === 'metrics'" x-transition:enter
+                                         class="space-y-4 divide-y divide-gray-100 text-sm leading-6">
+                                        {# Name (centered) #}
+                                        <div class="grid grid-cols-12 pt-4 gap-12" x-data="{ showError: false }">
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <div class="font-medium text-gray-900">
+                                                        Date created
+                                                    </div>
+                                                    <div class="text-xs text-gray-600 font-normal sr-only">A unique name
+                                                        to
+                                                        identify
+                                                        you
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <p class="text-gray-900">admin</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {# Date updated (centered) #}
+                                        <div class="grid grid-cols-12 pt-4 gap-12" x-data="{ showError: false }">
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <div class="font-medium text-gray-900">
+                                                        Date last updated
+                                                    </div>
+                                                    <div class="text-xs text-gray-600 font-normal sr-only">A unique name
+                                                        to
+                                                        identify
+                                                        you
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <p class="text-gray-900">admin</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {# Date updated (centered) #}
+                                        <div class="grid grid-cols-12 pt-4 gap-12" x-data="{ showError: false }">
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <div class="font-medium text-gray-900">
+                                                        Revisions
+                                                    </div>
+                                                    <div class="text-xs text-gray-600 font-normal sr-only">A unique name
+                                                        to
+                                                        identify
+                                                        you
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <p class="text-gray-900">admin</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {# Date updated (centered) #}
+                                        <div class="grid grid-cols-12 pt-4 gap-12" x-data="{ showError: false }">
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <div class="font-medium text-gray-900">
+                                                        Last changed by
+                                                    </div>
+                                                    <div class="text-xs text-gray-600 font-normal sr-only">A unique name
+                                                        to
+                                                        identify
+                                                        you
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <p class="text-gray-900">admin</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
