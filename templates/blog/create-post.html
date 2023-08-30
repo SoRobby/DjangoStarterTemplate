@@ -133,36 +133,47 @@
                                     <ul role="list" class="space-y-1 pr-2">
                                         <li>
                                             <button @click="selectedNav='main'" type="button"
-                                               class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
-                                               :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='main' }">Main</button>
+                                                    class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                                    :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='main' }">Main
+                                            </button>
                                         </li>
                                         <li>
                                             <button @click="selectedNav='authors'" type="button"
-                                               class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
-                                               :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='authors' }">Authors</button>
+                                                    class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                                    :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='authors' }">
+                                                Authors
+                                            </button>
                                         </li>
                                         <li>
                                             <button @click="selectedNav='attach-documents'" type="button"
-                                               class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
-                                               :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='attach-documents' }">Attach
-                                                Documents</button>
+                                                    class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                                    :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='attach-documents' }">
+                                                Attach
+                                                Documents
+                                            </button>
                                         </li>
                                         <li>
                                             <button @click="selectedNav='social-media'" type="button"
-                                               class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
-                                               :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='social-media' }">Social
-                                                Media</button>
+                                                    class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                                    :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='social-media' }">
+                                                Social
+                                                Media
+                                            </button>
                                         </li>
                                         <li>
                                             <button @click="selectedNav='seo-properties'" type="button"
-                                               class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
-                                               :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='seo-properties' }">SEO
-                                                Properties</button>
+                                                    class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                                    :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='seo-properties' }">
+                                                SEO
+                                                Properties
+                                            </button>
                                         </li>
                                         <li>
                                             <button @click="selectedNav='metrics'" type="button"
-                                               class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
-                                               :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='metrics' }">Metrics</button>
+                                                    class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                                    :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='metrics' }">
+                                                Metrics
+                                            </button>
                                         </li>
                                     </ul>
                                 </nav>
@@ -361,19 +372,30 @@
                                    class="block text-sm font-medium leading-6 text-gray-900 sr-only">
                                 Cover photo
                             </label>
-                            <svg class="aspect-video rounded text-gray-300 border border-gray-200 bg-white"
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                 stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
-                            </svg>
+                            <div class="aspect-video rounded text-gray-300 border border-gray-200 bg-white overflow-hidden">
+                                <img src="" alt="">
+                                <svg class="aspect-video text-gray-300 bg-white"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                     stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
+                                </svg>
+                            </div>
+                            {#                            <img src="" alt=""#}
+                            {#                                 class="aspect-video rounded text-gray-300 border border-gray-200 bg-white">#}
+                            {#                            <svg class="aspect-video rounded text-gray-300 border border-gray-200 bg-white"#}
+                            {#                                 xmlns="http://www.w3.org/2000/svg"#}
+                            {#                                 fill="none" viewBox="0 0 24 24" stroke-width="1.5"#}
+                            {#                                 stroke="currentColor">#}
+                            {#                                <path stroke-linecap="round" stroke-linejoin="round"#}
+                            {#                                      d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>#}
+                            {#                            </svg>#}
                             <button type="button"
                                     class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                                 Upload image
                             </button>
-
-
+                            
                         </div>
 
 

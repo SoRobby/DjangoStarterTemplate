@@ -29,7 +29,7 @@ function validateForm(formId) {
     return form.checkValidity();
 }
 
-function cropperCropImage(cropperContainer) {
+function cropperCropImage(cropperContainer, fileSizeByteLimit) {
     let cropperProfileContainer = document.getElementById(cropperContainer);
     let cropperInputImage = cropperProfileContainer.querySelector('.cropper-input');
     let cropperInputText = cropperProfileContainer.querySelector('.cropper-input-text');
@@ -38,10 +38,21 @@ function cropperCropImage(cropperContainer) {
     let cropperEditContainer = cropperProfileContainer.querySelector('.cropper-edit-container');
     let cropperCroppedPreview = cropperProfileContainer.querySelector('.cropper-cropped-preview');
     let cropperClose = cropperProfileContainer.querySelectorAll('.cropper-close');
+    let cropperErrorMessage = cropperProfileContainer.querySelector('.cropper-error-message');
 
     // Setup cropper
     cropperInputImage.addEventListener('change', e => {
         if (e.target.files.length) {
+
+            // Check file size
+            const fileSize = e.target.files[0].size;
+            if (fileSize > fileSizeByteLimit) {
+                cropperErrorMessage.innerHTML = 'File size must be 1 MByte or less';
+                return;
+            } else {
+                cropperErrorMessage.innerHTML = '';
+            }
+
             $("#modal-cropper").removeClass('hidden');
 
             // Start file reader
@@ -137,7 +148,6 @@ function cropperCropImage(cropperContainer) {
             }
         }
     }
-
 
 
 }

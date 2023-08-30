@@ -150,6 +150,7 @@
                                                          class="mt-1 text-xs text-red-600 font-normal">Show errors,
                                                         warnings, or other feedback
                                                     </div>
+                                                    <div class="mt-1 text-xs text-red-600 font-normal cropper-error-message"></div>
                                                 </div>
                                                 {% include 'components/cropperjs/crop-image-modal.html' %}
                                             </div>
@@ -368,8 +369,6 @@
                                                 <p class="text-gray-900">57</p>
                                             </div>
                                         </div>
-
-
                                     </div>
                                 </div>
 
@@ -393,7 +392,7 @@
 
         document.addEventListener("DOMContentLoaded", function (event) {
             // On change show image with crop options
-            cropperCropImage("cropper-profile-container")
+            cropperCropImage("cropper-profile-container", 1024*1024);
         });
 
 
