@@ -36,7 +36,7 @@
                     {# Company logo icon #}
                     <a href="{% url 'home' %}" class="flex flex-shrink-0 items-center">
                         <span class="sr-only">CompanyName</span>
-                        <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                        <img class="h-8 w-auto" src="{% static 'img/favicon/favicon.svg' %}"
                              alt="CompanyName"/>
                     </a>
                 </div>
@@ -52,7 +52,7 @@
                             <a href="{% url 'home' %}" class="-m-1.5 p-1.5 flex items-center">
                                 <span class="sr-only">Your Company</span>
                                 <img class="w-auto h-8"
-                                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                                     src="{% static 'img/favicon/favicon.svg' %}"
                                      alt="Your Company">
                                 <p class="ml-4 text-lg font-semibold text-gray-900 leading-6">Company name</p>
                             </a>

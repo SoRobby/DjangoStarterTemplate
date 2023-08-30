@@ -117,7 +117,7 @@
 
                                         <div class="col-span-6 flex gap-4 items-center" id="cropper-profile-container">
                                             <div class="flex-none w-12 h-12 bg-gray-400 rounded-full">
-                                                {% include 'components/avatar/avatar-12x12.html' %}
+                                                {% include 'components/avatar/avatar-12x12.html' with extra_classes="cropper-cropped-preview" %}
                                                 </div>
                                                 <div>
                                                     <label for="profile-image" class="cursor-pointer">

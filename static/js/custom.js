@@ -26,14 +26,11 @@ document.addEventListener('DOMContentLoaded', function () {
 function validateForm(formId) {
     console.log('validateForm()')
     const form = document.getElementById(formId);
-
-    console.log(form.checkValidity())
-    console.log(form)
     return form.checkValidity();
 }
 
 function cropperCropImage(cropperContainer) {
-    let cropperProfileContainer = document.getElementById('cropper-profile-container');
+    let cropperProfileContainer = document.getElementById(cropperContainer);
     let cropperInputImage = cropperProfileContainer.querySelector('.cropper-input');
     let cropperInputText = cropperProfileContainer.querySelector('.cropper-input-text');
     let cropperInputContainer = cropperProfileContainer.querySelector('.cropper-input-container');
@@ -96,6 +93,8 @@ function cropperCropImage(cropperContainer) {
         // Close modal
         $("#modal-cropper").addClass('hidden');
         $("#cropped-image-preview").removeClass('hidden');
+
+        updateProfilePreview(imgSrc, 'test');
     });
 
     // Close modal on cancel and exit
@@ -112,4 +111,33 @@ function cropperCropImage(cropperContainer) {
             cropperInputText.innerHTML = 'Upload an image'
         });
     });
+
+    function updateProfilePreview(imgSrc, username) {
+        let preview = document.querySelector('.cropper-cropped-preview');
+
+        if (preview) {
+            if (imgSrc) { // If image source exists, create or update <img>
+                if (preview.tagName === 'IMG') {
+                    preview.src = imgSrc;
+                } else {
+                    let img = document.createElement('img');
+                    img.src = imgSrc;
+                    img.classList = 'rounded-full w-12 h-12 cropper-cropped-preview';
+                    preview.replaceWith(img);
+                }
+            } else { // Otherwise, create or update <div>
+                if (preview.tagName === 'DIV') {
+                    preview.innerHTML = username.charAt(0).toUpperCase();
+                } else {
+                    let div = document.createElement('div');
+                    div.className = 'text-gray-800 h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center font-semibold text-2xl cropper-cropped-preview';
+                    div.innerHTML = username.charAt(0).toUpperCase();
+                    preview.replaceWith(div);
+                }
+            }
+        }
+    }
+
+
+
 }

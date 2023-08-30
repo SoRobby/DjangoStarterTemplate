@@ -10,9 +10,9 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.safestring import mark_safe
 
 from apps.accounts.forms import AccountAuthenticationForm, RegistrationForm
+from apps.accounts.services import send_verification_email
 from apps.accounts.utils import get_redirect_if_exists
 from libs.utils.utils import send_notification
-from apps.accounts.services import send_verification_email
 
 
 # Function based views:
@@ -41,7 +41,8 @@ def login_view(request, *args, **kwargs):
             if user:
                 login(request, user)
 
-                # See if a redirection exists in the session (e.g. if the user tried to access a page that required authentication)
+                # See if a redirection exists in the session (e.g. if the user tried to access a page that required
+                # authentication)
                 # Example of a redirection url, '/accounts/login/?next=/accounts/profile/'
                 # TODO - Need to verify that the redirect url is on the same domain for security reasons.
                 destination = get_redirect_if_exists(request)
