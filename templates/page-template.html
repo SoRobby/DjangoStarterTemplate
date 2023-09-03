@@ -27,9 +27,13 @@
 
 
 {# Page content #}
-{% block content %}
-    <p class="text-xl text-gray-700">My content goes here</p>
-{% endblock content %}
+{% block main %}
+    <main class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 py-4 sm:py-6">
+        {% block content %}
+            <p class="text-xl text-gray-700">My content goes here</p>
+        {% endblock content %}
+    </main>
+{% endblock main %}
 
 
 {# Footer #}

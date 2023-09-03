@@ -45,14 +45,6 @@ class ProfileEditGeneralView(UpdateView):
                           message='Your settings have been successfully updated')
         return self.request.path
 
-    # def get_template_names(self):
-    #     if self.request.headers.get('HX-Request') == 'true':
-    #         print('HX-Request')
-    #         return ['avatar/partials/profile-edit-general.html']
-
-    #     print('Not HX-Request')
-    #     return ['avatar/profile-edit-general.html']
-
 
 class ProfileEditSecurityView(TemplateView):
     template_name = 'profiles/edit/profile-edit-security.html'
