@@ -3,7 +3,8 @@ from uuid import uuid4
 from django.contrib.auth.models import AbstractBaseUser
 from django.core.validators import MinLengthValidator, RegexValidator
 from django.db import models
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
+from django.dispatch import receiver
 
 from apps.accounts.managers import AccountManager
 
@@ -96,6 +97,27 @@ class Account(AbstractBaseUser):
         return True
 
 
+class AccountInterfaces(models.Model):
+    account = models.OneToOneField(Account, on_delete=models.CASCADE, verbose_name='Account',
+                                   help_text='Account associated with the interfaces')
+
+    uuid = models.UUIDField(default=uuid4, editable=False, unique=True, verbose_name='UUID',
+                            help_text='Unique identifier for the account interfaces')
+
+    date_created = models.DateTimeField(auto_now_add=True, verbose_name='Date created',
+                                        help_text='Server date and time when the interfaces were created')
+
+    date_modified = models.DateTimeField(auto_now=True, verbose_name='Date modified',
+                                         help_text='Server date and time when the interfaces were last modified')
+
+    def __str__(self) -> str:
+        return str(self.account.email)
+
+    class Meta:
+        verbose_name = 'Account Interfaces'
+        verbose_name_plural = 'Account Interfaces'
+
+
 # Signal group for generating short uuid
 def generate_short_uuid(instance, length=8):
     """
@@ -115,3 +137,12 @@ def pre_save_account_receiver(sender, instance, *args, **kwargs):
 
 
 pre_save.connect(pre_save_account_receiver, sender=Account)
+
+
+@receiver(post_save, sender=Account)
+def create_account_interfaces(sender, instance, created, **kwargs):
+    # Only True when a new Account instance is created
+    if created:
+        AccountInterfaces.objects.create(account=instance)
+
+post_save.connect(create_account_interfaces, sender=Account)
