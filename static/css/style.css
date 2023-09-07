@@ -799,10 +799,6 @@ select {
   isolation: isolate;
 }
 
-.z-0 {
-  z-index: 0;
-}
-
 .z-10 {
   z-index: 10;
 }
@@ -1094,10 +1090,6 @@ select {
 
 .h-screen {
   height: 100vh;
-}
-
-.h-52 {
-  height: 13rem;
 }
 
 .max-h-60 {
