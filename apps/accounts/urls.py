@@ -29,7 +29,6 @@ urlpatterns = [
     path('delete-account/', views.delete_account_view, name='delete-account'),
 
     # Verify account email
-
     # path('verify/<user>/send-verification/', views.send_verification_email, name='send-verification-email'),
 
     path('verify/token/<str:token>/', views.verify_email, name='verify-email'),

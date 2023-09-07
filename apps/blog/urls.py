@@ -15,5 +15,5 @@ urlpatterns = [
 
     # path is /blog/edit/create-post/
     path('create-post/', views.create_post, name='create-post'),
-    # path('edit/<str:slug>/', views.edit_post, name='edit-post'),
+    path('edit/<str:uuid>/', views.edit_post, name='edit-post'),
 ]

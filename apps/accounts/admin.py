@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from apps.accounts.models import Account, AccountInterfaces
+from apps.accounts.models import Account
 
 
 # Admin objects
@@ -69,46 +69,4 @@ class AccountAdmin(UserAdmin):
         return field
 
 
-@admin.register(AccountInterfaces)
-class AccountInterfacesAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'date_created', 'date_modified')
 
-    list_filter = ()
-
-    filter_horizontal = ()
-
-    search_fields = ()
-
-    readonly_fields = ('id', 'uuid', 'date_created', 'date_modified')
-
-    fieldsets = (
-        ('Account', {
-            'fields': ('account',),
-            'description': 'Properties associated with the linked account'}
-         ),
-
-        ('Interfaces', {
-            'fields': (),
-            'description': 'Application interfaces associated with the linked account'}
-         ),
-
-        ('Read only properties', {
-            'fields': ('id', 'uuid', 'date_created', 'date_modified'),
-            'description': 'Ready only properties that cannot be modified'}
-         ),
-
-        ('Notes', {
-            'fields': (),
-            'description': '''
-                    <b>Methods</b><br>
-                '''}
-         ),
-    )
-
-    def formfield_for_dbfield(self, db_field, **kwargs):
-        field = super().formfield_for_dbfield(db_field, **kwargs)
-        field_type = db_field.get_internal_type()
-        field.help_text = f'{field.help_text}<br>' \
-                          f'Field name = "<code><small>{db_field.name}</small></code>"<br>' \
-                          f'Field type = "<code><small>{field_type}</small></code>"'
-        return field

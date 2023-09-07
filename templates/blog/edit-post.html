@@ -114,6 +114,7 @@
                                 </label>
                                 <div class="mt-2">
                                     <input type="text" name="title" id="title" placeholder="Add title..."
+                                           value="{{ post.title }}"
                                            class="block w-full rounded-md border-0 py-3 font-bold text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-2xl sm:leading-6">
                                 </div>
                             </div>
@@ -125,7 +126,7 @@
                                 </label>
                                 <div class="mt-2">
                                     <textarea name="editor" id="editor"
-                                              class="min-h-32">This is some sample content</textarea>
+                                              class="min-h-32">{{ post.content }}</textarea>
                                 </div>
                             </div>
 

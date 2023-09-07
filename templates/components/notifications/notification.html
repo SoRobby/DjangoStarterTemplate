@@ -1,7 +1,7 @@
-<div x-show="show" x-data="{ show: true }" x-init="show=true; setTimeout(() => show=false, 3000)"
+<div x-show="show" x-data="{ show: true }" x-init="show=true; setTimeout(() => show=false, 9000)"
      x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
      x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-     class="w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-lg pointer-events-auto ring-1 ring-black ring-opacity-5 transform transition duration-100 ease-out"
+     class="w-full max-w-sm overflow-hidden bg-white z-50 rounded-lg shadow-lg pointer-events-auto ring-1 ring-black ring-opacity-5 transform transition duration-100 ease-out"
      :class="{ 'opacity-100': show }">
     <div class="p-4">
         <div class="flex items-start">

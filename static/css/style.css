@@ -843,10 +843,6 @@ select {
   margin: -9rem;
 }
 
-.-m-3 {
-  margin: -0.75rem;
-}
-
 .-mx-3 {
   margin-left: -0.75rem;
   margin-right: -0.75rem;
@@ -870,11 +866,6 @@ select {
 .my-6 {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
-}
-
-.mx-2 {
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
 }
 
 .-ml-1 {
@@ -1013,10 +1004,6 @@ select {
   display: inline-block;
 }
 
-.inline {
-  display: inline;
-}
-
 .flex {
   display: flex;
 }
@@ -1109,12 +1096,8 @@ select {
   height: 100vh;
 }
 
-.h-0 {
-  height: 0px;
-}
-
-.h-0\.5 {
-  height: 0.125rem;
+.h-52 {
+  height: 13rem;
 }
 
 .max-h-60 {
@@ -1195,10 +1178,6 @@ select {
 
 .w-screen {
   width: 100vw;
-}
-
-.w-0\.5 {
-  width: 0.125rem;
 }
 
 .max-w-2xl {
@@ -1832,10 +1811,6 @@ select {
 
 .bg-no-repeat {
   background-repeat: no-repeat;
-}
-
-.fill-current {
-  fill: currentColor;
 }
 
 .object-cover {
@@ -2626,10 +2601,6 @@ select {
   outline-offset: 2px;
 }
 
-.focus-visible\:outline-offset-\[-4px\]:focus-visible {
-  outline-offset: -4px;
-}
-
 .focus-visible\:outline-gray-900:focus-visible {
   outline-color: #111827;
 }
@@ -2957,16 +2928,6 @@ select {
     padding-bottom: 1.5rem;
   }
 
-  .sm\:px-3 {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-  }
-
-  .sm\:px-3\.5 {
-    padding-left: 0.875rem;
-    padding-right: 0.875rem;
-  }
-
   .sm\:pl-2 {
     padding-left: 0.5rem;
   }
@@ -3025,11 +2986,6 @@ select {
 
   .sm\:ring-gray-900\/10 {
     --tw-ring-color: rgb(17 24 39 / 0.1);
-  }
-
-  .sm\:before\:flex-1::before {
-    content: var(--tw-content);
-    flex: 1 1 0%;
   }
 }
 

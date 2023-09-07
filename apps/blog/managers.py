@@ -14,3 +14,6 @@ class PostManager(models.Manager):
 
     def in_review(self):
         return self.filter(status=self.get_model().STATUS.REVIEW)
+
+    def not_published(self):
+        return self.exclude(status=self.get_model().STATUS.PUBLISHED)
