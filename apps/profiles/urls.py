@@ -32,13 +32,11 @@ urlpatterns = [
     path('settings/security/change-email/', views.profile_edit_security_change_email,
          name='settings-security-change-email'),
 
-    path('settings/notifications/', views.ProfileEditNotificationsView.as_view(),
-         name='settings-notifications'),
+    path('settings/notifications/', views.ProfileEditNotificationsView.as_view(), name='settings-notifications'),
 
-    path('settings/support/', views.ProfileEditSupportView.as_view(),
-         name='settings-support'),
+    path('settings/support/', views.ProfileEditSupportView.as_view(), name='settings-support'),
 
-    path('settings/support/send-message/', views.profile_edit_support_send_message,
-         name='settings-support-send-message'),
+    # Send support message
+    path('support/send-message/', views.profile_edit_support_send_message, name='support-send-message'),
 
 ]

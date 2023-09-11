@@ -799,10 +799,6 @@ select {
   isolation: isolate;
 }
 
-.z-0 {
-  z-index: 0;
-}
-
 .z-10 {
   z-index: 10;
 }
@@ -813,6 +809,10 @@ select {
 
 .z-50 {
   z-index: 50;
+}
+
+.col-span-12 {
+  grid-column: span 12 / span 12;
 }
 
 .col-span-6 {
@@ -996,6 +996,10 @@ select {
   margin-top: 2rem;
 }
 
+.mt-12 {
+  margin-top: 3rem;
+}
+
 .block {
   display: block;
 }
@@ -1094,10 +1098,6 @@ select {
 
 .h-screen {
   height: 100vh;
-}
-
-.h-52 {
-  height: 13rem;
 }
 
 .max-h-60 {
@@ -1348,6 +1348,10 @@ select {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.grid-cols-6 {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
 .flex-col {
   flex-direction: column;
 }
@@ -1410,6 +1414,10 @@ select {
 
 .gap-8 {
   gap: 2rem;
+}
+
+.gap-3 {
+  gap: 0.75rem;
 }
 
 .gap-x-1 {
@@ -2057,6 +2065,10 @@ select {
 
 .pt-8 {
   padding-top: 2rem;
+}
+
+.pt-2\.5 {
+  padding-top: 0.625rem;
 }
 
 .text-left {
@@ -2994,6 +3006,10 @@ select {
     inset: 0px;
   }
 
+  .md\:col-span-6 {
+    grid-column: span 6 / span 6;
+  }
+
   .md\:mb-12 {
     margin-bottom: 3rem;
   }
@@ -3010,6 +3026,10 @@ select {
     display: flex;
   }
 
+  .md\:grid {
+    display: grid;
+  }
+
   .md\:hidden {
     display: none;
   }
@@ -3020,6 +3040,10 @@ select {
 
   .md\:h-full {
     height: 100%;
+  }
+
+  .md\:grid-cols-12 {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
   .md\:grid-cols-2 {
@@ -3046,6 +3070,10 @@ select {
     justify-content: space-between;
   }
 
+  .md\:gap-12 {
+    gap: 3rem;
+  }
+
   .md\:space-x-3 > :not([hidden]) ~ :not([hidden]) {
     --tw-space-x-reverse: 0;
     margin-right: calc(0.75rem * var(--tw-space-x-reverse));
@@ -3060,6 +3088,10 @@ select {
 
   .md\:p-8 {
     padding: 2rem;
+  }
+
+  .md\:pt-4 {
+    padding-top: 1rem;
   }
 }
 

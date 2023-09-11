@@ -1,8 +1,8 @@
 {% if user.profile_image %}
     <img src="{{ user.profile_image.url }}?lastmod{{ user.last_login|date:"YmdHis" }}"
-         alt="Profile picture" class="rounded-full w-8 h-8 cropper-cropped-preview">
+         alt="Profile picture" class="rounded-full w-8 h-8{% if extra_classes %} {{ extra_classes }}{% endif %}">
 {% else %}
-    <div class="text-gray-800 h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center font-semibold text-2xl">
-    {{ user.username.0|upper }}
+    <div class="text-gray-800 h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center font-semibold text-2xl{% if extra_classes %} {{ extra_classes }}{% endif %}">
+        {{ user.username.0|upper }}
     </div>
 {% endif %}
