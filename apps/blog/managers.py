@@ -7,13 +7,13 @@ class PostManager(models.Manager):
         return apps.get_model('blog', 'Post')
 
     def published(self):
-        return self.filter(status=self.get_model().STATUS.PUBLISHED)
+        return self.filter(release_status=self.get_model().RELEASE_STATUS.PUBLISHED)
 
     def in_draft(self):
-        return self.filter(status=self.get_model().STATUS.DRAFT)
+        return self.filter(release_status=self.get_model().RELEASE_STATUS.DRAFT)
 
     def in_review(self):
-        return self.filter(status=self.get_model().STATUS.REVIEW)
+        return self.filter(release_status=self.get_model().RELEASE_STATUS.REVIEW)
 
     def not_published(self):
-        return self.exclude(status=self.get_model().STATUS.PUBLISHED)
+        return self.exclude(release_status=self.get_model().RELEASE_STATUS.PUBLISHED)

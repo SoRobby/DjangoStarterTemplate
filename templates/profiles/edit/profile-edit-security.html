@@ -25,7 +25,7 @@
             {% include 'profiles/edit/components/sidebar.html' %}
 
             <div class="px-4 py-2 sm:px-6 lg:flex-auto lg:px-0">
-                <div class="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
+                <div class="mx-auto max-w-4xl lg:mx-0 lg:max-w-none">
 
                     {% if not user.email_verified %}
                         <div class="pb-2">
@@ -50,17 +50,22 @@
                         {# Email and password #}
                         <div>
                             <h2 class="text-base font-semibold leading-7 text-gray-900">Email and password</h2>
-                            <p class="mt-1 text-sm leading-6 text-gray-500">Change your account's email address or account password.</p>
+                            <p class="mt-1 text-sm leading-6 text-gray-500">Change your account's email address or
+                                account password.</p>
                             <div class="mt-4 space-y-4 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
 
-                                <div class="grid grid-cols-12 pt-4 gap-12"
+                                {# Change email (top) #}
+                                <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
                                      x-data="{ showError: false, isEditing: false, isProcessing: false }">
-                                    <div class="col-span-6">
-                                        <div class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Email
-                                            address
-                                        </div>
-                                        <div class="text-xs text-gray-600 font-normal sr-only">Emails are always kept
-                                            private
+                                    <div class="col-span-12 md:col-span-6 flex">
+                                        <div class="w-full">
+                                            <label for="name"
+                                                   class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                Email address
+                                            </label>
+                                            <div class="text-xs text-gray-600 font-normal sr-only">Emails are always
+                                                kept private
+                                            </div>
                                         </div>
                                     </div>
                                     <form id="changeEmailForm"
@@ -68,7 +73,7 @@
                                           method="POST"
                                           @keydown.escape.window="isEditing=false"
                                           @submit="isProcessing=validateForm('changeEmailForm')"
-                                          class="col-span-6 flex items-center justify-between gap-6">
+                                          class="col-span-12 md:col-span-6 flex items-center justify-between gap-6">
                                         {% csrf_token %}
 
                                         <input type="hidden" name="username" value="{{ user.username }}">
@@ -108,20 +113,29 @@
                                         </button>
                                     </form>
                                 </div>
-                                <div class="grid grid-cols-12 pt-4 gap-12" x-data="{ showError: false }">
-                                    <div class="col-span-6">
-                                        <div class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Password
-                                        </div>
-                                        <div class="text-xs text-gray-600 font-normal sr-only">Change or modify your
-                                            account's password
+
+
+                                {# Change password (centered vertically) #}
+                                <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                     x-data="{ showError: false }">
+                                    <div class="col-span-12 md:col-span-6 flex items-center">
+                                        <div class="w-full">
+                                            <label for="name"
+                                                   class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                Password
+                                            </label>
+                                            <div class="text-xs text-gray-600 font-normal sr-only">Change or modify your
+                                                account's password
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-span-6 flex items-center justify-between">
+                                    <div class="col-span-12 md:col-span-6 flex items-center justify-between">
                                         <p class="text-gray-900">************</p>
                                         <a href="{% url 'password_change' %}"
                                            class="font-semibold text-indigo-600 hover:text-indigo-500">Change</a>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
 
@@ -131,24 +145,30 @@
                             <p class="mt-1 text-sm leading-6 text-gray-500">Critical settings and account changes, be
                                 certain before modifying.</p>
                             <div class="mt-4 space-y-4 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
-                                <div class="grid grid-cols-12 pt-4 gap-12">
-                                    <div class="col-span-6">
-                                        <div class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Delete
-                                            account
-                                        </div>
-                                        <div class="text-xs text-gray-600 font-normal">Once you delete your account,
-                                            there is no going back.
+
+                                {# Danger Zone > Delete account #}
+                                <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                     x-data="{ showError: false }">
+                                    <div class="col-span-12 md:col-span-6 flex items-center">
+                                        <div class="w-full">
+                                            <label for="name"
+                                                   class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                Delete account
+                                            </label>
+                                            <div class="text-xs text-gray-600 font-normal">
+                                                Once you delete your account, there is no going back.
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-span-6 flex items-center justify-end">
+                                    <div class="col-span-12 md:col-span-6 flex items-center md:justify-end">
                                         <button type="button" @click="isDeleteModalOpen=true"
                                                 class="font-semibold text-gray-600 hover:text-red-500 focus:outline-none">
                                             Delete account
                                         </button>
                                         {% include 'profiles/edit/modals/delete-account-confirm-modal.html' %}
                                     </div>
-
                                 </div>
+
                             </div>
                         </div>
                     </div>

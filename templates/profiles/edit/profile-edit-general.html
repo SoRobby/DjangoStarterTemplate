@@ -367,15 +367,10 @@
             integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
     <script src="{% static 'cropper.js' %}"></script>
     <script>
-
-
         document.addEventListener("DOMContentLoaded", function (event) {
             // On change show image with crop options
-            cropperCropImage("cropper-profile-container", 1024 * 1024);
+            cropperCropImage("cropper-profile-container", 1024*1024, 400/400);
         });
 
-
     </script>
-
-
 {% endblock scripts %}

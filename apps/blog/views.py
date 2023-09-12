@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 
-from .models import Post
+from apps.accounts.models import Account
 from libs.utils.utils import send_notification
+from .models import Post
 
 
 # Create your views here.
@@ -29,15 +30,28 @@ def create_post(request):
         # Get blog post title
         title = request.POST.get('title')
         content = request.POST.get('editor')
+        allow_comments = request.POST.get('allow_comments')
+        allow_sharing = request.POST.get('allow_sharing')
+        meta_title = request.POST.get('meta_title')
+        meta_description = request.POST.get('meta_description')
+        meta_keywords = request.POST.get('meta_keywords')
+        lead_author = request.POST.get('lead_author')
+
+        # Get lead author by email
+        lead_author = Account.objects.get(email=lead_author)
+
+        # Print all the POST out
+        print(request.POST)
 
         # Create blog post
-        post = Post.objects.create(title=title, content=content, status=Post.STATUS.DRAFT)
-        post.authors.add(request.user)
+        mew_post = Post.objects.create(title=title, content=content, release_status=Post.RELEASE_STATUS.DRAFT,
+                                       created_by=request.user, modified_by=request.user, lead_author=lead_author)
+        mew_post.authors.add(request.user)
 
         # Redirect user to edit_post
         send_notification(request, tag='success', title='Blog post created',
                           message='Your post has been successfully created')
-        return redirect('blog:edit-post', uuid=post.uuid)
+        return redirect('blog:edit-post', uuid=mew_post.uuid)
 
     return render(request, 'blog/create-post.html')
 
@@ -51,6 +65,7 @@ def edit_post(request, uuid):
         post.title = title
         post.content = content
         post.save()
-        send_notification(request, tag='success', title='Blog post saved', message='Your post has been successfully saved')
+        send_notification(request, tag='success', title='Blog post saved',
+                          message='Your post has been successfully saved')
 
     return render(request, 'blog/edit-post.html', {'post': post})

@@ -29,7 +29,7 @@ function validateForm(formId) {
     return form.checkValidity();
 }
 
-function cropperCropImage(cropperContainer, fileSizeByteLimit) {
+function cropperCropImage(cropperContainer, fileSizeByteLimit, aspectRatio) {
     let cropperProfileContainer = document.getElementById(cropperContainer);
     let cropperInputImage = cropperProfileContainer.querySelector('.cropper-input');
     let cropperInputText = cropperProfileContainer.querySelector('.cropper-input-text');
@@ -73,7 +73,7 @@ function cropperCropImage(cropperContainer, fileSizeByteLimit) {
                     // Initialize cropper
                     cropper = new Cropper(img, {
                         viewMode: 1,
-                        aspectRatio: 400 / 400,
+                        aspectRatio: aspectRatio,
                     });
                 }
             };

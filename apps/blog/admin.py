@@ -7,29 +7,39 @@ from apps.blog.models import Post
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'slug', 'status', 'date_created', 'date_modified', 'date_published')
+    list_display = ('title', 'slug', 'release_status', 'date_created', 'date_modified', 'date_published')
 
-    list_filter = ('status',)
+    list_filter = ('release_status',)
 
     filter_horizontal = ('authors',)
 
     search_fields = ('title',)
 
-    readonly_fields = ('id', 'uuid', 'date_created', 'date_modified')
+    readonly_fields = ('id', 'uuid', 'date_created', 'date_modified', 'date_deleted')
 
     fieldsets = (
         ('Post', {
-            'fields': ('title', 'slug', 'authors', 'status', 'content', 'date_published'),
+            'fields': ('title', 'slug', 'primary_author', 'authors', 'release_status', 'content', 'date_published'),
             'description': 'Primary post fields and content'}
          ),
 
-        ('Meta properties', {
+        ('SEO and meta properties', {
             'fields': ('meta_title', 'meta_description', 'meta_keywords'),
             'description': 'SEO meta tags'}
          ),
 
+        ('Settings', {
+            'fields': ('allow_comments', 'allow_sharing'),
+            'description': 'Post settings and permissions'}
+         ),
+
+        ('Audit information', {
+            'fields': ('created_by', 'modified_by', 'deleted_by', 'is_deleted'),
+            'description': 'Information about post creation, modification, and deletion'}
+         ),
+
         ('Read only properties', {
-            'fields': ('id', 'uuid', 'date_created', 'date_modified'),
+            'fields': ('id', 'uuid', 'date_created', 'date_modified', 'date_deleted'),
             'description': 'Ready only properties that cannot be modified'}
          ),
 
