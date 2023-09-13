@@ -3,7 +3,7 @@
 
 {# Title #}
 {% block title %}
-    <title>Edit post</title>
+    <title>Create a post</title>
 {% endblock title %}
 
 
@@ -90,11 +90,19 @@
         {% block content %}
 
             <form action="#" method="POST">
+                {% csrf_token %}
+
                 <div class="sticky top-0 z-10 mx-auto bg-white border-b border-gray-300">
                     <div class="px-4 mx-auto sm:px-6 lg:px-8 py-4">
                         <div class="sm:flex sm:items-center sm:justify-between">
                             <div>
-                                <h2 class="text-2xl text-gray-800">Create a post</h2>
+                                <h2 class="text-2xl text-gray-800">
+                                    {% if post %}
+                                        Edit post
+                                    {% else %}
+                                        Create a post
+                                    {% endif %}
+                                </h2>
                             </div>
                             <div class="flex gap-4">
                                 <button type="submit" name="save_type" value="draft"
@@ -120,7 +128,8 @@
                                     Title
                                 </label>
                                 <div class="mt-2">
-                                    <input type="text" name="title" id="title" placeholder="Add title..." value="{{ post.title }}"
+                                    <input type="text" name="title" id="title" placeholder="Add title..."
+                                           value="{{ post.title }}"
                                            class="block w-full rounded-md border-0 py-3 font-bold text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-2xl sm:leading-6">
                                 </div>
                             </div>
@@ -203,12 +212,16 @@
                                                             Allow comments
                                                         </label>
                                                         <div class="text-xs text-gray-600 font-normal">
-                                                            Emails about promotions and discounts
+                                                            Allow users to comment on the post
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-span-12 md:col-span-6 flex justify-end">
-                                                    {% include 'components/forms/toggles/toggle.html' with state=post.allow_comments id='allow_comments' name='allow_comments' %}
+                                                    {% if post %}
+                                                        {% include 'components/forms/toggles/toggle.html' with state=post.allow_comments id='allow_comments' name='allow_comments' %}
+                                                    {% else %}
+                                                        {% include 'components/forms/toggles/toggle.html' with state="true" id='allow_comments' name='allow_comments' %}
+                                                    {% endif %}
                                                 </div>
                                             </div>
 
@@ -221,12 +234,17 @@
                                                             Enable social media sharing
                                                         </label>
                                                         <div class="text-xs text-gray-600 font-normal">
-                                                            Emails about promotions and discounts
+                                                            Allowing the post to be easily shared on social media
+                                                            platforms
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-span-12 md:col-span-6 flex justify-end">
-                                                    {% include 'components/forms/toggles/toggle.html' with state=post.allow_social_media_sharing id='allow_sharing' name='allow_sharing' %}
+                                                    {% if post %}
+                                                        {% include 'components/forms/toggles/toggle.html' with state=post.allow_sharing id='allow_sharing' name='allow_sharing' %}
+                                                    {% else %}
+                                                        {% include 'components/forms/toggles/toggle.html' with state="true" id='allow_sharing' name='allow_sharing' %}
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>
@@ -532,7 +550,7 @@
                                 <h3 class="text-base font-medium leading-6 text-gray-800">Status & visibility</h3>
                                 <div class="grid grid-cols-2 items-center">
                                     <p class="text-sm text-gray-700">Status</p>
-                                    {% include 'components/forms/select/custom-select.html' with id="release_status" name="release_status" selected_option_key="draft" selected_option_name="Draft" options=release_status_choices_as_list %}
+                                    {% include 'components/forms/select/custom-select.html' with id="release_status" name="release_status" selected_option_key="draft" selected_option_name="Draft" options=post.get_release_status_choices_as_list %}
                                     <div class="col-span-2 text-xs text-gray-600 mt-2">
                                         Non-published posts are only visible to you and other admins.
                                     </div>
@@ -600,6 +618,9 @@
                     </div>
                 </div>
             </form>
+
+
+
 
         {% endblock content %}
     </main>
