@@ -26,8 +26,11 @@ def post(request, slug):
 
 
 def create_post(request):
+    context = {}
+
     if request.method == 'POST':
         # Get blog post title
+        save_type = request.POST.get('save_type')
         title = request.POST.get('title')
         content = request.POST.get('editor')
         allow_comments = request.POST.get('allow_comments')
@@ -44,7 +47,7 @@ def create_post(request):
         print(request.POST)
 
         # Create blog post
-        mew_post = Post.objects.create(title=title, content=content, release_status=Post.RELEASE_STATUS.DRAFT,
+        mew_post = Post.objects.create(title=title, content=content, release_status=Post.ReleaseStatus.DRAFT,
                                        created_by=request.user, modified_by=request.user, lead_author=lead_author)
         mew_post.authors.add(request.user)
 
@@ -53,7 +56,8 @@ def create_post(request):
                           message='Your post has been successfully created')
         return redirect('blog:edit-post', uuid=mew_post.uuid)
 
-    return render(request, 'blog/create-post.html')
+    context['release_status_choices_as_list'] = Post.get_release_status_choices_as_list()
+    return render(request, 'blog/create-post.html', context)
 
 
 def edit_post(request, uuid):
@@ -69,3 +73,13 @@ def edit_post(request, uuid):
                           message='Your post has been successfully saved')
 
     return render(request, 'blog/edit-post.html', {'post': post})
+
+
+def delete_post(request, uuid):
+    print('DELETING BLOG POST.')
+    post = Post.objects.get(uuid=uuid)
+    post.delete()
+    send_notification(request, tag='success', title='Blog post deleted',
+                      message='Your post has been successfully deleted')
+
+    return redirect('blog:post-list')

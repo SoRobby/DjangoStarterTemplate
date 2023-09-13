@@ -14,6 +14,9 @@ urlpatterns = [
     path('posts/<str:slug>/', views.post, name='post'),
 
     # path is /blog/edit/create-post/
-    path('create-post/', views.create_post, name='create-post'),
+
+    path('edit/create/', views.create_post, name='create-post'),
     path('edit/<str:uuid>/', views.edit_post, name='edit-post'),
+    path('edit/<str:uuid>/delete/', views.delete_post, name='delete-post'),
+
 ]

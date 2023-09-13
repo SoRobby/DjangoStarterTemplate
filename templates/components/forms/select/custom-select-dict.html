@@ -1,23 +1,29 @@
+{# f(selected_option_key, selected_option_name, options) #}
+{# selected_option_key is a string that refers to the key of the options dictionary #}
+{# selected_option_name is the string name of the selected option (e.g., "Draft") #}
+{# options is a list dictionary in the following format: `{'draft': 'Draft', 'review': 'Review', 'published': 'Published'}` #}
+
 <div class="relative w-full"
      x-data="{
         optionsOpen: false,
         selectedOptionKey: '{{ selected_option_key }}',
-        optionsList: {{ options }},
+        selectedOptionName: {{ options|safe }}['{{ selected_option_key }}'],
+        optionsDict: {{ options|safe }},
         focusedOptionIndex: -1
-        }"
+    }"
      @click.away="optionsOpen=false"
      @keyup.escape.window="optionsOpen=false">
     <button type="button"
             id="{{ id }}"
-            class="relative w-full cursor-default rounded-md bg-white py-2 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            class="relative w-full cursor-default rounded-md bg-white py-2 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 text-sm leading-6"
             @click="optionsOpen=!optionsOpen"
-            @keydown.arrow-up.prevent="focusedOptionIndex = focusedOptionIndex <= 0 ? optionsList.length - 1 : focusedOptionIndex - 1"
-            @keydown.arrow-down.prevent="focusedOptionIndex = focusedOptionIndex >= optionsList.length - 1 ? 0 : focusedOptionIndex + 1"
-            @keydown.enter.prevent="selectedOptionKey = optionsList[focusedOptionIndex].key; optionsOpen = false"
+            @keydown.arrow-up.prevent="focusedOptionIndex = focusedOptionIndex <= 0 ? Object.keys(optionsDict).length - 1 : focusedOptionIndex - 1"
+            @keydown.arrow-down.prevent="focusedOptionIndex = focusedOptionIndex >= Object.keys(optionsDict).length - 1 ? 0 : focusedOptionIndex + 1"
+            @keydown.enter.prevent="selectedOptionKey = Object.keys(optionsDict)[focusedOptionIndex]; optionsOpen = false"
             aria-haspopup="listbox" aria-expanded="true"
             aria-labelledby="listbox-label">
         <span class="block truncate"
-              x-text="optionsList.find(option => option.key === selectedOptionKey).name">{{ selected_option_name }}</span>
+              x-text="selectedOptionName">{{ selected_option_name }}</span>
         <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
             <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20"
                  fill="currentColor" aria-hidden="true">
@@ -37,14 +43,14 @@
         tabindex="-1" role="listbox" aria-labelledby="listbox-label"
         x-show="optionsOpen" x-transition x-cloak
         aria-activedescendant="listbox-option-3">
-        <template x-for="(option, index) in optionsList" :key="option.key">
+        <template x-for="(entry, index) in Object.entries(optionsDict)" :key="entry[0]">
             <li class="text-gray-900 hover:bg-gray-100 relative cursor-default select-none py-2 pl-8 pr-4"
-                :id="'listbox-option-' + option.key" role="option"
+                :id="'listbox-option-' + entry[0]" role="option"
                 x-bind:class="{ 'bg-gray-100': index === focusedOptionIndex }"
-                @click="selectedOptionKey = option.key; optionsOpen = false">
-                <span class="font-normal block truncate" x-text="option.name"></span>
+                @click="selectedOptionKey = entry[0]; optionsOpen = false">
+                <span class="font-normal block truncate" x-text="entry[1]"></span>
                 <span class="text-indigo-600 absolute inset-y-0 left-0 flex items-center pl-1.5"
-                      x-show="selectedOptionKey === option.key">
+                      x-show="selectedOptionKey === entry[0]">
                     <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path fill-rule="evenodd"
                           d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"

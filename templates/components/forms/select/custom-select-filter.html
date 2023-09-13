@@ -1,32 +1,38 @@
+{# f(selected_option_key, selected_option_name, options) #}
+{# selected_option_key is a string that refers to the key of the options list dictionary #}
+{# selected_option_name is the string name of the selected option (e.g., "Draft") #}
+{# options is a list dictionary in the following format: [{"key": "draft", "name": "Draft"}] #}
+
 <div class="relative w-full">
     <div x-data="{
     optionsOpen: false,
-    selectedOptionId: '{{ selected_option }}',
-    selectedOptionName: {{ options }}.find(option => option.id === '{{ selected_option }}').name,
+    selectedOptionKey: '{{ selected_option_key }}',
+    selectedOptionName: {{ options }}.find(option => option.key === '{{ selected_option_key }}').name,
     optionsList: {{ options }},
     searchTerm: '',
     focusedOptionIndex: -1,
     get visibleOptions() {
       return this.optionsList.filter(option => option.name.toLowerCase().includes(this.searchTerm.toLowerCase()));
     }
-  }"
+    }"
          @click.away="optionsOpen=false"
          @keyup.escape.window="optionsOpen=false"
          class="relative">
         <input type="text" x-model="selectedOptionName"
-               {% if id %}
-                id="{{ id }}"
-               {% endif %}
+                {% if id %}
+               id="{{ id }}"
+                {% endif %}
+               value="{{ selected_option_name }}"
                @click="optionsOpen=true; searchTerm=''"
                x-ref="searchBox"
                @input="searchTerm = $refs.searchBox.value"
                @keydown.arrow-up.prevent="focusedOptionIndex = focusedOptionIndex <= 0 ? visibleOptions.length - 1 : focusedOptionIndex - 1"
                @keydown.arrow-down.prevent="focusedOptionIndex = focusedOptionIndex >= visibleOptions.length - 1 ? 0 : focusedOptionIndex + 1"
-               @keydown.enter.prevent="selectedOptionId = visibleOptions[focusedOptionIndex].id; selectedOptionName = visibleOptions[focusedOptionIndex].name; optionsOpen = false; searchTerm=''"
+               @keydown.enter.prevent="selectedOptionKey = visibleOptions[focusedOptionIndex].key; selectedOptionName = visibleOptions[focusedOptionIndex].name; optionsOpen = false; searchTerm=''"
                class="w-full rounded-md border-0 bg-white py-2 pl-3 pr-12 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm leading-6"
                role="combobox" aria-controls="options" aria-expanded="false">
 
-        <input type="hidden" {% if name %}name="{{ name }}"{% endif %} x-model="selectedOptionId">
+        <input type="hidden" {% if name %}name="{{ name }}"{% endif %} x-model="selectedOptionKey">
 
         <button type="button"
                 @click="optionsOpen=!optionsOpen; if(!optionsOpen) searchTerm=''"
@@ -43,15 +49,15 @@
             id="options" role="listbox">
             <template
                     x-for="(option, index) in optionsList.filter(option => option.name.toLowerCase().includes(searchTerm.toLowerCase()))"
-                    :key="option.id">
+                    :key="option.key">
                 <li class="text-gray-900 hover:bg-gray-100 relative cursor-default select-none py-2 pl-8 pr-4"
-                    :id="'listbox-option-' + option.id" role="option"
-                    @click="selectedOptionId = option.id; optionsOpen = false; selectedOptionName = option.name; focusedOptionIndex=index"
+                    :id="'listbox-option-' + option.key" role="option"
+                    @click="selectedOptionKey = option.key; optionsOpen = false; selectedOptionName = option.name; focusedOptionIndex=index"
                     x-bind:class="{ 'bg-gray-100': index === focusedOptionIndex }">
                 <span class="font-normal block truncate"
                       x-text="option.name"></span>
                     <span class="text-indigo-600 absolute inset-y-0 left-0 flex items-center pl-1.5"
-                          x-show="selectedOptionId === option.id">
+                          x-show="selectedOptionKey === option.key">
                 <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
                      aria-hidden="true">
                     <path fill-rule="evenodd"

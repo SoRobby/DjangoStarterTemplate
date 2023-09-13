@@ -3,7 +3,7 @@
 
 {# Title #}
 {% block title %}
-    <title>Untitled</title>
+    <title>Edit post</title>
 {% endblock title %}
 
 
@@ -14,6 +14,7 @@
 
 {# Stylesheets #}
 {% block style %}
+    <link rel="stylesheet" type="text/css" href="{% static 'cropper.min.css' %}">
     <style>
         .ck.ck-balloon-panel.ck-powered-by-balloon[class*=position_border] {
             display: none;
@@ -61,6 +62,7 @@
             text-decoration-line: underline !important;
         }
 
+
     </style>
 {% endblock style %}
 
@@ -79,11 +81,15 @@
 
 {# Page content #}
 {% block main %}
-    <main class="mx-auto">
-        {% block content %}
-            <form action="#" method="POST">
-                {% csrf_token %}
+    <main class="mx-auto" x-data="{ isDeleteModalOpen: false }">
 
+        {% if post %}
+            {% include 'blog/edit/modals/delete-post-confirm-modal.html' %}
+        {% endif %}
+
+        {% block content %}
+
+            <form action="#" method="POST">
                 <div class="sticky top-0 z-10 mx-auto bg-white border-b border-gray-300">
                     <div class="px-4 mx-auto sm:px-6 lg:px-8 py-4">
                         <div class="sm:flex sm:items-center sm:justify-between">
@@ -91,11 +97,11 @@
                                 <h2 class="text-2xl text-gray-800">Create a post</h2>
                             </div>
                             <div class="flex gap-4">
-                                <button type="submit"
+                                <button type="submit" name="save_type" value="draft"
                                         class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                                     Save draft
                                 </button>
-                                <button type="submit"
+                                <button type="submit" name="save_type" value="publish"
                                         class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                                     Publish
                                 </button>
@@ -103,6 +109,7 @@
                         </div>
                     </div>
                 </div>
+
 
                 <div class="mx-auto">
                     <div class="flex w-full items-stretch gap-x-8">
@@ -113,8 +120,7 @@
                                     Title
                                 </label>
                                 <div class="mt-2">
-                                    <input type="text" name="title" id="title" placeholder="Add title..."
-                                           value="{{ post.title }}"
+                                    <input type="text" name="title" id="title" placeholder="Add title..." value="{{ post.title }}"
                                            class="block w-full rounded-md border-0 py-3 font-bold text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-2xl sm:leading-6">
                                 </div>
                             </div>
@@ -126,7 +132,7 @@
                                 </label>
                                 <div class="mt-2">
                                     <textarea name="editor" id="editor"
-                                              class="min-h-32">{{ post.content }}</textarea>
+                                              class="min-h-32">This is some sample content</textarea>
                                 </div>
                             </div>
 
@@ -157,14 +163,6 @@
                                                 </button>
                                             </li>
                                             <li>
-                                                <button @click="selectedNav='social-media'" type="button"
-                                                        class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
-                                                        :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='social-media' }">
-                                                    Social
-                                                    Media
-                                                </button>
-                                            </li>
-                                            <li>
                                                 <button @click="selectedNav='seo-properties'" type="button"
                                                         class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
                                                         :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='seo-properties' }">
@@ -172,180 +170,354 @@
                                                     Properties
                                                 </button>
                                             </li>
-                                            <li>
-                                                <button @click="selectedNav='metrics'" type="button"
-                                                        class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
-                                                        :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='metrics' }">
-                                                    Metrics
-                                                </button>
-                                            </li>
+                                            {% if post %}
+                                                <li>
+                                                    <button @click="selectedNav='metrics'" type="button"
+                                                            class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                                            :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='metrics' }">
+                                                        Metrics
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button @click="selectedNav='danger-zone'" type="button"
+                                                            class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                                            :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='danger-zone' }">
+                                                        Danger Zone
+                                                    </button>
+                                                </li>
+                                            {% endif %}
                                         </ul>
                                     </nav>
+
                                     <div class="flex-1">
-                                        <div x-show="selectedNav === 'main'" x-transition:enter>
-                                            Main area
-                                        </div>
-                                        <div x-show="selectedNav === 'authors'" x-transition:enter>
-                                            Add authors
-                                        </div>
-                                        <div x-show="selectedNav === 'attach-documents'" x-transition:enter>
-                                            attach-documents
-                                        </div>
-                                        <div x-show="selectedNav === 'social-media'" x-transition:enter>
-                                            social-media
-                                        </div>
-                                        <div x-show="selectedNav === 'seo-properties'" x-transition:enter
-                                             class="space-y-4 divide-y divide-gray-100 text-sm leading-6">
-                                            {# Name (centered) #}
-                                            <div class="grid grid-cols-12 pt-4 gap-12" x-data="{ showError: false }">
-                                                <div class="col-span-6 flex items-center">
+
+                                        <div x-show="selectedNav === 'main'" x-transition:enter
+                                             class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
+
+                                            {# Main > allow comments #}
+                                            <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12">
+                                                <div class="col-span-12 md:col-span-6 flex items-center">
                                                     <div class="w-full">
-                                                        <div class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                            Meta title
-                                                        </div>
+                                                        <label for="allow_comments"
+                                                               class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                            Allow comments
+                                                        </label>
                                                         <div class="text-xs text-gray-600 font-normal">
-                                                            Title that will appear in search engines and browser tab. Recommended length is 50-60 characters.
+                                                            Emails about promotions and discounts
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-span-6 flex items-center">
+                                                <div class="col-span-12 md:col-span-6 flex justify-end">
+                                                    {% include 'components/forms/toggles/toggle.html' with state=post.allow_comments id='allow_comments' name='allow_comments' %}
+                                                </div>
+                                            </div>
+
+                                            {# Main > allow social media sharing #}
+                                            <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12">
+                                                <div class="col-span-12 md:col-span-6 flex items-center">
                                                     <div class="w-full">
-                                                        <label for="name" class="sr-only">First
-                                                            name</label>
-                                                        <input type="text" id="name" name="name"
-                                                               maxlength="60"
+                                                        <label for="allow_sharing"
+                                                               class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                            Enable social media sharing
+                                                        </label>
+                                                        <div class="text-xs text-gray-600 font-normal">
+                                                            Emails about promotions and discounts
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-span-12 md:col-span-6 flex justify-end">
+                                                    {% include 'components/forms/toggles/toggle.html' with state=post.allow_social_media_sharing id='allow_sharing' name='allow_sharing' %}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div x-show="selectedNav === 'authors'" x-transition:enter x-cloak
+                                             class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
+                                            {# Authors > Lead author #}
+                                            <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                                 x-data="{ showError: false }">
+                                                <div class="col-span-12 md:col-span-6 flex items-center">
+                                                    <div class="w-full">
+                                                        <label for="lead_author"
+                                                               class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                            Lead author email
+                                                        </label>
+                                                        <div class="text-xs text-gray-600 font-normal">
+                                                            The lead author will be listed first
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-span-12 md:col-span-6 flex items-center">
+                                                    <div class="w-full">
+                                                        <input type="text" id="lead_author" name="lead_author"
+                                                               maxlength="{{ form.name.field.max_length }}"
+                                                               value="{{ user.email }}"
+                                                               class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                        <div class="mt-2 text-xs text-gray-600 font-normal">
+                                                            Enter the lead authors email address
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            {# Authors > All authors #}
+                                            <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                                 x-data="{ showError: false }">
+                                                <div class="col-span-12 md:col-span-6 flex">
+                                                    <div class="w-full">
+                                                        <label for="authors"
+                                                               class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                            Other author emails
+                                                        </label>
+                                                        <div class="text-xs text-gray-600 font-normal">Add additional
+                                                            authors
+                                                            to the post
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-span-12 md:col-span-6 flex items-center">
+                                                    <div class="w-full" x-data="{ authors: [] }">
+                                                        <div class="grid gap-2">
+                                                            <template x-for="(author, index) in authors" :key="index">
+                                                                <div class="flex items-center">
+                                                                    <input type="text" x-model="authors[index]"
+                                                                           name="meta-title"
+                                                                           maxlength="{{ form.name.field.max_length }}"
+                                                                           value="{{ user.email }}"
+                                                                           class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                                    <button type="button"
+                                                                            class="px-2 text-gray-600 text-sm hover:text-gray-800"
+                                                                            x-on:click="authors.splice(index, 1)">Remove
+                                                                    </button>
+                                                                </div>
+                                                            </template>
+                                                        </div>
+                                                        <button type="button" class="mt-2 text-gray-800"
+                                                                x-on:click="authors.push('')">+ Add
+                                                            author
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div x-show="selectedNav === 'attach-documents'" x-transition:enter x-cloak>
+                                            <span class="font-semibold text-gray-600 text-sm">
+                                                Coming soon...
+                                            </span>
+                                        </div>
+
+                                        <div x-show="selectedNav === 'seo-properties'" x-transition:enter x-cloak
+                                             class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
+
+                                            {# Meta > title #}
+                                            <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                                 x-data="{ showError: false }">
+                                                <div class="col-span-12 md:col-span-6 flex items-center">
+                                                    <div class="w-full">
+                                                        <label for="meta_title"
+                                                               class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                            Meta title
+                                                        </label>
+                                                        <div class="text-xs text-gray-600 font-normal">
+                                                            Title that will appear in search engines and browser tab.
+                                                            Recommended length is 50-60 characters.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-span-12 md:col-span-6 flex items-center">
+                                                    <div class="w-full">
+                                                        <input type="text" id="meta_title" name="meta_title"
+                                                               maxlength="{{ form.name.field.max_length }}"
                                                                value="{{ post.title }}"
                                                                class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                        <div x-show="showError"
+                                                             class="mt-2 text-xs text-red-600 font-normal">
+                                                            Invalid input
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            {# Meta description (centered) #}
-                                            <div class="grid grid-cols-12 pt-4 gap-12">
-                                                <div class="col-span-6">
-                                                    <div class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                        Meta description
-                                                    </div>
-                                                    <div class="text-xs text-gray-600 font-normal">High level summary
-                                                        that
-                                                        describes the post
-                                                    </div>
-                                                </div>
-                                                <div class="col-span-6">
-                                                    <label for="description" class="sr-only"></label>
-                                                    <textarea type="text" name="description" id="description"
-                                                              maxlength="{{ form.description.field.max_length }}"
-                                                              class="resize-y-auto block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{{ user.description }}</textarea>
-                                                </div>
-                                            </div>
-
-                                            {# Meta keywords (centered) #}
-                                            <div class="grid grid-cols-12 pt-4 gap-12" x-data="{ showError: false }">
-                                                <div class="col-span-6 flex items-center">
+                                            {# Meta > description #}
+                                            <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                                 x-data="{ showError: false }">
+                                                <div class="col-span-12 md:col-span-6 flex">
                                                     <div class="w-full">
-                                                        <div class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                        <label for="meta_description"
+                                                               class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                            Meta description
+                                                        </label>
+                                                        <div class="text-xs text-gray-600 font-normal">High level
+                                                            summary that describes the post. Recommended length is
+                                                            50-160 characters.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-span-12 md:col-span-6 flex items-center">
+                                                    <div class="w-full">
+                                                        <textarea type="text" name="meta_description"
+                                                                  id="meta_description"
+                                                                  rows="4"
+                                                                  maxlength="{{ form.description.field.max_length }}"
+                                                                  class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{{ user.description }}</textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            {# Meta > keywords #}
+                                            <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                                 x-data="{ showError: false }">
+                                                <div class="col-span-12 md:col-span-6 flex items-center">
+                                                    <div class="w-full">
+                                                        <label for="meta_keywords"
+                                                               class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
                                                             Meta keywords
-                                                        </div>
+                                                        </label>
                                                         <div class="text-xs text-gray-600 font-normal">
-                                                            Keywords that describe the post
+                                                            Comma separated keywords that describe the post. Recommended
+                                                            number of
+                                                            keywords is 3-8.
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-span-6 flex items-center">
+                                                <div class="col-span-12 md:col-span-6 flex items-center">
                                                     <div class="w-full">
-                                                        <label for="name" class="sr-only">First
-                                                            name</label>
-                                                        <input type="text" id="name" name="name"
+                                                        <input type="text" id="meta_keywords" name="meta_keywords"
                                                                maxlength="{{ form.name.field.max_length }}"
-                                                               value="blog, test, name"
+                                                               value="{{ post.title }}"
                                                                class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                                        <p class="text-xs text-gray-600 font-normal">Separate keywords
-                                                            by a
-                                                            comma</p>
+                                                        <div x-show="showError"
+                                                             class="mt-2 text-xs text-red-600 font-normal">
+                                                            Invalid input
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div x-show="selectedNav === 'metrics'" x-transition:enter
-                                             class="space-y-4 divide-y divide-gray-100 text-sm leading-6">
-                                            {# Name (centered) #}
-                                            <div class="grid grid-cols-12 pt-4 gap-12" x-data="{ showError: false }">
-                                                <div class="col-span-6 flex items-center">
-                                                    <div class="w-full">
-                                                        <div class="font-medium text-gray-900">
-                                                            Date created
+                                        {% if post %}
+                                            <div x-show="selectedNav === 'metrics'" x-transition:enter x-cloak
+                                                 class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
+                                                {# Name (centered) #}
+                                                <div class="grid grid-cols-12 pt-4 gap-12"
+                                                     x-data="{ showError: false }">
+                                                    <div class="col-span-6 flex items-center">
+                                                        <div class="w-full">
+                                                            <div class="font-medium text-gray-900">
+                                                                Date created
+                                                            </div>
+                                                            <div class="text-xs text-gray-600 font-normal sr-only">A
+                                                                unique
+                                                                name
+                                                                to
+                                                                identify
+                                                                you
+                                                            </div>
                                                         </div>
-                                                        <div class="text-xs text-gray-600 font-normal sr-only">Date created
+                                                    </div>
+                                                    <div class="col-span-6 flex items-center">
+                                                        <div class="w-full">
+                                                            <p class="text-gray-900">admin</p>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-span-6 flex items-center">
-                                                    <div class="w-full">
-                                                        <p class="text-gray-900">{{ post.date_created }}</p>
+
+                                                {# Date updated (centered) #}
+                                                <div class="grid grid-cols-12 pt-4 gap-12"
+                                                     x-data="{ showError: false }">
+                                                    <div class="col-span-6 flex items-center">
+                                                        <div class="w-full">
+                                                            <div class="font-medium text-gray-900">
+                                                                Date last updated
+                                                            </div>
+                                                            <div class="text-xs text-gray-600 font-normal sr-only">A
+                                                                unique
+                                                                name to identify you
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-span-6 flex items-center">
+                                                        <div class="w-full">
+                                                            <p class="text-gray-900">admin</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {# Date updated (centered) #}
+                                                <div class="grid grid-cols-12 pt-4 gap-12"
+                                                     x-data="{ showError: false }">
+                                                    <div class="col-span-6 flex items-center">
+                                                        <div class="w-full">
+                                                            <div class="font-medium text-gray-900">
+                                                                Revisions
+                                                            </div>
+                                                            <div class="text-xs text-gray-600 font-normal sr-only">A
+                                                                unique
+                                                                name
+                                                                to
+                                                                identify
+                                                                you
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-span-6 flex items-center">
+                                                        <div class="w-full">
+                                                            <p class="text-gray-900">admin</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {# Date updated (centered) #}
+                                                <div class="grid grid-cols-12 pt-4 gap-12"
+                                                     x-data="{ showError: false }">
+                                                    <div class="col-span-6 flex items-center">
+                                                        <div class="w-full">
+                                                            <div class="font-medium text-gray-900">
+                                                                Last changed by
+                                                            </div>
+                                                            <div class="text-xs text-gray-600 font-normal sr-only">A
+                                                                unique
+                                                                name
+                                                                to
+                                                                identify
+                                                                you
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-span-6 flex items-center">
+                                                        <div class="w-full">
+                                                            <p class="text-gray-900">admin</p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                        {% endif %}
 
-                                            {# Date updated (centered) #}
-                                            <div class="grid grid-cols-12 pt-4 gap-12" x-data="{ showError: false }">
-                                                <div class="col-span-6 flex items-center">
-                                                    <div class="w-full">
-                                                        <div class="font-medium text-gray-900">
-                                                            Date last updated
-                                                        </div>
-                                                        <div class="text-xs text-gray-600 font-normal sr-only">Date updated
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-span-6 flex items-center">
-                                                    <div class="w-full">
-                                                        <p class="text-gray-900">{{ post.date_modified }}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <div x-show="selectedNav === 'danger-zone'" x-transition:enter x-cloak
+                                             class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
 
-                                            {# Date updated (centered) #}
-                                            <div class="grid grid-cols-12 pt-4 gap-12" x-data="{ showError: false }">
-                                                <div class="col-span-6 flex items-center">
+                                            {# Meta > title #}
+                                            <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                                 x-data="{ showError: false }">
+                                                <div class="col-span-12 md:col-span-6 flex items-center">
                                                     <div class="w-full">
-                                                        <div class="font-medium text-gray-900">
-                                                            Revisions
-                                                        </div>
-                                                        <div class="text-xs text-gray-600 font-normal sr-only">A unique
-                                                            name
-                                                            to
-                                                            identify
-                                                            you
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-span-6 flex items-center">
-                                                    <div class="w-full">
-                                                        <p class="text-gray-900">TBD</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {# Date updated (centered) #}
-                                            <div class="grid grid-cols-12 pt-4 gap-12" x-data="{ showError: false }">
-                                                <div class="col-span-6 flex items-center">
-                                                    <div class="w-full">
-                                                        <div class="font-medium text-gray-900">
-                                                            Last changed by
-                                                        </div>
-                                                        <div class="text-xs text-gray-600 font-normal sr-only">A unique
-                                                            name
-                                                            to
-                                                            identify
-                                                            you
+                                                        <label for="meta_title"
+                                                               class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                            Delete post
+                                                        </label>
+                                                        <div class="text-xs text-gray-600 font-normal">
+                                                            Deleting a post is permanent and cannot be undone.
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-span-6 flex items-center">
-                                                    <div class="w-full">
-                                                        <p class="text-gray-900">TBD</p>
-                                                    </div>
+                                                <div class="col-span-12 md:col-span-6 flex items-center md:justify-end">
+                                                    <button type="button" @click="isDeleteModalOpen=true"
+                                                            class="font-semibold text-gray-600 hover:text-red-500 focus:outline-none">
+                                                        Delete post
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -354,25 +526,38 @@
                             </div>
                         </div>
 
-                        <aside class="border-l border-gray-200 bg-gray-50 w-64 space-y-4 divide-y divide-gray-200">
+
+                        <aside class="border-l border-gray-200 bg-gray-50 w-80 space-y-4 divide-y divide-gray-200">
                             <div class="space-y-4 pt-4 px-4 sm:px-6">
                                 <h3 class="text-base font-medium leading-6 text-gray-800">Status & visibility</h3>
                                 <div class="grid grid-cols-2 items-center">
+                                    <p class="text-sm text-gray-700">Status</p>
+                                    {% include 'components/forms/select/custom-select.html' with id="release_status" name="release_status" selected_option_key="draft" selected_option_name="Draft" options=release_status_choices_as_list %}
+                                    <div class="col-span-2 text-xs text-gray-600 mt-2">
+                                        Non-published posts are only visible to you and other admins.
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 items-center">
                                     <p class="text-sm text-gray-700">Visibility</p>
-                                    {% include 'components/forms/select/custom-select.html' with id="visibility" name="visibility" selected_option='public' options="[{'id': 'public', 'name': 'Public'}, {'id': 'private', 'name': 'Private'}]" %}
+                                    {% include 'components/forms/select/custom-select.html' with id="visibility" name="visibility" selected_option_key='public' selected_option_name="Public" options="[{'key': 'public', 'name': 'Public'}, {'key': 'private', 'name': 'Private'}]" %}
+                                    <div class="col-span-2 text-xs text-gray-600 mt-2">
+                                        Non-published posts are only visible to you and other admins.
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="space-y-4 pt-4 px-4 sm:px-6">
+                            <div class="space-y-4 pt-4 px-4 sm:px-6" id="cropper-featured-image-container">
                                 <h3 class="text-base font-medium leading-6 text-gray-800">Featured image</h3>
 
                                 <label for="featured_image"
                                        class="block text-sm font-medium leading-6 text-gray-900 sr-only">
                                     Cover photo
                                 </label>
+
                                 <div class="aspect-video rounded text-gray-300 border border-gray-200 bg-white overflow-hidden">
-                                    <img src="" alt="">
-                                    <svg class="aspect-video text-gray-300 bg-white"
+                                    <img src="" alt="" class="cropper-cropped-preview">
+                                    <svg class="aspect-video text-gray-300 bg-white cropper-cropped-preview"
                                          xmlns="http://www.w3.org/2000/svg"
                                          fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                          stroke="currentColor">
@@ -380,28 +565,42 @@
                                               d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
                                     </svg>
                                 </div>
-                                {#                            <img src="" alt=""#}
-                                {#                                 class="aspect-video rounded text-gray-300 border border-gray-200 bg-white">#}
-                                {#                            <svg class="aspect-video rounded text-gray-300 border border-gray-200 bg-white"#}
-                                {#                                 xmlns="http://www.w3.org/2000/svg"#}
-                                {#                                 fill="none" viewBox="0 0 24 24" stroke-width="1.5"#}
-                                {#                                 stroke="currentColor">#}
-                                {#                                <path stroke-linecap="round" stroke-linejoin="round"#}
-                                {#                                      d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>#}
-                                {#                            </svg>#}
-                                <button type="button"
-                                        class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                    Upload image
-                                </button>
 
+                                <label for="profile-image" class="cursor-pointer">
+                                    <ul class="mt-2 border border-gray-200 border-dashed divide-y divide-gray-200 rounded-md hover:bg-gray-100 overflow-hidden cropper-input-container bg-white">
+                                        <li class="flex items-center py-2 px-4 text-sm">
+                                            <svg class="flex-shrink-0 w-6 h-6 text-gray-400"
+                                                 xmlns="http://www.w3.org/2000/svg"
+                                                 viewBox="0 0 20 20"
+                                                 fill="currentColor" aria-hidden="true">
+                                                <path fill-rule="evenodd"
+                                                      d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                                                      clip-rule="evenodd"></path>
+                                            </svg>
+                                            <input id="profile-image" name="profile_image"
+                                                   type="file"
+                                                   accept="image/*" class="sr-only cropper-input">
+                                            <div class="flex flex-shrink-0 ml-2 space-x-4 text-left">
+                                                <p class="text-gray-900 rounded-md font-small cropper-input-text">
+                                                    Upload featured image
+                                                </p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <button type="button"
+                                            class="mt-1 font-semibold text-indigo-600 hover:text-indigo-500 hidden">
+                                        Remove image
+                                    </button>
+                                </label>
+                                <div class="mt-1 text-xs text-red-600 font-normal cropper-error-message"></div>
+                                {% include 'components/cropperjs/crop-image-modal.html' %}
                             </div>
-
 
                         </aside>
                     </div>
                 </div>
-
             </form>
+
         {% endblock content %}
     </main>
 {% endblock main %}
@@ -415,11 +614,19 @@
 
 {# Scripts #}
 {% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="{% static 'cropper.js' %}"></script>
     <script>
         ClassicEditor
             .create(document.querySelector('#editor'))
             .catch(error => {
                 console.error(error);
             });
+
+        document.addEventListener("DOMContentLoaded", function (event) {
+            // On change show image with crop options
+            cropperCropImage("cropper-featured-image-container", 1024 * 1024, 16 / 9);
+        });
     </script>
 {% endblock scripts %}

@@ -16,7 +16,7 @@ from .managers import PostManager
 # Create your models here.
 
 class Post(models.Model):
-    class RELEASE_STATUS(models.TextChoices):
+    class ReleaseStatus(models.TextChoices):
         DRAFT = 'draft', 'Draft'
         REVIEW = 'review', 'Review'
         PUBLISHED = 'published', 'Published'
@@ -29,12 +29,12 @@ class Post(models.Model):
                             less')
 
     lead_author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                       related_name='authored_posts_as_lead',
-                                       help_text='Lead author of the post')
+                                    related_name='authored_posts_as_lead',
+                                    help_text='Lead author of the post')
 
     authors = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='authored_posts', help_text='Post authors.')
 
-    release_status = models.CharField(max_length=55, default=RELEASE_STATUS.DRAFT, choices=RELEASE_STATUS.choices,
+    release_status = models.CharField(max_length=55, default=ReleaseStatus.DRAFT, choices=ReleaseStatus.choices,
                                       verbose_name='Release status',
                                       help_text='Current status of the post')
 
@@ -94,7 +94,7 @@ class Post(models.Model):
 
     def save(self, *args, **kwargs):
         # Set the date_published
-        if self.date_published is None and self.release_status == self.RELEASE_STATUS.PUBLISHED:
+        if self.date_published is None and self.release_status == self.ReleaseStatus.PUBLISHED:
             self.date_published = timezone.now()
 
         if self.date_deleted is None and self.is_deleted:
@@ -115,6 +115,19 @@ class Post(models.Model):
     @property
     def keywords_list(self):
         return self.meta_keywords.split(',')
+
+    @staticmethod
+    def get_release_status_choices_as_dict():
+        return dict(Post.ReleaseStatus.choices)
+
+    @staticmethod
+    def get_release_status_choices_as_list():
+        """
+        Returns the release status choices as a list of dictionaries with keys 'key' and 'name' for each choice.
+        :return: list of dictionaries
+        """
+        return [{'key': key, 'name': name} for key, name in Post.ReleaseStatus.choices]
+
 
 
 @receiver(pre_save, sender=Post)

@@ -100,7 +100,8 @@
                                                        maxlength="{{ form.name.field.max_length }}"
                                                        value="{{ user.name }}"
                                                        class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                                <div x-show="showError" class="mt-2 text-xs text-red-600 font-normal">
+                                                <div x-show="showError" x-cloak
+                                                     class="mt-2 text-xs text-red-600 font-normal">
                                                     Invalid input
                                                 </div>
                                             </div>
@@ -203,7 +204,7 @@
                                             </div>
                                         </div>
                                         <div class="col-span-12 md:col-span-6 flex items-center">
-                                            {% include 'components/forms/select/custom-select-filter.html' with id="country" name="country" selected_option=user.theme options=countries %}
+{#                                            {% include 'components/forms/select/custom-select-filter.html' with id="country" name="country" selected_option=user.theme options=countries %}#}
                                         </div>
                                     </div>
 
@@ -223,7 +224,7 @@
                                             </div>
                                         </div>
                                         <div class="col-span-12 md:col-span-6 flex items-center">
-                                            {% include 'components/forms/select/custom-select-filter.html' with id="theme" name="theme" selected_option=user.theme options=theme_choices %}
+                                            {% include 'components/forms/select/custom-select-filter.html' with id="theme" name="theme" selected_option_key=user.theme selected_option_name=user.get_theme_display options=user.get_theme_choices_as_list %}
                                         </div>
                                     </div>
 
@@ -243,7 +244,7 @@
                                             </div>
                                         </div>
                                         <div class="col-span-12 md:col-span-6 flex items-center">
-                                            {% include 'components/forms/select/custom-select.html' with id="theme" name="theme" selected_option=user.theme options=theme_choices %}
+                                            {% include 'components/forms/select/custom-select.html' with id="theme" name="theme" selected_option_key=user.theme selected_option_name=user.get_theme_display options=user.get_theme_choices_as_list %}
                                         </div>
                                     </div>
 
@@ -294,7 +295,7 @@
                                             </div>
                                         </div>
                                         <div class="col-span-12 md:col-span-6 flex items-center">
-                                            {% include 'components/forms/select/custom-select-filter.html' with id="language" name="language" selected_option="english" options="[{'id': 'english', 'name': 'English'}, {'id': 'spanish', 'name': 'Spanish'}, {'id': 'chinese', 'name': 'Chinese'}]" %}
+                                            {% include 'components/forms/select/custom-select-filter.html' with id="language" name="language" selected_option_key="english" selected_option_name="English" options="[{'key': 'english', 'name': 'English'}, {'key': 'spanish', 'name': 'Spanish'}, {'key': 'chinese', 'name': 'Chinese'}]" %}
                                         </div>
                                     </div>
 
@@ -314,7 +315,7 @@
                                             </div>
                                         </div>
                                         <div class="col-span-12 md:col-span-6 flex items-center">
-                                            {% include 'components/forms/select/custom-select-filter.html' with id="date-format" name="date-format" selected_option="MM/DD/YYYY" options="[{'id': 'MM/DD/YYYY', 'name': 'MM/DD/YYYY'}, {'id': 'DD/MM/YYYY', 'name': 'DD/MM/YYYY'}, {'id': 'YYYY/MM/DD', 'name': 'YYYY/MM/DD'}]" %}
+                                            {% include 'components/forms/select/custom-select-filter.html' with id="date-format" name="date-format" selected_option_key="MM/DD/YYYY" selected_option_name="MM/DD/YYYY" options="[{'key': 'MM/DD/YYYY', 'name': 'MM/DD/YYYY'}, {'key': 'DD/MM/YYYY', 'name': 'DD/MM/YYYY'}, {'key': 'YYYY/MM/DD', 'name': 'YYYY/MM/DD'}]" %}
                                         </div>
                                     </div>
                                 </div>
@@ -369,7 +370,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function (event) {
             // On change show image with crop options
-            cropperCropImage("cropper-profile-container", 1024*1024, 400/400);
+            cropperCropImage("cropper-profile-container", 1024 * 1024, 400 / 400);
         });
 
     </script>

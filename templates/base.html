@@ -38,10 +38,9 @@
     {% endif %}
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.1/dist/cdn.min.js"></script>
-    <script src="https://unpkg.com/htmx.org@1.9.2"
-            integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h"
+    <script src="https://unpkg.com/htmx.org@1.9.5"
+            integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO"
             crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/htmx.org@1.9.5"></script>
 
     {# Head Scripts #}
     {% block head_script %}
@@ -97,5 +96,10 @@
 <script src="{% static '/js/custom.js' %}"></script>
 {% block scripts %}
 {% endblock scripts %}
+<script>
+    document.body.addEventListener('htmx:configRequest', (event) => {
+        event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+    })
+</script>
 </body>
 </html>

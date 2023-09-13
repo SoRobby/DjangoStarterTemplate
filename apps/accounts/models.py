@@ -11,7 +11,7 @@ from apps.accounts.managers import AccountManager
 # Models
 class Account(AbstractBaseUser):
     # Choice classes
-    class Themes(models.TextChoices):
+    class ThemeChoices(models.TextChoices):
         LIGHT = 'light', 'Light'
         DARK = 'dark', 'Dark'
         SYSTEM = 'system', 'System'
@@ -51,7 +51,7 @@ class Account(AbstractBaseUser):
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True, verbose_name='Profile image',
                                       help_text='Profile image or avatar')
 
-    theme = models.CharField(max_length=55, default=Themes.SYSTEM, choices=Themes.choices, verbose_name='Theme',
+    theme = models.CharField(max_length=55, default=ThemeChoices.SYSTEM, choices=ThemeChoices.choices, verbose_name='Theme',
                              help_text='User website theme')
 
     is_profile_public = models.BooleanField(default=True, verbose_name='Profile public',
@@ -94,6 +94,22 @@ class Account(AbstractBaseUser):
 
     def has_module_perms(self, app_label) -> bool:
         return True
+
+    @property
+    def theme_choices_as_list(self):
+        return [{'key': key, 'name': name} for i, (key, name) in enumerate(self.ThemeChoices.choices)]
+
+    @staticmethod
+    def get_theme_choices_as_dict():
+        return dict(Account.ThemeChoices.choices)
+
+    @staticmethod
+    def get_theme_choices_as_list():
+        """
+        Returns the theme choices as a list of dictionaries with keys 'key' and 'name' for each choice.
+        :return: list of dictionaries
+        """
+        return [{'key': key, 'name': name} for key, name in Account.ThemeChoices.choices]
 
 
 # Signal group for generating short uuid

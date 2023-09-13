@@ -3,6 +3,8 @@ document.body.addEventListener('htmx:configRequest', (event) => {
 })
 
 
+
+
 // Resize textarea along y-axis to fit content
 document.addEventListener('DOMContentLoaded', function () {
     let textareas = document.getElementsByClassName('resize-y-auto');

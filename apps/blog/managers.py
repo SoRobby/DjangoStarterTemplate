@@ -1,5 +1,5 @@
-from django.db import models
 from django.apps import apps
+from django.db import models
 
 
 class PostManager(models.Manager):
@@ -7,13 +7,14 @@ class PostManager(models.Manager):
         return apps.get_model('blog', 'Post')
 
     def published(self):
-        return self.filter(release_status=self.get_model().RELEASE_STATUS.PUBLISHED)
+        return self.filter(release_status=self.get_model().ReleaseStatus.PUBLISHED)
 
     def in_draft(self):
-        return self.filter(release_status=self.get_model().RELEASE_STATUS.DRAFT)
+        return self.filter(release_status=self.get_model().ReleaseStatus.DRAFT)
 
     def in_review(self):
-        return self.filter(release_status=self.get_model().RELEASE_STATUS.REVIEW)
+        return self.filter(release_status=self.get_model().ReleaseStatus.REVIEW)
 
     def not_published(self):
-        return self.exclude(release_status=self.get_model().RELEASE_STATUS.PUBLISHED)
+        return self.exclude(release_status=self.get_model().ReleaseStatus.PUBLISHED)
+
