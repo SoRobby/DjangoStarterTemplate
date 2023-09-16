@@ -135,12 +135,12 @@
                             </div>
 
                             <div class="sm:col-span-6 mt-2">
-                                <label for="editor"
+                                <label for="content"
                                        class="block text-sm font-medium leading-6 text-gray-900 sr-only">
                                     Editor
                                 </label>
                                 <div class="mt-2">
-                                    <textarea name="editor" id="editor"
+                                    <textarea name="content" id="content"
                                               class="min-h-32">This is some sample content</textarea>
                                 </div>
                             </div>
@@ -347,8 +347,8 @@
                                                 <div class="col-span-12 md:col-span-6 flex items-center">
                                                     <div class="w-full">
                                                         <input type="text" id="meta_title" name="meta_title"
-                                                               maxlength="{{ form.name.field.max_length }}"
-                                                               value="{{ post.title }}"
+                                                               maxlength="{{ form.meta_title.field.max_length }}"
+                                                               value="{{ post.meta_title }}"
                                                                class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                         <div x-show="showError"
                                                              class="mt-2 text-xs text-red-600 font-normal">
@@ -378,8 +378,8 @@
                                                         <textarea type="text" name="meta_description"
                                                                   id="meta_description"
                                                                   rows="4"
-                                                                  maxlength="{{ form.description.field.max_length }}"
-                                                                  class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{{ user.description }}</textarea>
+                                                                  maxlength="{{ form.meta_description.field.max_length }}"
+                                                                  class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{{ post.meta_description }}</textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -404,8 +404,8 @@
                                                 <div class="col-span-12 md:col-span-6 flex items-center">
                                                     <div class="w-full">
                                                         <input type="text" id="meta_keywords" name="meta_keywords"
-                                                               maxlength="{{ form.name.field.max_length }}"
-                                                               value="{{ post.title }}"
+                                                               maxlength="255"
+                                                               value="{{ post.meta_keywords }}"
                                                                class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                         <div x-show="showError"
                                                              class="mt-2 text-xs text-red-600 font-normal">
@@ -664,7 +664,7 @@
     <script src="{% static 'cropper.js' %}"></script>
     <script>
         ClassicEditor
-            .create(document.querySelector('#editor'))
+            .create(document.querySelector('#content'))
             .catch(error => {
                 console.error(error);
             });
