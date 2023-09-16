@@ -64,4 +64,4 @@ def generate_unique_slug(instance: Model, slug_target_field: str, slug_source_fi
         uuid = force_str(uuid4()).replace('-', '')[:6].lower()
         slug = f'{slug}-{uuid}'
 
-    raise ValueError(f"Couldn't generate a unique slug for {instance} after {max_iterations} tries")
+    raise ValueError(f"Could not generate a unique slug for {instance} after {max_iterations} tries")

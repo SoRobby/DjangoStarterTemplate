@@ -438,7 +438,7 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p class="text-gray-900">admin</p>
+                                                            <p class="text-gray-900">{{ post.date_created }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -459,7 +459,7 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p class="text-gray-900">admin</p>
+                                                            <p class="text-gray-900">{{ post.date_modified }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -488,7 +488,31 @@
                                                     </div>
                                                 </div>
 
-                                                {# Date updated (centered) #}
+                                                {# Created by #}
+                                                <div class="grid grid-cols-12 pt-4 gap-12"
+                                                     x-data="{ showError: false }">
+                                                    <div class="col-span-6 flex items-center">
+                                                        <div class="w-full">
+                                                            <div class="font-medium text-gray-900">
+                                                                Created by
+                                                            </div>
+                                                            <div class="text-xs text-gray-600 font-normal sr-only">A
+                                                                unique
+                                                                name
+                                                                to
+                                                                identify
+                                                                you
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-span-6 flex items-center">
+                                                        <div class="w-full">
+                                                            <p class="text-gray-900">{{ post.created_by }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {# Last changed by #}
                                                 <div class="grid grid-cols-12 pt-4 gap-12"
                                                      x-data="{ showError: false }">
                                                     <div class="col-span-6 flex items-center">
@@ -507,7 +531,7 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p class="text-gray-900">admin</p>
+                                                            <p class="text-gray-900">{{ post.modified_by }}</p>
                                                         </div>
                                                     </div>
                                                 </div>

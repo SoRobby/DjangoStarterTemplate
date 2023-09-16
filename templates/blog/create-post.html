@@ -135,12 +135,12 @@
                             </div>
 
                             <div class="sm:col-span-6 mt-2">
-                                <label for="editor"
+                                <label for="content"
                                        class="block text-sm font-medium leading-6 text-gray-900 sr-only">
                                     Editor
                                 </label>
                                 <div class="mt-2">
-                                    <textarea name="editor" id="editor"
+                                    <textarea name="content" id="content"
                                               class="min-h-32">This is some sample content</textarea>
                                 </div>
                             </div>
@@ -438,7 +438,7 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p class="text-gray-900">admin</p>
+                                                            <p class="text-gray-900">{{ post.date_created }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -459,7 +459,7 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p class="text-gray-900">admin</p>
+                                                            <p class="text-gray-900">{{ post.date_modified }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -494,23 +494,39 @@
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
                                                             <div class="font-medium text-gray-900">
-                                                                Last changed by
+                                                                Created by
                                                             </div>
                                                             <div class="text-xs text-gray-600 font-normal sr-only">A
-                                                                unique
-                                                                name
-                                                                to
-                                                                identify
-                                                                you
+                                                                The user who created the post
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p class="text-gray-900">admin</p>
+                                                            <p class="text-gray-900">{{ post.created_by }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <div class="grid grid-cols-12 pt-4 gap-12"
+                                                     x-data="{ showError: false }">
+                                                    <div class="col-span-6 flex items-center">
+                                                        <div class="w-full">
+                                                            <div class="font-medium text-gray-900">
+                                                                Last changed by
+                                                            </div>
+                                                            <div class="text-xs text-gray-600 font-normal sr-only">A
+                                                                The user who last changed the post
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-span-6 flex items-center">
+                                                        <div class="w-full">
+                                                            <p class="text-gray-900">{{ post.modified_by }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         {% endif %}
 
@@ -640,7 +656,7 @@
     <script src="{% static 'cropper.js' %}"></script>
     <script>
         ClassicEditor
-            .create(document.querySelector('#editor'))
+            .create(document.querySelector('#content'))
             .catch(error => {
                 console.error(error);
             });

@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from apps.accounts.models import Account
 from libs.utils.utils import send_notification
 from .models import Post
-
+from .forms import PostForm
 
 # Create your views here.
 def post_list(request):
@@ -27,17 +27,29 @@ def post(request, slug):
 
 def create_post(request):
     context = {}
-
     if request.method == 'POST':
-        # Get blog post title
+
+        # Check if form is valid
+        form = PostForm(request.POST)
+        if form.is_valid():
+            print('FORM IS VALID')
+        else:
+            print('FORM IS NOT VALID')
+
+
+        # Get post data
         save_type = request.POST.get('save_type')
         title = request.POST.get('title')
-        content = request.POST.get('editor')
-        allow_comments = request.POST.get('allow_comments')
-        allow_sharing = request.POST.get('allow_sharing')
+        content = request.POST.get('content')
+        release_status = request.POST.get('release_status')
+
+        allow_comments = request.POST.get('allow_comments') == 'true'
+        allow_sharing = request.POST.get('allow_sharing') == 'true'
+
         meta_title = request.POST.get('meta_title')
         meta_description = request.POST.get('meta_description')
         meta_keywords = request.POST.get('meta_keywords')
+
         lead_author = request.POST.get('lead_author')
 
         # Get lead author by email
@@ -47,8 +59,18 @@ def create_post(request):
         print(request.POST)
 
         # Create blog post
-        mew_post = Post.objects.create(title=title, content=content, release_status=Post.ReleaseStatus.DRAFT,
-                                       created_by=request.user, modified_by=request.user, lead_author=lead_author)
+        mew_post = Post.objects.create(title=title,
+                                       content=content,
+                                       release_status=release_status,
+                                       created_by=request.user,
+                                       modified_by=request.user,
+                                       lead_author=lead_author,
+                                       meta_title=meta_title,
+                                       meta_description=meta_description,
+                                       meta_keywords=meta_keywords,
+                                       allow_comments=allow_comments,
+                                       allow_sharing=allow_sharing)
+
         mew_post.authors.add(request.user)
 
         # Redirect user to edit_post
@@ -65,7 +87,7 @@ def edit_post(request, uuid):
 
     if request.method == 'POST':
         title = request.POST.get('title')
-        content = request.POST.get('editor')
+        content = request.POST.get('content')
         post.title = title
         post.content = content
         post.save()

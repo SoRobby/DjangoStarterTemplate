@@ -4,9 +4,8 @@ from uuid import uuid4
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.signals import pre_save
-from django.dispatch import receiver
 from django.utils import timezone
+from django.utils.text import slugify
 from django_ckeditor_5.fields import CKEditor5Field
 
 from libs.utils.utils import generate_unique_slug
@@ -14,6 +13,7 @@ from .managers import PostManager
 
 
 # Create your models here.
+
 
 class Post(models.Model):
     class ReleaseStatus(models.TextChoices):
@@ -93,15 +93,41 @@ class Post(models.Model):
     objects = PostManager()
 
     def save(self, *args, **kwargs):
+        print('blog models.py save() called')
+        if self.slug is None or self.title_has_changed:
+            self.slug = self.generate_slug()
+
         # Set the date_published
         if self.date_published is None and self.release_status == self.ReleaseStatus.PUBLISHED:
             self.date_published = timezone.now()
 
+        # Set the date_deleted if the post is deleted
         if self.date_deleted is None and self.is_deleted:
             self.date_deleted = timezone.now()
 
         # Call the original save method of models.model
         super().save(*args, **kwargs)
+
+    def title_has_changed(self):
+        # Check if the title has changed and needs a new slug
+        try:
+            orig = Post.objects.get(pk=self.pk)
+            return orig.title != self.title
+        except Post.DoesNotExist:
+            return True
+
+    def generate_slug(self):
+        new_slug = slugify(self.title)
+        qs_exists = Post.objects.filter(slug=new_slug).exclude(id=self.id).exists()
+
+        if qs_exists:
+            new_slug = f'{new_slug}-{timezone.now().strftime("%Y-%m-%d")}'
+            qs_exists = Post.objects.filter(slug=new_slug).exclude(id=self.id).exists()
+
+        if qs_exists:
+            new_slug = generate_unique_slug(self, 'slug', 'title')
+
+        return new_slug
 
     @property
     def number_of_words(self):
@@ -128,10 +154,10 @@ class Post(models.Model):
         """
         return [{'key': key, 'name': name} for key, name in Post.ReleaseStatus.choices]
 
-
-
-@receiver(pre_save, sender=Post)
-def post_pre_save(sender, instance, *args, **kwargs):
-    if instance.slug is None:
-        generated_slug = generate_unique_slug(instance, 'slug', 'title')
-        instance.slug = generated_slug
+# @receiver(pre_save, sender=Post)
+# def post_pre_save(sender, instance, *args, **kwargs):
+#     if instance.slug is None:
+#         generated_slug = generate_unique_slug(instance, 'slug', 'title')
+#         instance.slug = generated_slug
+#
+#     print('PRE SAVE SIGNAL CALLED!!!!')
