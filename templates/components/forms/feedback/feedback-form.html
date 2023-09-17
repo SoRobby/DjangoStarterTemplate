@@ -11,13 +11,13 @@
              class="pointer-events-auto w-full max-w-lg overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
             <div class="p-4">
 
-                <div id="feedbackFormPartial" class="flex items-start">
-                    <form id="feedbackForm" hx-post="{% url 'feedback:submit-feedback' %}"
-                          hx-target="#feedbackFormPartial" hx-swap="outerHTML"
-                          @submit="isProcessing = validateForm('feedbackForm')"
+                <div id="feedback-form-partial" class="flex items-start">
+                    <form id="feedback-form" hx-post="{% url 'feedback:submit-feedback' %}"
+                          hx-target="#feedback-form-partial" hx-swap="outerHTML"
+                          @submit="isProcessing = validateForm('feedback-form')"
                           class="ml-3 w-0 flex-1 pt-0.5">
                         {% csrf_token %}
-                        <input type="hidden" name="current_url" x-data="{ url: window.location.href }" :value="url">
+                        <input type="hidden" name="page_url" x-data="{ url: window.location.href }" :value="url">
                         <div class="flex justify-between">
                             <p class="text-sm font-medium text-gray-900">Feedback</p>
                             <div class="ml-4 flex flex-shrink-0 float-right">
@@ -33,10 +33,10 @@
 
                         <p class="text-sm text-gray-900">Your feedback helps us create a better platform.</p>
                         <div class="mt-2">
-                            <label for="feedback" class="block text-sm leading-6 text-gray-900">Add your
+                            <label for="feedback-content" class="block text-sm leading-6 text-gray-900">Add your
                                 feedback</label>
                             <div class="mt-1">
-                                <textarea rows="3" name="feedback" id="feedback" maxlength="1000" required
+                                <textarea rows="3" name="content" id="feedback-content" maxlength="1000" required
                                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
                             </div>
                             <div class="mt-4 flex items-center justify-end gap-x-5">

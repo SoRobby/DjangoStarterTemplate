@@ -3,9 +3,11 @@ from uuid import uuid4
 from django.conf import settings
 from django.db import models
 
+from db.abstract_models import DateCreatedAndModified
+
 
 # Create your models here.
-class Feedback(models.Model):
+class Feedback(DateCreatedAndModified):
     class CATEGORY(models.TextChoices):
         BUG = 'bug', 'Bug Report'
         FEATURE = 'feature', 'Feature Request'
@@ -34,11 +36,11 @@ class Feedback(models.Model):
     uuid = models.UUIDField(default=uuid4, editable=False, unique=True, verbose_name='UUID',
                             help_text='Unique identifier for the feedback')
 
-    date_created = models.DateTimeField(auto_now_add=True, verbose_name='Date created',
-                                        help_text='Server date and time when the feedback was created')
-
-    date_modified = models.DateTimeField(auto_now=True, verbose_name='Date modified',
-                                         help_text='Server date and time when the feedback was last modified')
+    # date_created = models.DateTimeField(auto_now_add=True, verbose_name='Date created',
+    #                                     help_text='Server date and time when the feedback was created')
+    #
+    # date_modified = models.DateTimeField(auto_now=True, verbose_name='Date modified',
+    #                                      help_text='Server date and time when the feedback was last modified')
 
     def __str__(self):
         return f'Feedback {self.pk}'

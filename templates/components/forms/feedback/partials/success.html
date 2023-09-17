@@ -1,4 +1,4 @@
-<div id="feedbackFormPartial" class="flex items-start">
+<div id="feedback-form-partial" class="flex items-start">
     <div class="flex-shrink-0">
         <svg class="w-6 h-6 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none"
              viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
@@ -7,8 +7,8 @@
         </svg>
     </div>
 
-    <div id="feedbackForm" action="{% url 'feedback:submit-feedback' %}" method="POST"
-         @submit="isProcessing = validateForm('feedbackForm')"
+    <div id="feedback-form" action="{% url 'feedback:submit-feedback' %}" method="POST"
+         @submit="isProcessing = validateForm('feedback-form')"
          class="ml-3 w-0 flex-1 pt-0.5">
         {% csrf_token %}
         <input type="hidden" name="current_url" x-data="{ url: window.location.href }" :value="url">

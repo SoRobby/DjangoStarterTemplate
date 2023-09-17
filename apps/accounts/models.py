@@ -79,7 +79,7 @@ class Account(AbstractBaseUser):
                                        help_text='Server date and time the account was created')
 
     last_login = models.DateTimeField(auto_now=True, verbose_name='Last login',
-                                      help_text=f'Server date and time the account last logged in')
+                                      help_text='Server date and time the account last logged in')
 
     objects = AccountManager()
 

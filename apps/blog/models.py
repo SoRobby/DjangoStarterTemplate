@@ -12,12 +12,12 @@ from libs.utils.utils import generate_unique_slug
 from .managers import PostManager
 
 
-from db.abstract_models import DateCreatedAndModified
+from db.abstract_models import DateCreatedAndModified, DateDeleted
 
 # Create your models here.
 
 
-class Post(models.Model):
+class Post(DateCreatedAndModified, DateDeleted):
     class ReleaseStatus(models.TextChoices):
         DRAFT = 'draft', 'Draft'
         REVIEW = 'review', 'Review'
@@ -78,19 +78,19 @@ class Post(models.Model):
     deleted_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE,
                                    related_name='deleted_posts', help_text='User who deleted the post')
 
-    date_created = models.DateTimeField(auto_now_add=True, verbose_name='Date created',
-                                        help_text='Server date and time when the post was created')
-
-    date_modified = models.DateTimeField(auto_now=True, verbose_name='Date modified',
-                                         help_text='Server date and time when the item was last modified')
+    # date_created = models.DateTimeField(auto_now_add=True, verbose_name='Date created',
+    #                                     help_text='Server date and time when the item was created modified')
+    #
+    # date_modified = models.DateTimeField(auto_now=True, verbose_name='Date modified',
+    #                                      help_text='Server date and time when the item was last modified')
 
     date_published = models.DateTimeField(auto_now_add=False, auto_now=False, blank=True, null=True,
                                           verbose_name='Date published',
                                           help_text='Server date and time when the item was published')
 
-    date_deleted = models.DateTimeField(auto_now_add=False, auto_now=False, blank=True, null=True,
-                                        verbose_name='Date deleted',
-                                        help_text='Server date and time when the item was deleted')
+    # date_deleted = models.DateTimeField(auto_now_add=False, auto_now=False, blank=True, null=True,
+    #                                     verbose_name='Date deleted',
+    #                                     help_text='Server date and time when the item was deleted')
 
     objects = PostManager()
 

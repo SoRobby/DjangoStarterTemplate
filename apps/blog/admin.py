@@ -11,7 +11,7 @@ class PostAdmin(admin.ModelAdmin):
 
     list_filter = ('release_status',)
 
-    filter_horizontal = ('authors',)
+    filter_horizontal = ()
 
     search_fields = ('title',)
 
@@ -19,7 +19,9 @@ class PostAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Post', {
-            'fields': ('title', 'slug', 'lead_author', 'authors', 'release_status', 'content', 'featured_image', 'date_published'),
+            'fields': (
+                'title', 'slug', 'lead_author', 'release_status', 'content', 'featured_image',
+                'date_published'),
             'description': 'Primary post fields and content'}
          ),
 
