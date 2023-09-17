@@ -12,6 +12,8 @@ from libs.utils.utils import generate_unique_slug
 from .managers import PostManager
 
 
+from db.abstract_models import DateCreatedAndModified
+
 # Create your models here.
 
 
@@ -80,15 +82,15 @@ class Post(models.Model):
                                         help_text='Server date and time when the post was created')
 
     date_modified = models.DateTimeField(auto_now=True, verbose_name='Date modified',
-                                         help_text='Server date and time when the post was last modified')
+                                         help_text='Server date and time when the item was last modified')
 
     date_published = models.DateTimeField(auto_now_add=False, auto_now=False, blank=True, null=True,
                                           verbose_name='Date published',
-                                          help_text='Server date and time when the post was published')
+                                          help_text='Server date and time when the item was published')
 
     date_deleted = models.DateTimeField(auto_now_add=False, auto_now=False, blank=True, null=True,
                                         verbose_name='Date deleted',
-                                        help_text='Server date and time when the post was deleted')
+                                        help_text='Server date and time when the item was deleted')
 
     objects = PostManager()
 

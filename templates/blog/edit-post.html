@@ -1,5 +1,6 @@
 {% extends 'base-ultrawide.html' %}
 {% load static %}
+{#{% load utc_datetime_tags %}#}
 
 {# Title #}
 {% block title %}
@@ -88,8 +89,7 @@
         {% endif %}
 
         {% block content %}
-
-            <form action="#" method="POST">
+            <form action="." method="POST">
                 {% csrf_token %}
 
                 <div class="sticky top-0 z-10 mx-auto bg-white border-b border-gray-300">
@@ -104,15 +104,23 @@
                                     {% endif %}
                                 </h2>
                             </div>
-                            <div class="flex gap-4">
-                                <button type="submit" name="save_type" value="draft"
+                            <div class="flex gap-4" x-data="{ isSaving: false, isPublishing: false }">
+                                <button type="submit" name="save_type" value="draft" x-show="!isSaving && !isPublishing"
+                                        @click="isSaving=true"
                                         class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                                     Save draft
                                 </button>
                                 <button type="submit" name="save_type" value="publish"
+                                        x-show="!isSaving && !isPublishing" @click="isPublishing=true"
                                         class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                                     Publish
                                 </button>
+                                <div class="flex items-center" x-show="isSaving" x-cloak>
+                                    {% include 'components/processing/processing-xs.html' with include_padding=False text="Saving..." %}
+                                </div>
+                                <div class="flex items-center" x-show="isPublishing" x-cloak>
+                                    {% include 'components/processing/processing-xs.html' with include_padding=False text="Publishing..." %}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -120,6 +128,15 @@
 
 
                 <div class="mx-auto">
+                    <div>
+                        <p>
+                            Tiemzone: {{ now_datetime }}
+                        </p>
+                        <p>
+                            now: {{ now_datetime }}
+                        </p>
+                    </div>
+
                     <div class="flex w-full items-stretch gap-x-8">
                         <div class="flex-1 px-4 mx-auto max-w-7xl py-4 sm:py-6 sm:px-6 lg:px-8 space-y-4">
                             <div class="sm:col-span-6">
@@ -256,7 +273,7 @@
                                                  x-data="{ showError: false }">
                                                 <div class="col-span-12 md:col-span-6 flex items-center">
                                                     <div class="w-full">
-                                                        <label for="lead_author"
+                                                        <label for="lead_author_email"
                                                                class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
                                                             Lead author email
                                                         </label>
@@ -267,9 +284,14 @@
                                                 </div>
                                                 <div class="col-span-12 md:col-span-6 flex items-center">
                                                     <div class="w-full">
-                                                        <input type="text" id="lead_author" name="lead_author"
+                                                        <input type="text" id="lead_author_email"
+                                                               name="lead_author_email"
                                                                maxlength="{{ form.name.field.max_length }}"
+                                                               {% if post.lead_author %}
+                                                               value="{{ post.lead_author.email }}"
+                                                               {% else %}
                                                                value="{{ user.email }}"
+                                                                {% endif %}
                                                                class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                         <div class="mt-2 text-xs text-gray-600 font-normal">
                                                             Enter the lead authors email address
@@ -459,7 +481,10 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p class="text-gray-900">{{ post.date_modified }}</p>
+{#                                                            <p x-data="{ localTime: convertUTCToLocalTime('{{ post.date_modified|utc_standard }}') }" class="text-gray-900"#}
+{#                                                               x-text="localTime"></p>#}
+{#                                                            <p>{{ post.date_modified|utc_standard }}</p>#}
+{#                                                            <p>{{ post.get_date_modified_utc_standard }}</p>#}
                                                         </div>
                                                     </div>
                                                 </div>
