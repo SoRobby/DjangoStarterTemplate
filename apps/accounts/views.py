@@ -79,7 +79,7 @@ def register_view(request, *args, **kwargs):
     """
     Creates a new account for the user if the form is valid.
     """
-    logging.debug('[REGISTER_VIEW] called')
+    logging.debug('[REGISTER_VIEW] Called')
     context = {}
     user = request.user
 
@@ -124,6 +124,7 @@ def send_verification_email_view(request, username: str):
     if request.user.username == username or request.user.is_superuser:
         Account = get_user_model()
         user = Account.objects.get(username=username)
+        user.generate_new_email_verification_token()
 
         try:
             # Get the current domain
@@ -139,7 +140,8 @@ def send_verification_email_view(request, username: str):
             # Send error notification to user. If user is staff, show error message in notification
             if request.user.is_staff:
                 send_notification(request, tag='error', title='Unable to send verification email',
-                                  message=f'We were unable to send the verification email due to an unexpected error\nError: {e}')
+                                  message=f'We were unable to send the verification email due to an unexpected\
+                                  error\nError: {e}')
             else:
                 send_notification(request, tag='error', title='Unable to send verification email',
                                   message='We were unable to send the verification email due to an unexpected error')
@@ -151,7 +153,7 @@ def send_verification_email_view(request, username: str):
 
 
 def verify_email(request, token):
-    logging.debug('[VERIFY_EMAIL]')
+    logging.debug('[VERIFY_EMAIL] Called')
     Account = get_user_model()
 
     try:

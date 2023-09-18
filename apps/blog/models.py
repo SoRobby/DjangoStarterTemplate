@@ -1,3 +1,4 @@
+import os
 from math import ceil
 from uuid import uuid4
 
@@ -8,13 +9,16 @@ from django.utils import timezone
 from django.utils.text import slugify
 from django_ckeditor_5.fields import CKEditor5Field
 
+from db.abstract_models import DateCreatedAndModified, DateDeleted
 from libs.utils.utils import generate_unique_slug
 from .managers import PostManager
 
 
-from db.abstract_models import DateCreatedAndModified, DateDeleted
-
 # Create your models here.
+
+
+def upload_to_featured_images(instance, filename):
+    return os.path.join('blog', str(instance.uuid), 'featured-image', filename)
 
 
 class Post(DateCreatedAndModified, DateDeleted):
@@ -43,19 +47,25 @@ class Post(DateCreatedAndModified, DateDeleted):
     content = CKEditor5Field(config_name='extends', verbose_name='Content',
                              help_text='Primary content of the post using rich text editor')
 
-    featured_image = models.ImageField(upload_to='blog/featured-images/', blank=True, null=True,
+    featured_image_raw = models.ImageField(upload_to=upload_to_featured_images, blank=True, null=True,
+                                           help_text='Original unedited image of the post')
+
+    featured_image = models.ImageField(upload_to=upload_to_featured_images, blank=True, null=True,
                                        help_text='Featured image of the post')
+
+    featured_image_thumbnail = models.ImageField(upload_to=upload_to_featured_images, blank=True, null=True,
+                                                 help_text='Featured image thumbnail of the post')
 
     meta_title = models.CharField(max_length=200, null=True, blank=True,
                                   help_text='Title that will appear in search engines and browser tab. Recommended\
-                                  length is 50-60 characters.')
+                                  length is 50-60 characters')
 
     meta_description = models.CharField(max_length=200, null=True, blank=True,
-                                        help_text='Summary of the post. Recommended length is 50-160 characters.')
+                                        help_text='Summary of the post. Recommended length is 50-160 characters')
 
     meta_keywords = models.CharField(max_length=200, null=True, blank=True,
                                      help_text='Comma-separated keywords. Keywords that describe the post. Recommended\
-                                     number of keywords is 3-8.')
+                                     number of keywords is 3-8')
 
     allow_comments = models.BooleanField(default=True, verbose_name='Allow comments',
                                          help_text='If checked, comments are allowed for this post')
@@ -78,19 +88,9 @@ class Post(DateCreatedAndModified, DateDeleted):
     deleted_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE,
                                    related_name='deleted_posts', help_text='User who deleted the post')
 
-    # date_created = models.DateTimeField(auto_now_add=True, verbose_name='Date created',
-    #                                     help_text='Server date and time when the item was created modified')
-    #
-    # date_modified = models.DateTimeField(auto_now=True, verbose_name='Date modified',
-    #                                      help_text='Server date and time when the item was last modified')
-
     date_published = models.DateTimeField(auto_now_add=False, auto_now=False, blank=True, null=True,
                                           verbose_name='Date published',
                                           help_text='Server date and time when the item was published')
-
-    # date_deleted = models.DateTimeField(auto_now_add=False, auto_now=False, blank=True, null=True,
-    #                                     verbose_name='Date deleted',
-    #                                     help_text='Server date and time when the item was deleted')
 
     objects = PostManager()
 

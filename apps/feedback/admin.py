@@ -35,17 +35,7 @@ class PostAdmin(admin.ModelAdmin):
         ('Read Only Properties', {
             'fields': ('id', 'uuid', 'date_created', 'date_modified'),
             'description': 'Ready only properties that cannot be modified'}
-         ),
-
-        ('Notes', {
-            'fields': (),
-            'description': '''
-                    <b>Query manager:</b><br>
-                    - published: Returns all Post's that have the status of "published"<br>
-                    - in_review: Returns all Post's that have the status of "review"<br>
-                    - in_draft: Returns all Post's that have the status of "draft"<br>
-                '''}
-         ),
+         )
     )
 
     def formfield_for_dbfield(self, db_field, **kwargs):

@@ -29,10 +29,10 @@ class Account(AbstractBaseUser):
                                 ],
                                 verbose_name='Username', help_text='Unique username associated with the account')
 
-    name = models.CharField(max_length=120, blank=True, verbose_name='Name', help_text='Name')
+    name = models.CharField(max_length=120, blank=True, verbose_name='Name', help_text='Name of the user')
 
     description = models.TextField(max_length=500, blank=True, verbose_name='Description',
-                                   help_text=f'User bio or description')
+                                   help_text='User bio or description')
 
     is_active = models.BooleanField(default=True, verbose_name='Active',
                                     help_text='Designates whether this user should be treated as active')
@@ -44,15 +44,15 @@ class Account(AbstractBaseUser):
                                    help_text='Designates whether the user can log into this admin site')
 
     is_superuser = models.BooleanField(default=False, verbose_name='Superuser status',
-                                       help_text=f'Designates that this user has all permissions without explicitly '
-                                                 f'assigning them')
+                                       help_text='Designates that this user has all permissions without explicitly '
+                                                 'assigning them')
 
     # TODO - Make profile images upload the the uuid of the user.
-    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True, verbose_name='Profile image',
+    profile_image = models.ImageField(upload_to='accounts/', blank=True, null=True, verbose_name='Profile image',
                                       help_text='Profile image or avatar')
 
-    theme = models.CharField(max_length=55, default=ThemeChoices.SYSTEM, choices=ThemeChoices.choices, verbose_name='Theme',
-                             help_text='User website theme')
+    theme = models.CharField(max_length=55, default=ThemeChoices.SYSTEM, choices=ThemeChoices.choices,
+                             verbose_name='Theme', help_text='User website theme')
 
     is_profile_public = models.BooleanField(default=True, verbose_name='Profile public',
                                             help_text='Designates whether the user profile can be viewed by others')
@@ -60,7 +60,7 @@ class Account(AbstractBaseUser):
     email_verified = models.BooleanField(default=False, verbose_name='Email verified',
                                          help_text='Designates whether the user has verified their email address')
 
-    email_verification_token = models.UUIDField(default=uuid4, editable=False, unique=True,
+    email_verification_token = models.UUIDField(default=uuid4, editable=True, unique=True,
                                                 verbose_name='Email verification token',
                                                 help_text='Unique identifier for the email verification token')
 
@@ -98,6 +98,10 @@ class Account(AbstractBaseUser):
     @property
     def theme_choices_as_list(self):
         return [{'key': key, 'name': name} for i, (key, name) in enumerate(self.ThemeChoices.choices)]
+
+    def generate_new_email_verification_token(self):
+        self.email_verification_token = uuid4()
+        self.save()
 
     @staticmethod
     def get_theme_choices_as_dict():

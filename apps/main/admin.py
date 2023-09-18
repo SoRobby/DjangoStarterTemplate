@@ -2,14 +2,8 @@ from django.contrib import admin
 
 from .models import Country
 
+
 # Register your models here.
-
-
-
-
-
-
-
 @admin.register(Country)
 class PostAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'name', 'country_code')
@@ -27,7 +21,7 @@ class PostAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Country', {
             'fields': ('name', 'slug', 'country_code', 'phone_code'),
-            'description': 'Primary post fields and content'}
+            'description': 'Information about the country'}
          ),
         ('Read only properties', {
             'fields': ('id', 'uuid', 'date_created', 'date_modified'),
@@ -42,4 +36,3 @@ class PostAdmin(admin.ModelAdmin):
                           f'Field name = "<code><small>{db_field.name}</small></code>"<br>' \
                           f'Field type = "<code><small>{field_type}</small></code>"'
         return field
-

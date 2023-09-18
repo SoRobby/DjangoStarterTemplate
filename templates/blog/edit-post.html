@@ -89,7 +89,7 @@
         {% endif %}
 
         {% block content %}
-            <form action="." method="POST">
+            <form action="." method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
 
                 <div class="sticky top-0 z-10 mx-auto bg-white border-b border-gray-300">
@@ -633,7 +633,7 @@
                                     </svg>
                                 </div>
 
-                                <label for="profile-image" class="cursor-pointer">
+                                <label for="featured-image" class="cursor-pointer">
                                     <ul class="mt-2 border border-gray-200 border-dashed divide-y divide-gray-200 rounded-md hover:bg-gray-100 overflow-hidden cropper-input-container bg-white">
                                         <li class="flex items-center py-2 px-4 text-sm">
                                             <svg class="flex-shrink-0 w-6 h-6 text-gray-400"
@@ -644,7 +644,7 @@
                                                       d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
                                                       clip-rule="evenodd"></path>
                                             </svg>
-                                            <input id="profile-image" name="profile_image"
+                                            <input id="featured-image" name="featured_image"
                                                    type="file"
                                                    accept="image/*" class="sr-only cropper-input">
                                             <div class="flex flex-shrink-0 ml-2 space-x-4 text-left">

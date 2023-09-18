@@ -36,8 +36,6 @@ class ProfileEditGeneralView(UpdateView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
-
-        # context['theme_choices'] = [{'key': key, 'name': name} for i, (key, name) in enumerate(Account.Themes.choices)]
         return context
 
     # Return success URL to itself

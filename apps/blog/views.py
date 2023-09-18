@@ -1,12 +1,15 @@
+import logging
+from io import BytesIO
+
+from PIL import Image
+from django.core.files import File
 from django.shortcuts import render, redirect
 
 from apps.accounts.models import Account
 from libs.utils.utils import send_notification
 from .forms import PostForm
 from .models import Post
-from django.utils import timezone
-import zoneinfo
-import datetime
+
 
 # Create your views here.
 def post_list(request):
@@ -81,25 +84,68 @@ def create_post(request):
         return redirect('blog:edit-post', uuid=mew_post.uuid)
 
     context['release_status_choices_as_list'] = Post.get_release_status_choices_as_list()
+
     return render(request, 'blog/create-post.html', context)
 
 
 def edit_post(request, uuid):
     context = {}
-    single_post = Post.objects.get(uuid=uuid)
+    blog_post = Post.objects.get(uuid=uuid)
 
     if request.method == 'POST':
-        form = PostForm(request.POST, instance=post)
+
+        # Get post data
+
+        if 'cropper-distance-x' in request.POST:
+            if request.POST.get('cropper-distance-x') != '':
+                image_crop_x = float(request.POST.get('cropper-distance-x'))
+                image_crop_y = float(request.POST.get('cropper-distance-y'))
+                image_crop_width = float(request.POST.get('cropper-width'))
+                image_crop_height = float(request.POST.get('cropper-height'))
+
+                print(f'image_crop_x = {image_crop_x}')
+                print(f'image_crop_y = {image_crop_y}')
+                print(f'image_crop_width = {image_crop_width}')
+                print(f'image_crop_height = {image_crop_height}')
+
+                # Get image file that was uploaded
+                featured_image = Image.open(request.FILES.get('featured_image'))
+                print(f'featured_image = {featured_image}')
+
+                # Crop image using Crop dimensions
+                featured_image = featured_image.crop(
+                    (image_crop_x, image_crop_y, image_crop_width + image_crop_x, image_crop_height + image_crop_y))
+
+                featured_image = featured_image.resize((730, 428), Image.LANCZOS)
+
+                # Convert PIL image to BytesIO
+                image_io = BytesIO()
+                featured_image.save(image_io, format='png')  # or 'PNG', etc.
+                image_file = File(image_io, name=f'{blog_post.uuid}.png')
+
+                # blog_post.featured_image = featured_image
+                blog_post.featured_image.save('featured-image.webp', image_file)
+                blog_post.save()
+
+                # featured_image.save(memory_file, format=product_extension_format.upper())
+
+            else:
+                logging.debug('[EDIT_POST] Cropper values are empty and no image was uploaded')
+
+        form = PostForm(request.POST, instance=blog_post)
 
         # form = PostForm(request.POST)
         if form.is_valid():
-            print('FORM IS VALID')
+            logging.debug('[EDIT_POST] Form is valid')
+
             print(form.cleaned_data)
             form.save()
 
             send_notification(request, tag='success', title='Blog post saved',
                               message='Your post has been successfully saved')
         else:
+            logging.debug('[EDIT_POST] Form is not valid')
+
             error_message = 'An unexpected error occurred while saving your post. Please try again later.'
 
             # Include form errors in the message
@@ -112,7 +158,7 @@ def edit_post(request, uuid):
             # send_notification(request, tag='error', title='Unable to save post',
             #                   message='An unexpected error occurred while saving your post. Please try again later.')
 
-    context['post'] = single_post
+    context['post'] = blog_post
     return render(request, 'blog/edit-post.html', context)
 
 

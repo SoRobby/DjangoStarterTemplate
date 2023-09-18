@@ -36,12 +36,6 @@ class Feedback(DateCreatedAndModified):
     uuid = models.UUIDField(default=uuid4, editable=False, unique=True, verbose_name='UUID',
                             help_text='Unique identifier for the feedback')
 
-    # date_created = models.DateTimeField(auto_now_add=True, verbose_name='Date created',
-    #                                     help_text='Server date and time when the feedback was created')
-    #
-    # date_modified = models.DateTimeField(auto_now=True, verbose_name='Date modified',
-    #                                      help_text='Server date and time when the feedback was last modified')
-
     def __str__(self):
         return f'Feedback {self.pk}'
 

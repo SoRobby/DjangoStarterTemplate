@@ -65,3 +65,24 @@ def generate_unique_slug(instance: Model, slug_target_field: str, slug_source_fi
         slug = f'{slug}-{uuid}'
 
     raise ValueError(f"Could not generate a unique slug for {instance} after {max_iterations} tries")
+
+
+def get_model_lengths(model_class):
+    field_lengths = {}
+    for field in model_class._meta.fields:
+        field_info = {}
+
+        # Check for max_length attribute and add to dictionary if exists
+        if hasattr(field, 'max_length') and field.max_length is not None:
+            field_info['max_length'] = field.max_length
+
+        # Check for min_length attribute and add to dictionary if exists
+        # Note: min_length is not a built-in Django model field option for models.CharField, but it is for forms.CharField.
+        # If you've customly added a 'min_length' attribute, this will catch it.
+        if hasattr(field, 'min_length') and field.min_length is not None:
+            field_info['min_length'] = field.min_length
+
+        if field_info:
+            field_lengths[field.name] = field_info
+
+    return field_lengths

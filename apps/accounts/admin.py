@@ -40,7 +40,7 @@ class AccountAdmin(UserAdmin):
          ),
 
         ('Read only properties', {
-            'fields': ('id', 'uuid', 'short_uuid', 'last_login', 'date_joined'),
+            'fields': ('id', 'uuid', 'short_uuid', 'date_joined', 'last_login'),
             'description': 'Ready only properties that cannot be modified'}
          ),
 

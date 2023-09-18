@@ -13,6 +13,8 @@ class ProfileEditGeneralForm(forms.ModelForm):
         fields = ('name', 'description', 'theme', 'is_profile_public', 'profile_image')
 
 
+
+
 class ChangeEmailForm(forms.Form):
     """
     Django Form to handle change of user email.

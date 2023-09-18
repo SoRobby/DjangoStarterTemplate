@@ -1,0 +1,55 @@
+/* Flips the delete and save buttons */
+.submit-row {
+    flex-direction: row-reverse;
+}
+
+.submit-row a.deletelink {
+    margin-left: unset !important;
+    margin-right: auto;
+}
+
+
+/* Delete button */
+.submit-row a.deletelink {
+    display: block;
+    background: None;
+    border-radius: 0px;
+    padding: 0.625rem 0.9375rem;
+    height: 0.9375rem;
+    line-height: 0.9375rem;
+    color: var(--body-quiet-color);
+    font-weight: 500;
+}
+
+.submit-row a.deletelink:hover {
+    display: block;
+    background: None;
+    border-radius: 0px;
+    padding: 0.625rem 0.9375rem;
+    height: 0.9375rem;
+    line-height: 0.9375rem;
+    color: #dc2626;
+    font-weight: 500;
+}
+
+.submit-row a.deletelink:focus {
+    display: block;
+    background: None;
+    border-radius: 0px;
+    padding: 0.625rem 0.9375rem;
+    height: 0.9375rem;
+    line-height: 0.9375rem;
+    color: #dc2626;
+    font-weight: 500;
+}
+
+/* Save button */
+.submit-row input.default {
+    text-transform: None;
+    font-weight: 500;
+}
+
+.submit-row > input {
+    text-transform: None;
+    font-weight: 500;
+}
