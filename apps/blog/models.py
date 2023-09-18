@@ -1,9 +1,12 @@
 import os
+from io import BytesIO
 from math import ceil
 from uuid import uuid4
 
+from PIL import Image
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.files import File
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify

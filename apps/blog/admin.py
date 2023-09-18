@@ -21,7 +21,7 @@ class PostAdmin(admin.ModelAdmin):
         ('Post', {
             'fields': (
                 'title', 'slug', 'lead_author', 'release_status', 'content', 'featured_image',
-                'date_published'),
+                'featured_image_thumbnail', 'featured_image_raw', 'date_published'),
             'description': 'Primary post fields and content'}
          ),
 

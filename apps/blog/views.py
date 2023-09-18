@@ -1,11 +1,10 @@
 import logging
-from io import BytesIO
 
 from PIL import Image
-from django.core.files import File
 from django.shortcuts import render, redirect
 
 from apps.accounts.models import Account
+from libs.utils.utils import process_image
 from libs.utils.utils import send_notification
 from .forms import PostForm
 from .models import Post
@@ -103,31 +102,44 @@ def edit_post(request, uuid):
                 image_crop_width = float(request.POST.get('cropper-width'))
                 image_crop_height = float(request.POST.get('cropper-height'))
 
+                crop_dimensions = (image_crop_x, image_crop_y, image_crop_width, image_crop_height)
+
                 print(f'image_crop_x = {image_crop_x}')
                 print(f'image_crop_y = {image_crop_y}')
                 print(f'image_crop_width = {image_crop_width}')
                 print(f'image_crop_height = {image_crop_height}')
 
                 # Get image file that was uploaded
-                featured_image = Image.open(request.FILES.get('featured_image'))
-                print(f'featured_image = {featured_image}')
+                featured_image_raw = Image.open(request.FILES.get('featured_image'))
 
-                # Crop image using Crop dimensions
-                featured_image = featured_image.crop(
-                    (image_crop_x, image_crop_y, image_crop_width + image_crop_x, image_crop_height + image_crop_y))
+                # Featured image logic
+                featured_image_raw_file = process_image(
+                    image=featured_image_raw,
+                    crop_dimensions=None,
+                    resize_dimensions=None,
+                    file_format=None,
+                )
+                blog_post.featured_image_raw.save(f'raw.{featured_image_raw.format}', featured_image_raw_file)
 
-                featured_image = featured_image.resize((730, 428), Image.LANCZOS)
+                # Featured image logic
+                featured_image_file = process_image(
+                    image=featured_image_raw,
+                    crop_dimensions=crop_dimensions,
+                    resize_dimensions=(730, 428),
+                    file_format='png'
+                )
+                blog_post.featured_image.save('featured.webp', featured_image_file)
 
-                # Convert PIL image to BytesIO
-                image_io = BytesIO()
-                featured_image.save(image_io, format='png')  # or 'PNG', etc.
-                image_file = File(image_io, name=f'{blog_post.uuid}.png')
+                # Featured image thumbnail logic
+                featured_image_thumbnail_file = process_image(
+                    image=featured_image_raw,
+                    crop_dimensions=crop_dimensions,
+                    resize_dimensions=(200, 200),
+                    file_format='png'
+                )
+                blog_post.featured_image_thumbnail.save(f'thumbnail.webp', featured_image_thumbnail_file)
 
-                # blog_post.featured_image = featured_image
-                blog_post.featured_image.save('featured-image.webp', image_file)
                 blog_post.save()
-
-                # featured_image.save(memory_file, format=product_extension_format.upper())
 
             else:
                 logging.debug('[EDIT_POST] Cropper values are empty and no image was uploaded')
