@@ -1,13 +1,12 @@
 import os
-from io import BytesIO
 from math import ceil
 from uuid import uuid4
 
-from PIL import Image
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.core.files import File
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.text import slugify
 from django_ckeditor_5.fields import CKEditor5Field
@@ -21,7 +20,10 @@ from .managers import PostManager
 
 
 def upload_to_featured_images(instance, filename):
-    return os.path.join('blog', str(instance.uuid), 'featured-image', filename)
+    if filename:
+        return os.path.join('blog', str(instance.uuid), 'featured-image', filename)
+    else:
+        return os.path.join('blog', str(instance.uuid), 'featured-image')
 
 
 class Post(DateCreatedAndModified, DateDeleted):
@@ -158,6 +160,42 @@ class Post(DateCreatedAndModified, DateDeleted):
         :return: list of dictionaries
         """
         return [{'key': key, 'name': name} for key, name in Post.ReleaseStatus.choices]
+
+
+# TODO - Not sure if this pre-save is relevant anymore.
+@receiver(pre_save, sender=Post)
+def delete_old_files(sender, instance, **kwargs):
+    """
+    Delete old featured_image and featured_image_thumbnail files before saving the new ones.
+    """
+
+    # Get the existing Post object from the database, if available.
+    if instance.pk:
+        try:
+            existing_post = Post.objects.get(pk=instance.pk)
+        except Post.DoesNotExist:
+            return  # No matching Post found, do nothing
+
+        # Check if featured_image_raw has changed
+        if instance.featured_image_raw and existing_post.featured_image_raw != instance.featured_image_raw:
+            existing_file_path = os.path.join(settings.MEDIA_ROOT, str(existing_post.featured_image_raw))
+            if os.path.isfile(existing_file_path):
+                os.remove(existing_file_path)
+
+        # Check if featured_image has changed
+        if instance.featured_image and existing_post.featured_image != instance.featured_image:
+            existing_file_path = os.path.join(settings.MEDIA_ROOT, str(existing_post.featured_image))
+            if os.path.isfile(existing_file_path):
+                os.remove(existing_file_path)
+
+        # Check if featured_image_thumbnail has changed
+        if instance.featured_image_thumbnail and existing_post.featured_image_thumbnail != instance.featured_image_thumbnail:
+            existing_thumbnail_path = os.path.join(settings.MEDIA_ROOT, str(existing_post.featured_image_thumbnail))
+            if os.path.isfile(existing_thumbnail_path):
+                os.remove(existing_thumbnail_path)
+
+
+pre_save.connect(delete_old_files, sender=Post)
 
 # @receiver(pre_save, sender=Post)
 # def post_pre_save(sender, instance, *args, **kwargs):

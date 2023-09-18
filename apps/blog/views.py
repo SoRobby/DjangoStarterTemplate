@@ -4,10 +4,9 @@ from PIL import Image
 from django.shortcuts import render, redirect
 
 from apps.accounts.models import Account
-from libs.utils.utils import process_image
-from libs.utils.utils import send_notification
+from libs.utils.utils import process_image, send_notification, get_yyyymmddhhmmss, save_file_to_field
 from .forms import PostForm
-from .models import Post
+from .models import Post, upload_to_featured_images
 
 
 # Create your views here.
@@ -91,12 +90,17 @@ def edit_post(request, uuid):
     context = {}
     blog_post = Post.objects.get(uuid=uuid)
 
+    print('path: ')
+    print(Post._meta.get_field('featured_image').name)
+    print(upload_to_featured_images(blog_post, 'raw.png'))
+
     if request.method == 'POST':
 
         # Get post data
-
         if 'cropper-distance-x' in request.POST:
             if request.POST.get('cropper-distance-x') != '':
+                current_datetime = get_yyyymmddhhmmss()
+
                 image_crop_x = float(request.POST.get('cropper-distance-x'))
                 image_crop_y = float(request.POST.get('cropper-distance-y'))
                 image_crop_width = float(request.POST.get('cropper-width'))
@@ -104,10 +108,15 @@ def edit_post(request, uuid):
 
                 crop_dimensions = (image_crop_x, image_crop_y, image_crop_width, image_crop_height)
 
-                print(f'image_crop_x = {image_crop_x}')
-                print(f'image_crop_y = {image_crop_y}')
-                print(f'image_crop_width = {image_crop_width}')
-                print(f'image_crop_height = {image_crop_height}')
+                logging.debug('[EDIT_POST] Cropper values are not empty')
+                logging.debug(f'[EDIT_POST] image_crop_x = {image_crop_x}')
+                logging.debug(f'[EDIT_POST] image_crop_y = {image_crop_y}')
+                logging.debug(f'[EDIT_POST] image_crop_width = {image_crop_width}')
+                logging.debug(f'[EDIT_POST] image_crop_height = {image_crop_height}')
+                if image_crop_width / image_crop_height != 16 / 9:
+                    logging.debug('[EDIT_POST] Image aspect ratio is not 16:9')
+                else:
+                    logging.debug('[EDIT_POST] Image aspect ratio is 16:9')
 
                 # Get image file that was uploaded
                 featured_image_raw = Image.open(request.FILES.get('featured_image'))
@@ -119,7 +128,14 @@ def edit_post(request, uuid):
                     resize_dimensions=None,
                     file_format=None,
                 )
-                blog_post.featured_image_raw.save(f'raw.{featured_image_raw.format}', featured_image_raw_file)
+                save_file_to_field(
+                    model_instance=blog_post,
+                    field_name='featured_image_raw',
+                    file=featured_image_raw_file,
+                    directory_path=upload_to_featured_images(blog_post, None),
+                    file_name=f'raw.{featured_image_raw.format.lower()}'
+                )
+                # blog_post.featured_image_raw.save(f'raw-{current_datetime}.{featured_image_raw.format.lower()}', featured_image_raw_file)
 
                 # Featured image logic
                 featured_image_file = process_image(
@@ -128,7 +144,14 @@ def edit_post(request, uuid):
                     resize_dimensions=(730, 428),
                     file_format='png'
                 )
-                blog_post.featured_image.save('featured.webp', featured_image_file)
+                save_file_to_field(
+                    model_instance=blog_post,
+                    field_name='featured_image',
+                    file=featured_image_raw_file,
+                    directory_path=upload_to_featured_images(blog_post, None),
+                    file_name=f'featured.webp'
+                )
+                # blog_post.featured_image.save(f'featured-{current_datetime}.webp', featured_image_file)
 
                 # Featured image thumbnail logic
                 featured_image_thumbnail_file = process_image(
@@ -137,7 +160,14 @@ def edit_post(request, uuid):
                     resize_dimensions=(200, 200),
                     file_format='png'
                 )
-                blog_post.featured_image_thumbnail.save(f'thumbnail.webp', featured_image_thumbnail_file)
+                save_file_to_field(
+                    model_instance=blog_post,
+                    field_name='featured_image_thumbnail',
+                    file=featured_image_thumbnail_file,
+                    directory_path=upload_to_featured_images(blog_post, None),
+                    file_name=f'thumbnail.webp'
+                )
+                # blog_post.featured_image_thumbnail.save(f'thumbnail-{current_datetime}.webp', featured_image_thumbnail_file)
 
                 blog_post.save()
 

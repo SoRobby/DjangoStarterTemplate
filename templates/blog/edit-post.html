@@ -287,9 +287,9 @@
                                                         <input type="text" id="lead_author_email"
                                                                name="lead_author_email"
                                                                maxlength="{{ form.name.field.max_length }}"
-                                                               {% if post.lead_author %}
+                                                                {% if post.lead_author %}
                                                                value="{{ post.lead_author.email }}"
-                                                               {% else %}
+                                                                {% else %}
                                                                value="{{ user.email }}"
                                                                 {% endif %}
                                                                class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
@@ -481,10 +481,10 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-{#                                                            <p x-data="{ localTime: convertUTCToLocalTime('{{ post.date_modified|utc_standard }}') }" class="text-gray-900"#}
-{#                                                               x-text="localTime"></p>#}
-{#                                                            <p>{{ post.date_modified|utc_standard }}</p>#}
-{#                                                            <p>{{ post.get_date_modified_utc_standard }}</p>#}
+                                                            {#                                                            <p x-data="{ localTime: convertUTCToLocalTime('{{ post.date_modified|utc_standard }}') }" class="text-gray-900"#}
+                                                            {#                                                               x-text="localTime"></p>#}
+                                                            {#                                                            <p>{{ post.date_modified|utc_standard }}</p>#}
+                                                            {#                                                            <p>{{ post.get_date_modified_utc_standard }}</p>#}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -623,7 +623,11 @@
                                 </label>
 
                                 <div class="aspect-video rounded text-gray-300 border border-gray-200 bg-white overflow-hidden">
-                                    <img src="" alt="" class="cropper-cropped-preview">
+                                    {% if post.featured_image %}
+                                        <img src="{{ post.featured_image.url }}?lastmod={{ post.get_date_modified_utc_standard }}" alt="" class="cropper-cropped-preview">
+                                    {% else %}
+                                        <img src="" alt="" class="cropper-cropped-preview">
+                                    {% endif %}
                                     <svg class="aspect-video text-gray-300 bg-white cropper-cropped-preview"
                                          xmlns="http://www.w3.org/2000/svg"
                                          fill="none" viewBox="0 0 24 24" stroke-width="1.5"
