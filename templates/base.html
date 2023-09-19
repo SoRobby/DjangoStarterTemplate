@@ -36,12 +36,18 @@
     {% if GOOGLE_ANALYTICS_ID %}
         {% include "components/google-analytics.html" %}
     {% endif %}
-    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.1/dist/cdn.min.js"></script>
-    <script src="https://unpkg.com/htmx.org@1.9.5"
-            integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO"
-            crossorigin="anonymous"></script>
 
+    {# Load AlpineJS #}
+    <script defer type="text/javascript" src="{% static 'collapse/dist/cdn.min.js' %}"></script>
+    <script defer type="text/javascript" src="{% static 'cdn.min.js' %}"></script>
+    {#     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>#}
+    {#     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.1/dist/cdn.min.js"></script>#}
+
+    {# Load HTMX #}
+    <script type="text/javascript" src="{% static 'htmx.min.js' %}"></script>
+    {#    <script src="https://unpkg.com/htmx.org@1.9.5" integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO" crossorigin="anonymous"></script>#}
+
+    {# Load utility javascript #}
     <script src="{% static '/js/utils.js' %}"></script>
 
     {# Head Scripts #}

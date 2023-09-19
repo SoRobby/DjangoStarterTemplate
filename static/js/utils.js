@@ -13,13 +13,22 @@
 // }
 
 function convertUTCToLocalTime(utcDateString) {
-  // Create a new Date object using the UTC date string
-  const date = new Date(utcDateString);
+    // Create a new Date object using the UTC date string
+    const date = new Date(utcDateString);
 
-  // Use toLocaleString or toLocaleDateString and toLocaleTimeString to format the date and time
-  return date.toLocaleString();
+    // Use toLocaleString or toLocaleDateString and toLocaleTimeString to format the date and time
+    return date.toLocaleString();
 }
 
+
+document.addEventListener("DOMContentLoaded", function (event) {
+
+    document.querySelectorAll('.convert-time').forEach(element => {
+        const utcDateString = element.getAttribute('data-utc-time');
+        element.textContent = new Date(utcDateString).toLocaleString();
+    });
+
+});
 
 
 // function convertUTCToLocalTime(utcTimeString, dateFormat, timeFormat) {
@@ -69,31 +78,30 @@ function convertUTCToLocalTime(utcDateString) {
 // Usage examples
 
 
-
 function convertUtcToLocalWithLocaleFormat(utcTimeString) {
-  // Create a new Date object from the UTC string
-  const utcDate = new Date(utcTimeString + "Z");  // Append "Z" to indicate that the time is in UTC
+    // Create a new Date object from the UTC string
+    const utcDate = new Date(utcTimeString + "Z");  // Append "Z" to indicate that the time is in UTC
 
-  const lang = navigator.language || navigator.userLanguage;  // Get the browser language setting
+    const lang = navigator.language || navigator.userLanguage;  // Get the browser language setting
 
-  let timeFormat;
+    let timeFormat;
 
-  // Assume English-speaking countries may prefer 12-hour clock (not always accurate!)
-  if (lang.startsWith("en")) {
-    timeFormat = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
-  } else {
-    timeFormat = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-  }
+    // Assume English-speaking countries may prefer 12-hour clock (not always accurate!)
+    if (lang.startsWith("en")) {
+        timeFormat = {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true};
+    } else {
+        timeFormat = {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false};
+    }
 
-  // Convert to the local time string
-  let localTimeStr = utcDate.toLocaleTimeString(lang, timeFormat);
+    // Convert to the local time string
+    let localTimeStr = utcDate.toLocaleTimeString(lang, timeFormat);
 
-  // Format AM/PM as a.m./p.m.
-  if (timeFormat.hour12) {
-    localTimeStr = localTimeStr.replace("AM", "a.m.").replace("PM", "p.m.");
-  }
+    // Format AM/PM as a.m./p.m.
+    if (timeFormat.hour12) {
+        localTimeStr = localTimeStr.replace("AM", "a.m.").replace("PM", "p.m.");
+    }
 
-  return localTimeStr;
+    return localTimeStr;
 }
 
 // Usage

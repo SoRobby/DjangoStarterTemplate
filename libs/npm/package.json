@@ -11,6 +11,12 @@
     "build-all": "npm run build & npm run build-min"
   },
   "dependencies": {
-    "cropperjs": "^1.5.13"
+    "@alpinejs/collapse": "^3.13.0",
+    "@ckeditor/ckeditor5-build-classic": "^39.0.2",
+    "alpinejs": "^3.13.0",
+    "ckeditor5": "^39.0.2",
+    "cropperjs": "^1.5.13",
+    "htmx.org": "^1.9.5",
+    "jquery": "^3.7.1"
   }
 }

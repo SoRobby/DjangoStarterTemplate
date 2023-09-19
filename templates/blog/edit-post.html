@@ -1,6 +1,6 @@
 {% extends 'base-ultrawide.html' %}
 {% load static %}
-{#{% load utc_datetime_tags %}#}
+{% load utc_datetime_tags %}
 
 {# Title #}
 {% block title %}
@@ -70,7 +70,8 @@
 
 {# Head Scripts #}
 {% block head_script %}
-    <script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>
+    {#    <script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>#}
+    <script type="text/javascript" src="{% static 'ckeditor5-build-classic/build/ckeditor.js' %}"></script>
 {% endblock head_script %}
 
 
@@ -130,11 +131,15 @@
                 <div class="mx-auto">
                     <div>
                         <p>
-                            Tiemzone: {{ now_datetime }}
+                            Date created: {{ post.date_created.isoformat }}
                         </p>
-                        <p>
-                            now: {{ now_datetime }}
-                        </p>
+                    <div>
+                        <p data-utc-time="{{ post.date_modified|utc_standard }}" class="convert-time">TBD</p>
+                    </div>
+                        <div>
+                            <p>Date modified: {{ post.date_modified|utc_standard }}</p>
+                            <p x-data="{ dateTime: convertUTCToLocalTime('{{ post.date_modified|utc_standard }}') }" x-text="dateTime">Date modified: TBD</p>
+                        </div>
                     </div>
 
                     <div class="flex w-full items-stretch gap-x-8">
@@ -624,7 +629,8 @@
 
                                 <div class="aspect-video rounded text-gray-300 border border-gray-200 bg-white overflow-hidden">
                                     {% if post.featured_image %}
-                                        <img src="{{ post.featured_image.url }}?lastmod={{ post.get_date_modified_utc_standard }}" alt="" class="cropper-cropped-preview">
+                                        <img src="{{ post.featured_image.url }}?lastmod={{ post.get_date_modified_utc_standard }}"
+                                             alt="" class="cropper-cropped-preview">
                                     {% else %}
                                         <img src="" alt="" class="cropper-cropped-preview">
                                     {% endif %}
@@ -666,14 +672,10 @@
                                 <div class="mt-1 text-xs text-red-600 font-normal cropper-error-message"></div>
                                 {% include 'components/cropperjs/crop-image-modal.html' %}
                             </div>
-
                         </aside>
                     </div>
                 </div>
             </form>
-
-
-
 
         {% endblock content %}
     </main>
@@ -688,8 +690,8 @@
 
 {# Scripts #}
 {% block scripts %}
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
-            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{% static 'jquery.min.js' %}"></script>
+    {#    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>#}
     <script src="{% static 'cropper.js' %}"></script>
     <script>
         ClassicEditor
@@ -702,5 +704,6 @@
             // On change show image with crop options
             cropperCropImage("cropper-featured-image-container", 1024 * 1024, 16 / 9);
         });
+
     </script>
 {% endblock scripts %}

@@ -166,6 +166,11 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
     BASE_DIR / 'libs/npm/node_modules/cropperjs/dist/',
+    BASE_DIR / 'libs/npm/node_modules/alpinejs/dist/',
+    BASE_DIR / 'libs/npm/node_modules/@alpinejs/',
+    BASE_DIR / 'libs/npm/node_modules/htmx.org/dist/',
+    BASE_DIR / 'libs/npm/node_modules/@ckeditor/',
+    BASE_DIR / 'libs/npm/node_modules/jquery/dist/',
 ]
 
 # Media files (Images, Videos, etc...)
