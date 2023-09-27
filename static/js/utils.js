@@ -12,13 +12,6 @@
 //   return localTimeStr;
 // }
 
-function convertUTCToLocalTime(utcDateString) {
-    // Create a new Date object using the UTC date string
-    const date = new Date(utcDateString);
-
-    // Use toLocaleString or toLocaleDateString and toLocaleTimeString to format the date and time
-    return date.toLocaleString();
-}
 
 
 document.addEventListener("DOMContentLoaded", function (event) {
@@ -27,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         const utcDateString = element.getAttribute('data-utc-time');
         element.textContent = new Date(utcDateString).toLocaleString();
     });
+
 
 });
 

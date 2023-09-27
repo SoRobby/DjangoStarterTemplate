@@ -163,5 +163,5 @@ def save_file_to_field(model_instance, field_name, file, directory_path, file_na
 
 
 
-def get_yyyymmddhhmmss():
-    return datetime.now().strftime('%Y%m%d%H%M%S')
+# def get_yyyymmddhhmmss():
+#     return datetime.now().strftime('%Y%m%d%H%M%S')

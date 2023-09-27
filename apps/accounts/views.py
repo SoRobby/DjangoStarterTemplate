@@ -185,7 +185,29 @@ def verify_email(request, token):
         return redirect('home')
 
 
-def delete_account_view(request):
+def soft_delete_account_view(request):
+    if request.user.is_authenticated and request.method == 'POST':
+
+        Account = get_user_model()
+
+        # Try to delete the user
+        try:
+            current_user = Account.objects.get(username=request.user.username)
+            current_user.is_marked_for_deletion = True
+            current_user.save()
+            logout(request)
+            send_notification(request, tag='success', title='Account deleted',
+                              message='Your account is set to be deleted 14 days from now')
+
+        except Account.DoesNotExist:
+            send_notification(request, tag='error', title='Error when deleting account',
+                              message='There was an error when attempting to delete your account')
+            return JsonResponse({"error": "User does not exist."}, status=400)
+
+    return redirect('home')
+
+
+def hard_delete_account_view(request):
     if request.user.is_authenticated and request.method == 'POST':
 
         Account = get_user_model()
@@ -195,7 +217,8 @@ def delete_account_view(request):
             current_user = Account.objects.get(username=request.user.username)
             current_user.delete()
             send_notification(request, tag='success', title='Account deleted',
-                              message='You have successfully deleted your account')
+                              message='Your account has been deleted')
+
         except Account.DoesNotExist:
             send_notification(request, tag='error', title='Error when deleting account',
                               message='There was an error when attempting to delete your account')

@@ -23,6 +23,11 @@ def home(request: HttpResponse) -> HttpResponse:
     return render(request, 'main/home.html', context)
 
 
+def test(request: HttpResponse) -> HttpResponse:
+    context = {}
+    logging.debug('[MAIN.TEST] View is for testing various items.')
+    return render(request, 'main/test.html', context)
+
 def terms_of_service(request):
     return render(request, 'main/terms-of-service.html')
 

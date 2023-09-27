@@ -4,7 +4,7 @@ from PIL import Image
 from django.shortcuts import render, redirect
 
 from apps.accounts.models import Account
-from libs.utils.utils import process_image, send_notification, get_yyyymmddhhmmss, save_file_to_field
+from libs.utils.utils import process_image, send_notification, save_file_to_field
 from .forms import PostForm
 from .models import Post, upload_to_featured_images
 
@@ -99,7 +99,7 @@ def edit_post(request, uuid):
         # Get post data
         if 'cropper-distance-x' in request.POST:
             if request.POST.get('cropper-distance-x') != '':
-                current_datetime = get_yyyymmddhhmmss()
+                # current_datetime = get_yyyymmddhhmmss()
 
                 image_crop_x = float(request.POST.get('cropper-distance-x'))
                 image_crop_y = float(request.POST.get('cropper-distance-y'))
@@ -205,9 +205,16 @@ def edit_post(request, uuid):
 
 
 def delete_post(request, uuid):
-    print('DELETING BLOG POST.')
-    post = Post.objects.get(uuid=uuid)
-    post.delete()
+    logging.debug(f'[BLOG.DELETE_POST] Soft deleting blog post of uuid={uuid}')
+
+    # Only the blog post owner or superuser can delete a blog post
+    post_to_delete = Post.objects.get(uuid=uuid)
+
+    if post_to_delete.created_by == request.user or post_to_delete.lead_author == request.user or request.user.is_superuser:
+        post_to_delete.deleted_by = request.user
+        post_to_delete.is_deleted = True
+        post_to_delete.save()
+
     send_notification(request, tag='success', title='Blog post deleted',
                       message='Your post has been successfully deleted')
 

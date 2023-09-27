@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView, UpdateView
 
-from apps.accounts.models import Account
+from apps.accounts.models import Account, AccountSettings
 from apps.accounts.services import send_verification_email
 from apps.main.models import Country
 from libs.utils.utils import send_notification
@@ -30,10 +30,11 @@ class ProfileEditGeneralView(UpdateView):
     template_name = 'profiles/edit/profile-edit-general.html'
 
     def get_object(self, queryset=None):
-        logging.debug('[PROFILE_EDIT_SECURITY_CHANGE_EMAIL] Called')
+        logging.debug('[PROFILE_EDIT_GENERAL_VIEW.GET_OBJECT] Called')
         return self.request.user
 
     def get_context_data(self, **kwargs):
+        logging.debug('[PROFILE_EDIT_GENERAL_VIEW.GET_CONTEXT_DATA] Called')
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
         return context
@@ -78,7 +79,30 @@ def profile_edit_security_change_email(request, *args, **kwargs):
 
 
 class ProfileEditNotificationsView(TemplateView):
+    model = AccountSettings
     template_name = 'profiles/edit/profile-edit-notifications.html'
+
+    # Refeence this https://chat.openai.com/c/3bcfc02f-81b2-4518-a0c8-b6bce02f5427
+    # To finish this mode, got too tired to continue working on this. Falling asleep... zzzzz...
+
+    def get_object(self, queryset=None):
+        logging.debug('[PROFILE_EDIT_NOTIFICATIONS_VIEW.GET_OBJECT] Called')
+        settings = AccountSettings.objects.get(account=self.request.user)
+        return settings
+
+    def get_context_data(self, **kwargs):
+        logging.debug('[PROFILE_EDIT_NOTIFICATIONS_VIEW.GET_CONTEXT_DATA] Called')
+
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+
+        # Get the settings object and add it to the context
+        settings = self.get_object()
+        context['settings'] = settings
+
+        return context
+
+
 
 
 class ProfileEditSupportView(TemplateView):

@@ -3,9 +3,12 @@ from uuid import uuid4
 from django.contrib.auth.models import AbstractBaseUser
 from django.core.validators import MinLengthValidator, RegexValidator
 from django.db import models
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
+from django.dispatch import receiver
+from django.utils import timezone
 
 from apps.accounts.managers import AccountManager
+from apps.accounts.utils import generate_short_uuid
 
 
 # Models
@@ -64,6 +67,15 @@ class Account(AbstractBaseUser):
                                                 verbose_name='Email verification token',
                                                 help_text='Unique identifier for the email verification token')
 
+    is_marked_for_deletion = models.BooleanField(default=False, verbose_name='Is marked for deletion',
+                                                 help_text='Designates whether the user has marked their account for\
+                                                 deletion')
+
+    date_marked_for_deletion = models.DateTimeField(auto_now_add=False, auto_now=False, blank=True, null=True,
+                                                    verbose_name='Date marked for deletion',
+                                                    help_text='Server date and time when the user deleted their\
+                                                    account')
+
     uuid = models.UUIDField(default=uuid4, editable=False, unique=True, verbose_name='UUID',
                             help_text='Unique identifier for the account')
 
@@ -86,8 +98,20 @@ class Account(AbstractBaseUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
+    class Meta:
+        verbose_name_plural = 'Accounts'
+        verbose_name = 'Account'
+
     def __str__(self) -> str:
         return self.username
+
+    def save(self, *args, **kwargs):
+        # Set the date_deleted if the post is deleted
+        if self.is_marked_for_deletion and self.date_marked_for_deletion is None:
+            self.date_marked_for_deletion = timezone.now()
+
+        # Call the original save method of models.model
+        super().save(*args, **kwargs)
 
     def has_perm(self, perm, obj=None):
         return self.is_admin
@@ -95,13 +119,13 @@ class Account(AbstractBaseUser):
     def has_module_perms(self, app_label) -> bool:
         return True
 
-    @property
-    def theme_choices_as_list(self):
-        return [{'key': key, 'name': name} for i, (key, name) in enumerate(self.ThemeChoices.choices)]
-
     def generate_new_email_verification_token(self):
         self.email_verification_token = uuid4()
         self.save()
+
+    @property
+    def theme_choices_as_list(self):
+        return [{'key': key, 'name': name} for i, (key, name) in enumerate(self.ThemeChoices.choices)]
 
     @staticmethod
     def get_theme_choices_as_dict():
@@ -116,22 +140,56 @@ class Account(AbstractBaseUser):
         return [{'key': key, 'name': name} for key, name in Account.ThemeChoices.choices]
 
 
-# Signal group for generating short uuid
-def generate_short_uuid(instance, length=8):
-    """
-    Recursive function that generates a unique short uuid of a given length.
-    """
-    short_uuid = str(uuid4()).replace('-', '')[:length].lower()
-    instances = instance.__class__.objects.filter(short_uuid=short_uuid)
+class AccountSettings(models.Model):
+    account = models.OneToOneField(Account, on_delete=models.CASCADE, verbose_name='Account',
+                                   help_text='Account that is connected to the settings')
 
-    if len(instances) > 0:
-        short_uuid = generate_short_uuid(length)
-    return short_uuid
+    show_email = models.BooleanField(default=False, verbose_name='Show email', help_text='Show or hide the email')
+
+    marketing_emails = models.BooleanField(default=True, verbose_name='Marketing emails',
+                                           help_text='Receive marketing emails')
+
+    weekly_digest_emails = models.BooleanField(default=True, verbose_name='Weekly digest emails',
+                                               help_text='Receive weekly digest emails')
+
+    discovery_emails = models.BooleanField(default=True, verbose_name='Discovery emails',
+                                           help_text='Receive emails about new features and tips')
+
+    site_update_emails = models.BooleanField(default=True, verbose_name='Site updates',
+                                             help_text='Receive site update emails')
+
+    inbox_message_notifications = models.BooleanField(default=True, verbose_name='Inbox message notifications',
+                                                      help_text='Receive notifications when you receive a new message\
+                                                      in your inbox')
+
+    announcement_notifications = models.BooleanField(default=True, verbose_name='Announcement notifications',
+                                                     help_text='Receive notifications about new announcements')
+
+    uuid = models.UUIDField(default=uuid4, editable=False, unique=True, verbose_name='UUID',
+                            help_text='Unique identifier for the account settings')
+
+    date_created = models.DateTimeField(auto_now_add=True, verbose_name='Date created',
+                                        help_text='Server date and time when the item was created modified')
+
+    date_modified = models.DateTimeField(auto_now=True, verbose_name='Date modified',
+                                         help_text='Server date and time when the item was last modified')
+
+    class Meta:
+        verbose_name_plural = 'Account settings'
+        verbose_name = 'Account setting'
+
+    def __str__(self) -> str:
+        return f"{self.account.username} settings"
 
 
+# Model signals
+@receiver(pre_save, sender=Account)
 def pre_save_account_receiver(sender, instance, *args, **kwargs):
     if not instance.short_uuid:
         instance.short_uuid = generate_short_uuid(instance, length=instance._meta.get_field('short_uuid').max_length)
 
 
-pre_save.connect(pre_save_account_receiver, sender=Account)
+@receiver(post_save, sender=Account)
+def setup_account_tables(sender, instance, created, **kwargs):
+    if created:
+        AccountSettings.objects.create(account=instance)

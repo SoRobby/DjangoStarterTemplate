@@ -129,19 +129,6 @@
 
 
                 <div class="mx-auto">
-                    <div>
-                        <p>
-                            Date created: {{ post.date_created.isoformat }}
-                        </p>
-                    <div>
-                        <p data-utc-time="{{ post.date_modified|utc_standard }}" class="convert-time">TBD</p>
-                    </div>
-                        <div>
-                            <p>Date modified: {{ post.date_modified|utc_standard }}</p>
-                            <p x-data="{ dateTime: convertUTCToLocalTime('{{ post.date_modified|utc_standard }}') }" x-text="dateTime">Date modified: TBD</p>
-                        </div>
-                    </div>
-
                     <div class="flex w-full items-stretch gap-x-8">
                         <div class="flex-1 px-4 mx-auto max-w-7xl py-4 sm:py-6 sm:px-6 lg:px-8 space-y-4">
                             <div class="sm:col-span-6">
@@ -375,7 +362,10 @@
                                                     <div class="w-full">
                                                         <input type="text" id="meta_title" name="meta_title"
                                                                maxlength="{{ form.meta_title.field.max_length }}"
+                                                                {% if post.meta_title %}
                                                                value="{{ post.meta_title }}"
+                                                                {% endif %}
+                                                               placeholder="{{ post.title }}"
                                                                class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                         <div x-show="showError"
                                                              class="mt-2 text-xs text-red-600 font-normal">
@@ -406,7 +396,8 @@
                                                                   id="meta_description"
                                                                   rows="4"
                                                                   maxlength="{{ form.meta_description.field.max_length }}"
-                                                                  class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{{ post.meta_description }}</textarea>
+                                                                  class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{% if post.meta_description %}
+                                                            {{ post.meta_description }}{% endif %}</textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -432,7 +423,9 @@
                                                     <div class="w-full">
                                                         <input type="text" id="meta_keywords" name="meta_keywords"
                                                                maxlength="255"
+                                                                {% if post.meta_keywords %}
                                                                value="{{ post.meta_keywords }}"
+                                                                {% endif %}
                                                                class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                         <div x-show="showError"
                                                              class="mt-2 text-xs text-red-600 font-normal">
@@ -465,7 +458,7 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p class="text-gray-900">{{ post.date_created }}</p>
+                                                            <p data-utc-time="{{ post.date_created.isoformat }}" class="text-gray-900 convert-time"></p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -486,10 +479,7 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            {#                                                            <p x-data="{ localTime: convertUTCToLocalTime('{{ post.date_modified|utc_standard }}') }" class="text-gray-900"#}
-                                                            {#                                                               x-text="localTime"></p>#}
-                                                            {#                                                            <p>{{ post.date_modified|utc_standard }}</p>#}
-                                                            {#                                                            <p>{{ post.get_date_modified_utc_standard }}</p>#}
+                                                            <p data-utc-time="{{ post.date_modified.isoformat }}" class="text-gray-900 convert-time"></p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -513,7 +503,7 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p class="text-gray-900">admin</p>
+                                                            <p class="text-gray-900">TBD</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -604,7 +594,7 @@
                                 <h3 class="text-base font-medium leading-6 text-gray-800">Status & visibility</h3>
                                 <div class="grid grid-cols-2 items-center">
                                     <p class="text-sm text-gray-700">Status</p>
-                                    {% include 'components/forms/select/custom-select.html' with id="release_status" name="release_status" selected_option_key="draft" selected_option_name="Draft" options=post.get_release_status_choices_as_list %}
+                                    {% include 'components/forms/select/custom-select.html' with id="release_status" name="release_status" selected_option_key=post.release_status selected_option_name=post.get_release_status_display options=post.get_release_status_choices_as_list %}
                                     <div class="col-span-2 text-xs text-gray-600 mt-2">
                                         Non-published posts are only visible to you and other admins.
                                     </div>

@@ -40,7 +40,7 @@
                             </div>
                         </div>
                     </div>
-                    <form action="{% url 'delete-account' %}" method="POST"
+                    <form action="{% url 'soft-delete-account' %}" method="POST"
                           class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse"
                           x-data="{ isDeleting:false }">
                         {% csrf_token %}
