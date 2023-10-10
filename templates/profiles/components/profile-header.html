@@ -18,16 +18,22 @@
     {% if mode == 'view' %}
         <div class="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-3 sm:space-y-0 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
             <a href="{% url 'profiles:settings-general' %}"
-               class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Edit</a>
+               class="btn-primary-lg">Edit</a>
         </div>
     {% elif mode == 'edit' %}
-        <div class="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-3 sm:space-y-0 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
-            <a href="{% url 'profiles:profile' username=user.username %}"
-               class="inline-flex items-center justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Cancel</a>
-            <button type="submit"
-                    class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+        <div x-data="{ isSaving: false }"
+             class="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-3 sm:space-y-0 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
+            <a x-show="!isSaving" href="{% url 'profiles:profile' username=user.username %}"
+               class="btn-secondary-lg">Cancel</a>
+            <button type="submit" @click="isSaving=true" x-show="!isSaving"
+                    class="btn-primary-lg">
                 Save changes
             </button>
+            <div x-show="isSaving" x-cloak>
+                {% include 'components/processing/processing-sm.html' with text="Saving..." %}
+            </div>
+
         </div>
     {% endif %}
 </div>
+
