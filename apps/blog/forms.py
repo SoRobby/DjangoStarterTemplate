@@ -1,10 +1,12 @@
 from django import forms
+from django_ckeditor_5.widgets import CKEditor5Widget
 
 from apps.accounts.models import Account
 from .models import Post
 
 
 class PostForm(forms.ModelForm):
+    # content = forms.CharField(required=False, widget=forms.Textarea())
     lead_author_email = forms.EmailField(label="Lead Author's Email", required=True)
 
     class Meta:
@@ -31,4 +33,3 @@ class PostForm(forms.ModelForm):
             instance.save()
 
         return instance
-

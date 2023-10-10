@@ -141,29 +141,29 @@ class Account(AbstractBaseUser):
 
 
 class AccountSettings(models.Model):
-    account = models.OneToOneField(Account, on_delete=models.CASCADE, verbose_name='Account',
+    account = models.OneToOneField(Account, on_delete=models.CASCADE, verbose_name='Account', related_name='settings',
                                    help_text='Account that is connected to the settings')
 
     show_email = models.BooleanField(default=False, verbose_name='Show email', help_text='Show or hide the email')
 
-    marketing_emails = models.BooleanField(default=True, verbose_name='Marketing emails',
-                                           help_text='Receive marketing emails')
+    receive_marketing_emails = models.BooleanField(default=True, verbose_name='Marketing emails',
+                                                   help_text='Receive marketing emails')
 
-    weekly_digest_emails = models.BooleanField(default=True, verbose_name='Weekly digest emails',
-                                               help_text='Receive weekly digest emails')
+    receive_weekly_digest_emails = models.BooleanField(default=True, verbose_name='Weekly digest emails',
+                                                       help_text='Receive weekly digest emails')
 
-    discovery_emails = models.BooleanField(default=True, verbose_name='Discovery emails',
-                                           help_text='Receive emails about new features and tips')
+    receive_discovery_emails = models.BooleanField(default=True, verbose_name='Discovery emails',
+                                                   help_text='Receive emails about new features and tips')
 
-    site_update_emails = models.BooleanField(default=True, verbose_name='Site updates',
-                                             help_text='Receive site update emails')
+    receive_site_update_emails = models.BooleanField(default=True, verbose_name='Site updates',
+                                                     help_text='Receive site update emails')
 
-    inbox_message_notifications = models.BooleanField(default=True, verbose_name='Inbox message notifications',
-                                                      help_text='Receive notifications when you receive a new message\
-                                                      in your inbox')
+    receive_inbox_message_notifications = models.BooleanField(default=True, verbose_name='Inbox message notifications',
+                                                              help_text='Receive notifications when you receive a new\
+                                                              message in your inbox')
 
-    announcement_notifications = models.BooleanField(default=True, verbose_name='Announcement notifications',
-                                                     help_text='Receive notifications about new announcements')
+    receive_announcement_notifications = models.BooleanField(default=True, verbose_name='Announcement notifications',
+                                                             help_text='Receive notifications about new announcements')
 
     uuid = models.UUIDField(default=uuid4, editable=False, unique=True, verbose_name='UUID',
                             help_text='Unique identifier for the account settings')

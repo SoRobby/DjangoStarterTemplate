@@ -1,0 +1,27 @@
+{% if is_checked %}
+    <button {% if binding_name %}@click="{{ binding_name }}=!{{ binding_name }}" {% endif %}
+            type="button"
+            id="{{ id }}"
+            class="toggle-normal toggle-checked"
+            role="switch"
+            aria-checked="true">
+        <input type="hidden" name="{{ name }}" aria-labelledby="{{ id }}" value="true">
+        <span class="sr-only">Use setting</span>
+        <span aria-hidden="true"
+              class="translate-x-5 pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+    </button>
+{% else %}
+    <button {% if binding_name %}@click="{{ binding_name }}=!{{ binding_name }}" {% endif %}
+            type="button"
+            id="{{ id }}"
+            class="toggle-normal toggle-unchecked"
+            role="switch"
+            aria-checked="false">
+        <input type="hidden" name="{{ name }}" aria-labelledby="{{ id }}" value="false">
+        <span class="sr-only">Use setting</span>
+        <span aria-hidden="true"
+              class="translate-x-0 pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+    </button>
+{% endif %}
+
+

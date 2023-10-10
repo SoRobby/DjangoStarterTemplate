@@ -106,11 +106,11 @@
                             </div>
                             <div class="flex gap-4">
                                 <button type="submit" name="save_type" value="draft"
-                                        class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                        class="btn-secondary-lg">
                                     Save draft
                                 </button>
                                 <button type="submit" name="save_type" value="publish"
-                                        class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                        class="btn-secondary-lg">
                                     Publish
                                 </button>
                             </div>
@@ -218,9 +218,9 @@
                                                 </div>
                                                 <div class="col-span-12 md:col-span-6 flex justify-end">
                                                     {% if post %}
-                                                        {% include 'components/forms/toggles/toggle.html' with state=post.allow_comments id='allow_comments' name='allow_comments' %}
+                                                        {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=post.allow_comments id='allow_comments' name='allow_comments' %}
                                                     {% else %}
-                                                        {% include 'components/forms/toggles/toggle.html' with state="true" id='allow_comments' name='allow_comments' %}
+                                                        {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=True id='allow_comments' name='allow_comments' %}
                                                     {% endif %}
                                                 </div>
                                             </div>

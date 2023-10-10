@@ -99,7 +99,7 @@
                                                 <input type="text" id="name" name="name"
                                                        maxlength="{{ form.name.field.max_length }}"
                                                        value="{{ user.name }}"
-                                                       class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                       class="input-text">
                                                 <div x-show="showError" x-cloak
                                                      class="mt-2 text-xs text-red-600 font-normal">
                                                     Invalid input
@@ -168,7 +168,7 @@
                                     {# User bio (centered vertically) #}
                                     <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
                                          x-data="{ showError: false }">
-                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                        <div class="col-span-12 md:col-span-6 flex">
                                             <div class="w-full">
                                                 <label for="description"
                                                        class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
@@ -179,11 +179,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                        <div class="col-span-12 md:col-span-6 flex">
                                             <div class="w-full">
                                                 <textarea type="text" name="description" id="description"
                                                           maxlength="{{ form.description.field.max_length }}"
-                                                          class="resize-y-auto block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{{ user.description }}</textarea>
+                                                          class="auto-expand input-text">{% if user.description %}{{ user.description }}{% endif %}</textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -263,7 +263,7 @@
                                             </div>
                                         </div>
                                         <div class="col-span-12 md:col-span-6 flex justify-end">
-                                            {% include 'components/forms/toggles/toggle.html' with state=user.is_profile_public id='is_profile_public' name='is_profile_public' %}
+                                            {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=user.is_profile_public id='is_profile_public' name='is_profile_public' %}
                                         </div>
                                     </div>
                                 </div>

@@ -4,6 +4,8 @@ from django import forms
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.forms import UserCreationForm
 
+from apps.accounts.models import AccountSettings
+
 # Use the get_user_model function to get the custom user model
 Account = get_user_model()
 
@@ -117,3 +119,15 @@ class RegistrationForm(UserCreationForm):
             raise forms.ValidationError(f'Username "{username}" is unavailable.')
         else:
             raise forms.ValidationError(f'Usernames must only contain alphanumeric characters.')
+
+
+class AccountSettingsForm(forms.ModelForm):
+    """
+
+    """
+
+    class Meta:
+        model = AccountSettings
+        fields = ('receive_marketing_emails', 'receive_weekly_digest_emails', 'receive_discovery_emails',
+                  'receive_site_update_emails', 'receive_inbox_message_notifications',
+                  'receive_announcement_notifications')

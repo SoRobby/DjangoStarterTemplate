@@ -58,9 +58,23 @@
             line-height: 1.5rem;
         }
 
-        .ck-content > a {
+        .ck-content a {
             color: #2563eb !important;
             text-decoration-line: underline !important;
+        }
+
+        /* Bulleted list */
+        .ck-content ul {
+            list-style-type: disc;
+            list-style-position: inside;
+            padding-left: 1rem;
+        }
+
+        /* Ordered list */
+        .ck-content ol {
+            list-style-type: decimal;
+            list-style-position: inside;
+            padding-left: 1rem;
         }
 
 
@@ -108,12 +122,12 @@
                             <div class="flex gap-4" x-data="{ isSaving: false, isPublishing: false }">
                                 <button type="submit" name="save_type" value="draft" x-show="!isSaving && !isPublishing"
                                         @click="isSaving=true"
-                                        class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                        class="btn-secondary-lg">
                                     Save draft
                                 </button>
                                 <button type="submit" name="save_type" value="publish"
                                         x-show="!isSaving && !isPublishing" @click="isPublishing=true"
-                                        class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                        class="btn-secondary-lg">
                                     Publish
                                 </button>
                                 <div class="flex items-center" x-show="isSaving" x-cloak>
@@ -139,18 +153,19 @@
                                 <div class="mt-2">
                                     <input type="text" name="title" id="title" placeholder="Add title..."
                                            value="{{ post.title }}"
-                                           class="block w-full rounded-md border-0 py-3 font-bold text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-2xl sm:leading-6">
+                                           class="iblock w-full rounded-md border-0 py-3 font-bold text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 input-focus sm:text-2xl sm:leading-6">
                                 </div>
                             </div>
 
                             <div class="sm:col-span-6 mt-2">
                                 <label for="content"
-                                       class="block text-sm font-medium leading-6 text-gray-900 sr-only">
+                                       class="sr-only">
                                     Editor
                                 </label>
                                 <div class="mt-2">
                                     <textarea name="content" id="content"
-                                              class="min-h-32">This is some sample content</textarea>
+                                              class="min-h-32 sr-only">{% if post.content %}
+                                        {{ post.content }}{% endif %}</textarea>
                                 </div>
                             </div>
 
@@ -227,9 +242,9 @@
                                                 </div>
                                                 <div class="col-span-12 md:col-span-6 flex justify-end">
                                                     {% if post %}
-                                                        {% include 'components/forms/toggles/toggle.html' with state=post.allow_comments id='allow_comments' name='allow_comments' %}
+                                                        {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=post.allow_comments id='allow_comments' name='allow_comments' %}
                                                     {% else %}
-                                                        {% include 'components/forms/toggles/toggle.html' with state="true" id='allow_comments' name='allow_comments' %}
+                                                        {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=True id='allow_comments' name='allow_comments' %}
                                                     {% endif %}
                                                 </div>
                                             </div>
@@ -250,9 +265,9 @@
                                                 </div>
                                                 <div class="col-span-12 md:col-span-6 flex justify-end">
                                                     {% if post %}
-                                                        {% include 'components/forms/toggles/toggle.html' with state=post.allow_sharing id='allow_sharing' name='allow_sharing' %}
+                                                        {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=post.allow_sharing id='allow_sharing' name='allow_sharing' %}
                                                     {% else %}
-                                                        {% include 'components/forms/toggles/toggle.html' with state="true" id='allow_sharing' name='allow_sharing' %}
+                                                        {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=True id='allow_sharing' name='allow_sharing' %}
                                                     {% endif %}
                                                 </div>
                                             </div>
@@ -284,7 +299,7 @@
                                                                 {% else %}
                                                                value="{{ user.email }}"
                                                                 {% endif %}
-                                                               class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                               class="input-text">
                                                         <div class="mt-2 text-xs text-gray-600 font-normal">
                                                             Enter the lead authors email address
                                                         </div>
@@ -317,7 +332,7 @@
                                                                            name="meta-title"
                                                                            maxlength="{{ form.name.field.max_length }}"
                                                                            value="{{ user.email }}"
-                                                                           class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                                           class="input-text">
                                                                     <button type="button"
                                                                             class="px-2 text-gray-600 text-sm hover:text-gray-800"
                                                                             x-on:click="authors.splice(index, 1)">Remove
@@ -366,7 +381,7 @@
                                                                value="{{ post.meta_title }}"
                                                                 {% endif %}
                                                                placeholder="{{ post.title }}"
-                                                               class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                               class="input-text">
                                                         <div x-show="showError"
                                                              class="mt-2 text-xs text-red-600 font-normal">
                                                             Invalid input
@@ -396,7 +411,7 @@
                                                                   id="meta_description"
                                                                   rows="4"
                                                                   maxlength="{{ form.meta_description.field.max_length }}"
-                                                                  class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{% if post.meta_description %}
+                                                                  class="input-text">{% if post.meta_description %}
                                                             {{ post.meta_description }}{% endif %}</textarea>
                                                     </div>
                                                 </div>
@@ -426,7 +441,7 @@
                                                                 {% if post.meta_keywords %}
                                                                value="{{ post.meta_keywords }}"
                                                                 {% endif %}
-                                                               class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                               class="input-text">
                                                         <div x-show="showError"
                                                              class="mt-2 text-xs text-red-600 font-normal">
                                                             Invalid input
@@ -458,7 +473,8 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p data-utc-time="{{ post.date_created.isoformat }}" class="text-gray-900 convert-time"></p>
+                                                            <p data-utc-time="{{ post.date_created.isoformat }}"
+                                                               class="text-gray-900 convert-time"></p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -479,7 +495,8 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p data-utc-time="{{ post.date_modified.isoformat }}" class="text-gray-900 convert-time"></p>
+                                                            <p data-utc-time="{{ post.date_modified.isoformat }}"
+                                                               class="text-gray-900 convert-time"></p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -527,7 +544,8 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p class="text-gray-900">{{ post.created_by }}</p>
+                                                            <p class="text-gray-900">{{ post.created_by.username }}
+                                                                ({{ post.created_by.email }})</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -551,7 +569,8 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p class="text-gray-900">{{ post.modified_by }}</p>
+                                                            <p class="text-gray-900">{{ post.modified_by.username }}
+                                                                ({{ post.modified_by.email }})</p>
                                                         </div>
                                                     </div>
                                                 </div>

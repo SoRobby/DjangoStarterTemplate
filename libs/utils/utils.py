@@ -38,6 +38,82 @@ def send_notification(request, tag: str, title: str = '', message: str = '') -> 
     messages.add_message(request, level=level, message=message, extra_tags=title)
 
 
+def send_info_notification(request, title: str = '', message: str = '') -> None:
+    """
+    Adds an info message to the Django messages framework.
+
+    Args:
+        request (HttpRequest): The HTTP request object to which the message will be added.
+        title (str, optional): The title of the message. Defaults to an empty string.
+        message (str, optional): The content of the message. Defaults to an empty string.
+
+    Returns:
+        None
+
+    Raises:
+        None
+    """
+
+    send_notification(request, tag='info', title=title, message=message)
+
+
+def send_success_notification(request, title: str = '', message: str = '') -> None:
+    """
+    Adds a success message to the Django messages framework.
+
+    Args:
+        request (HttpRequest): The HTTP request object to which the message will be added.
+        title (str, optional): The title of the message. Defaults to an empty string.
+        message (str, optional): The content of the message. Defaults to an empty string.
+
+    Returns:
+        None
+
+    Raises:
+        None
+    """
+
+    send_notification(request, tag='success', title=title, message=message)
+
+
+def send_warning_notification(request, title: str = '', message: str = '') -> None:
+    """
+    Adds a warning message to the Django messages framework.
+
+    Args:
+        request (HttpRequest): The HTTP request object to which the message will be added.
+        title (str, optional): The title of the message. Defaults to an empty string.
+        message (str, optional): The content of the message. Defaults to an empty string.
+
+    Returns:
+        None
+
+    Raises:
+        None
+    """
+
+    send_notification(request, tag='warning', title=title, message=message)
+
+
+def send_error_notification(request, title: str = '', message: str = '') -> None:
+    """
+    Adds an error message to the Django messages framework.
+
+    Args:
+        request (HttpRequest): The HTTP request object to which the message will be added.
+        title (str, optional): The title of the message. Defaults to an empty string.
+        message (str, optional): The content of the message. Defaults to an empty string.
+
+    Returns:
+        None
+
+    Raises:
+        None
+    """
+
+    send_notification(request, tag='error', title=title, message=message)
+
+
 def generate_unique_slug(instance: Model, slug_target_field: str, slug_source_field: str,
                          max_iterations: int = 200) -> str:
     """
@@ -160,8 +236,6 @@ def save_file_to_field(model_instance, field_name, file, directory_path, file_na
     # Update the model field with the new file path
     setattr(model_instance, field_name, file_path)
     model_instance.save()
-
-
 
 # def get_yyyymmddhhmmss():
 #     return datetime.now().strftime('%Y%m%d%H%M%S')

@@ -2,6 +2,7 @@ import logging
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView, UpdateView
@@ -12,6 +13,8 @@ from apps.main.models import Country
 from libs.utils.utils import send_notification
 from .forms import ProfileEditGeneralForm, ChangeEmailForm, SupportMessageForm
 from .services import send_support_email
+
+from apps.accounts.forms import AccountSettingsForm
 
 
 # Create your views here.
@@ -82,7 +85,7 @@ class ProfileEditNotificationsView(TemplateView):
     model = AccountSettings
     template_name = 'profiles/edit/profile-edit-notifications.html'
 
-    # Refeence this https://chat.openai.com/c/3bcfc02f-81b2-4518-a0c8-b6bce02f5427
+    # Reference this https://chat.openai.com/c/3bcfc02f-81b2-4518-a0c8-b6bce02f5427
     # To finish this mode, got too tired to continue working on this. Falling asleep... zzzzz...
 
     def get_object(self, queryset=None):
@@ -102,7 +105,22 @@ class ProfileEditNotificationsView(TemplateView):
 
         return context
 
+    def post(self, request, *args, **kwargs):
+        logging.debug('[PROFILE_EDIT_NOTIFICATIONS_VIEW.POST] Called')
 
+        settings = self.get_object()
+        settings_form = AccountSettingsForm(request.POST, instance=settings)
+
+        if settings_form.is_valid():
+            settings_form.save()
+            send_notification(request, tag='success', title='Settings updated',
+                              message='Your settings have been successfully updated')
+        else:
+            send_notification(request, tag='error', title='Unable to save settings',
+                              message='There was an error saving your settings, please try again later')
+
+        # Return the current page
+        return self.get(request, *args, **kwargs)
 
 
 class ProfileEditSupportView(TemplateView):

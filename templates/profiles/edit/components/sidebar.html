@@ -321,8 +321,8 @@
             {% if user.is_superuser %}
                 <hr class="mt-4 pb-4">
                 <li>
-                    {% if request.resolver_match.url_name == 'profile-edit-components' %}
-                        <a href="{% url 'profiles:settings-support' %}"
+                    {% if request.resolver_match.url_name == 'components' %}
+                        <a href="{% url 'adminpanel:components' %}"
                            class="bg-gray-100 text-indigo-600 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">
                             <svg class="h-6 w-6 shrink-0 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none"
                                  viewBox="0 0 24 24" stroke-width="1.5"
@@ -333,7 +333,7 @@
                             Components
                         </a>
                     {% else %}
-                        <a href="{% url 'profiles:settings-support' %}"
+                        <a href="{% url 'adminpanel:components' %}"
                            class="text-gray-700 hover:text-gray-800 hover:bg-gray-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">
                             <svg class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-gray-500"
                                  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"

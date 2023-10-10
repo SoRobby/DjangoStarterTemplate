@@ -180,7 +180,6 @@ def edit_post(request, uuid):
         if form.is_valid():
             logging.debug('[EDIT_POST] Form is valid')
 
-            print(form.cleaned_data)
             form.save()
 
             send_notification(request, tag='success', title='Blog post saved',
@@ -197,8 +196,6 @@ def edit_post(request, uuid):
 
             send_notification(request, tag='error', title='Unable to save post',
                               message=error_message)
-            # send_notification(request, tag='error', title='Unable to save post',
-            #                   message='An unexpected error occurred while saving your post. Please try again later.')
 
     context['post'] = blog_post
     return render(request, 'blog/edit-post.html', context)

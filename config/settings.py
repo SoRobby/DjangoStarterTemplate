@@ -66,6 +66,7 @@ THIRD_PARTY_APPS = [
 # Project apps
 PROJECT_APPS = [
     'apps.accounts',
+    'apps.adminpanel',
     'apps.blog',
     'apps.feedback',
     'apps.main',

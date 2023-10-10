@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{# Title #}
+{% block title %}<title>Admin | Components</title>{% endblock title %}
+
+
+{# General meta information (i.e. Description, tags, etc...) #}
+{% block meta %}
+{% endblock meta %}
+
+
+{# Stylesheets #}
+{% block style %}
+{% endblock style %}
+
+
+{# Head Scripts #}
+{% block head_script %}
+{% endblock head_script %}
+
+
+{# Header #}
+{% block header %}
+    {% include 'components/header.html' %}
+{% endblock header %}
+
+
+{# Page content #}
+{% block content %}
+
+    <div class="divide-y divide-gray-200 space-y-4">
+
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <h3 class="text-lg font-medium text-gray-800">Toggle Normal</h3>
+                <p class="mt-2 text-sm text-gray-600">A normal toggle without an icon.</p>
+            </div>
+            <div class="py-2">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-xs pb-2 text-gray-600 font-medium">Regular</p>
+                        {% include 'components/forms/toggles/toggle-normal.html' with is_checked=True id="toggle-example1" name="toggle-example1" %}
+                    </div>
+
+                    <div x-data="{ isChecked: false }">
+                        <p class="text-xs pb-2 text-gray-600 font-medium">AlpineJS Binding</p>
+                        {% include 'components/forms/toggles/toggle-normal.html' with is_checked=False id="toggle-example2" name="toggle-example2" binding_name="isChecked" %}
+                        <p class="text-gray-600 text-xs mt-2">AlpineJS status: <span x-text="isChecked"
+                                                                                     class="font-medium">-</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-4 grid grid-cols-2 gap-4">
+            <div>
+                <h3 class="text-lg font-medium text-gray-800">Toggle with Icon</h3>
+                <p class="mt-2 text-sm text-gray-600">A toggle with an icon.</p>
+            </div>
+            <div class="py-2">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-xs pb-2 text-gray-600 font-medium">Regular</p>
+                        {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=True id="toggle-with-icon-example1" name="toggle-with-icon-example1" %}
+                    </div>
+
+                    <div x-data="{ isChecked: false }">
+                        <p class="text-xs pb-2 text-gray-600 font-medium">AlpineJS Binding</p>
+                        {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=False id="toggle-with-icon-example2" name="toggle-with-icon-example2" binding_name="isChecked" %}
+                        <p class="text-gray-600 text-xs mt-2">AlpineJS status: <span x-text="isChecked"
+                                                                                     class="font-medium">-</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="pt-4 grid grid-cols-2 gap-4">
+            <div>
+                <h3 class="text-lg font-medium text-gray-800">Primary Button Types</h3>
+                <p class="mt-2 text-sm text-gray-600">Description of component goes here...</p>
+            </div>
+            <div class="py-2 flex flex-col items-center justify-start space-y-4 sm:flex-row sm:items-end sm:justify-around sm:space-y-0">
+                <button type="button" class="btn-primary-xs">Extra small</button>
+                <button type="button" class="btn-primary-sm">Small</button>
+                <button type="button" class="btn-primary-normal">Normal</button>
+                <button type="button" class="btn-primary-lg">Large</button>
+                <button type="button" class="btn-primary-xl">Extra large</button>
+            </div>
+        </div>
+
+
+        <div class="pt-4 grid grid-cols-2 gap-4">
+            <div>
+                <h3 class="text-lg font-medium text-gray-800">Secondary Button Types</h3>
+                <p class="mt-2 text-sm text-gray-600">Description of component goes here...</p>
+            </div>
+            <div class="py-2 flex flex-col items-center justify-start space-y-4 sm:flex-row sm:items-end sm:justify-around sm:space-y-0">
+                <button type="button" class="btn-secondary-xs">Extra small</button>
+                <button type="button" class="btn-secondary-sm">Small</button>
+                <button type="button" class="btn-secondary-normal">Normal</button>
+                <button type="button" class="btn-secondary-lg">Large</button>
+                <button type="button" class="btn-secondary-xl">Extra large</button>
+            </div>
+        </div>
+
+        <div class="pt-4 grid grid-cols-2 gap-4">
+            <div>
+                <h3 class="text-lg font-medium text-gray-800">Text Button Types</h3>
+                <p class="mt-2 text-sm text-gray-600">Description of component goes here...</p>
+            </div>
+            <div class="py-2 flex flex-col items-center justify-start space-y-4 sm:flex-row sm:items-end sm:justify-around sm:space-y-0">
+                <button type="button" class="btn-text-xs">Extra small</button>
+                <button type="button" class="btn-text-sm">Small</button>
+                <button type="button" class="btn-text-normal">Normal</button>
+                <button type="button" class="btn-text-lg">Large</button>
+                <button type="button" class="btn-text-xl">Extra large</button>
+            </div>
+        </div>
+
+
+        <div class="pt-4 grid grid-cols-2 gap-4">
+            <div>
+                <h3 class="text-lg font-medium text-gray-800">Input element align top</h3>
+                <p class="mt-2 text-sm text-gray-600">Description of component goes here...</p>
+            </div>
+            <div class="py-2">
+
+                {# Without the class of `items-center` applied to the grid child elements it will align to the top #}
+                <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12">
+                    <div class="col-span-12 md:col-span-6 flex">
+                        <div class="w-full">
+                            <label for="textarea-1" class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                Bio
+                            </label>
+                            <div class="text-xs text-gray-600 font-normal">
+                                Short description of yourself
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-span-12 md:col-span-6 flex">
+                        <div class="w-full">
+                            <textarea type="text" name="textarea-1" id="textarea-1" maxlength="500"
+                                      class="auto-expand input-text"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-dark">text-dark</p>
+                <p class="text-normal">text-normal</p>
+                <p class="text-muted">text-muted</p>
+
+
+            </div>
+        </div>
+
+        <div class="pt-4 grid grid-cols-2 gap-4">
+            <div>
+                <h3 class="text-lg font-medium text-gray-800">Input element align center</h3>
+                <p class="mt-2 text-sm text-gray-600">Description of component goes here...</p>
+            </div>
+            <div class="py-2">
+
+                <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12">
+                    <div class="col-span-12 md:col-span-6 flex items-center">
+                        <div class="w-full">
+                            <label for="textarea-2" class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                Bio
+                            </label>
+                            <div class="text-xs text-gray-600 font-normal">
+                                Short description of yourself
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-span-12 md:col-span-6 flex items-center">
+                        <div class="w-full">
+                            <textarea type="text" name="textarea-2" id="textarea-2" maxlength="500"
+                                      class="auto-expand input-text"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="pt-4 grid grid-cols-2 gap-4">
+            <div>
+                <h3 class="text-lg font-medium text-gray-800">Form elements</h3>
+                <p class="mt-2 text-sm text-gray-600">Description of component goes here...</p>
+            </div>
+            <div class="py-2">
+
+                <div class="grid grid-cols-1 gap-4">
+                    <div>
+                        <p class="text-xs pb-2 text-gray-600 font-medium">Regular</p>
+                        <label for="text-input-example1" class="sr-only">text-input-example1</label>
+                        <input id="text-input-example1" type="text" class="input-text">
+                    </div>
+
+                    <div>
+                        <p class="text-xs pb-2 text-gray-600 font-medium">Regular</p>
+                        <label for="text-input-example1" class="sr-only">text-input-example1</label>
+                        <input id="text-input-example1" type="text" class="input-text" placeholder="Enter some text...">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="pt-4 grid grid-cols-2 gap-4">
+            <div>
+                <h3 class="text-lg font-medium text-gray-800">Badges</h3>
+                <p class="mt-2 text-sm text-gray-600">Description of component goes here...</p>
+            </div>
+            <div class="py-2">
+                <span class="badge-gray">gray</span>
+                <span class="badge-secondary">badge-secondary</span>
+                <span class="badge-red">red</span>
+                <span class="badge-error">error</span>
+                <span class="badge-yellow">yellow</span>
+                <span class="badge-warning">warning</span>
+                <span class="badge-green">green</span>
+                <span class="badge-success">success</span>
+                <span class="badge-blue">blue</span>
+                <span class="badge-info">info</span>
+                <span class="badge-indigo">indigo</span>
+                <span class="badge-purple">purple</span>
+                <span class="badge-pink">pink</span>
+            </div>
+        </div>
+
+
+        <div class="pt-4 grid grid-cols-2 gap-4">
+            <div>
+                <h3 class="text-lg font-medium text-gray-800">Component A</h3>
+                <p class="mt-2 text-sm text-gray-600">Description of component goes here...</p>
+            </div>
+            <div class="py-2">
+                Component template link...
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+{% endblock content %}
+
+
+{# Footer #}
+{% block footer %}
+    {% include 'components/footer.html' %}
+{% endblock footer %}
+
+
+{# Scripts #}
+{% block scripts %}
+{% endblock scripts %}

@@ -1,3 +1,147 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* Tailwind class groups */
+/* Ref: https://tailwindcss.com/docs/reusing-styles */
+
+@layer components {
+    /* Toggle element styling for a checked toggle */
+    .toggle-checked {
+        @apply bg-indigo-600 relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2;
+    }
+
+    /* Toggle element styling for an unchecked toggle */
+    .toggle-unchecked {
+        @apply bg-gray-200 relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2;
+    }
+
+    /* Primary button styling, added "inline-flex items-center justify-center" */
+    .btn-primary-xs {
+        @apply inline-flex items-center justify-center rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600;
+    }
+
+    .btn-primary-sm {
+        @apply inline-flex items-center justify-center rounded bg-indigo-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600;
+    }
+
+    .btn-primary-normal, .btn-primary {
+        @apply inline-flex items-center justify-center rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600;
+    }
+
+    .btn-primary-lg {
+        @apply inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600;
+    }
+
+    .btn-primary-xl {
+        @apply inline-flex items-center justify-center rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600;
+    }
+
+    /* Secondary button styling */
+    .btn-secondary-xs {
+        @apply inline-flex items-center justify-center rounded bg-white px-2 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50;
+    }
+
+    .btn-secondary-sm {
+        @apply inline-flex items-center justify-center rounded bg-white px-2 py-1 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50;
+    }
+
+    .btn-secondary-normal, .btn-secondary {
+        @apply inline-flex items-center justify-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50;
+    }
+
+    .btn-secondary-lg {
+        @apply inline-flex items-center justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50;
+    }
+
+    .btn-secondary-xl {
+        @apply inline-flex items-center justify-center rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50;
+    }
+
+    /* No outline button */
+    .btn-text-xs {
+        @apply inline-flex items-center justify-center rounded bg-white px-2 py-1 text-xs font-semibold text-gray-900 ring-1 ring-inset ring-transparent hover:bg-gray-50 hover:ring-gray-300;
+    }
+
+    .btn-text-sm {
+        @apply inline-flex items-center justify-center rounded bg-white px-2 py-1 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-transparent hover:bg-gray-50 hover:ring-gray-300;
+    }
+
+    .btn-text-normal, .btn-secondary {
+        @apply inline-flex items-center justify-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-transparent hover:bg-gray-50 hover:ring-gray-300;
+    }
+
+    .btn-text-lg {
+        @apply inline-flex items-center justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-transparent hover:bg-gray-50 hover:ring-gray-300;
+    }
+
+    .btn-text-xl {
+        @apply inline-flex items-center justify-center rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-transparent hover:bg-gray-50 hover:ring-gray-300;
+    }
+
+
+    /* Input element */
+    input.input-text, textarea.input-text {
+        @apply block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6;
+    }
+
+    .input-focus {
+        @apply focus:ring-2 focus:ring-inset focus:ring-indigo-600;
+    }
+
+    .text-dark {
+        @apply text-gray-900;
+    }
+
+    .text-normal {
+        @apply text-gray-800;
+    }
+
+    .text-muted {
+        @apply text-gray-600;
+    }
+
+
+    /* Badges */
+    .badge-gray, .badge-secondary {
+        @apply inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600;
+    }
+
+    .badge-red, .badge-error {
+        @apply inline-flex items-center rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-700;
+    }
+
+    .badge-yellow, .badge-warning {
+        @apply inline-flex items-center rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800;
+    }
+
+    .badge-green, .badge-success {
+        @apply inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700;
+    }
+
+    .badge-blue, .badge-info {
+        @apply inline-flex items-center rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700;
+    }
+
+    .badge-indigo, .badge-primary {
+        @apply inline-flex items-center rounded-full bg-indigo-100 px-2 py-1 text-xs font-medium text-indigo-700
+    }
+
+    .badge-purple {
+        @apply inline-flex items-center rounded-full bg-purple-100 px-2 py-1 text-xs font-medium text-purple-700;
+    }
+
+    .badge-pink {
+        @apply inline-flex items-center rounded-full bg-pink-100 px-2 py-1 text-xs font-medium text-pink-700;
+    }
+
+
+    /* General background hover color */
+    .bg-hover {
+        @apply bg-gray-100;
+    }
+}
+
+
+/*bg-gray-200 relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2*/
