@@ -197,6 +197,7 @@ def edit_post(request, uuid):
             send_notification(request, tag='error', title='Unable to save post',
                               message=error_message)
 
+    context['form'] = PostForm(instance=blog_post)
     context['post'] = blog_post
     return render(request, 'blog/edit-post.html', context)
 

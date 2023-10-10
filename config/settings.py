@@ -315,3 +315,5 @@ CKEDITOR_5_CONFIGS = {
         }
     }
 }
+
+CKEDITOR_5_FILE_STORAGE = "apps.blog.storage.CustomStorage"

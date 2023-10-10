@@ -77,6 +77,16 @@
             padding-left: 1rem;
         }
 
+        textarea.django_ckeditor_5 {
+            display: none;
+        }
+
+        .ck-word-count {
+            color: #4b5563;
+            font-size: 0.75rem;
+            margin-top: 0.25rem !important;
+        }
+
 
     </style>
 {% endblock style %}
@@ -85,7 +95,7 @@
 {# Head Scripts #}
 {% block head_script %}
     {#    <script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>#}
-    <script type="text/javascript" src="{% static 'ckeditor5-build-classic/build/ckeditor.js' %}"></script>
+    {#    <script type="text/javascript" src="{% static 'ckeditor5-build-classic/build/ckeditor.js' %}"></script>#}
 {% endblock head_script %}
 
 
@@ -106,6 +116,7 @@
         {% block content %}
             <form action="." method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
+                {{ form.media }}
 
                 <div class="sticky top-0 z-10 mx-auto bg-white border-b border-gray-300">
                     <div class="px-4 mx-auto sm:px-6 lg:px-8 py-4">
@@ -141,7 +152,6 @@
                     </div>
                 </div>
 
-
                 <div class="mx-auto">
                     <div class="flex w-full items-stretch gap-x-8">
                         <div class="flex-1 px-4 mx-auto max-w-7xl py-4 sm:py-6 sm:px-6 lg:px-8 space-y-4">
@@ -158,14 +168,12 @@
                             </div>
 
                             <div class="sm:col-span-6 mt-2">
-                                <label for="content"
+                                <label for="{{ form.content.id_for_label }}"
                                        class="sr-only">
                                     Editor
                                 </label>
                                 <div class="mt-2">
-                                    <textarea name="content" id="content"
-                                              class="min-h-32 sr-only">{% if post.content %}
-                                        {{ post.content }}{% endif %}</textarea>
+                                    {{ form.content }}
                                 </div>
                             </div>
 
@@ -703,11 +711,11 @@
     {#    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>#}
     <script src="{% static 'cropper.js' %}"></script>
     <script>
-        ClassicEditor
-            .create(document.querySelector('#content'))
-            .catch(error => {
-                console.error(error);
-            });
+        {#ClassicEditor#}
+        {#    .create(document.querySelector('#content'))#}
+        {#    .catch(error => {#}
+        {#        console.error(error);#}
+        {#    });#}
 
         document.addEventListener("DOMContentLoaded", function (event) {
             // On change show image with crop options

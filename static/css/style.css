@@ -3157,6 +3157,10 @@ input.input-text:focus, textarea.input-text:focus {
     flex: none;
   }
 
+  .sm\:grid-cols-12 {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
   .sm\:flex-row {
     flex-direction: row;
   }
