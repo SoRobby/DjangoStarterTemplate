@@ -221,15 +221,21 @@ RECAPTCHA_SECRET_KEY = env('RECAPTCHA_SECRET_KEY', default='')
 MULTILINE_TEMPLATE_TAGS = env.bool('MULTILINE_TEMPLATE_TAGS', default=False)
 
 # Logging configuration
-logging.basicConfig(level=logging.DEBUG)
+LOG_LEVEL = env('LOG_LEVEL', default='DEBUG')
 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'filters': {
+        'colorize': {
+            '()': 'config.configurator.ColorizeFilter'
+        },
+    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'custom',
+            'filters': ['colorize'],
         },
     },
     'formatters': {
@@ -241,9 +247,20 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        'level': 'DEBUG',
+        'level': LOG_LEVEL,
     },
 }
+
+# Log server errors
+# TODO - Make this option into an environment variable. Also test to make sure it works and understand how it works.
+# if True:
+#     LOGGING['loggers'] = {
+#         'django': {
+#             'handlers': ['console'],
+#             'level': 'ERROR',
+#             'propagate': False,
+#         },
+#     }
 
 # CKEditor5 settings
 customColorPalette = [

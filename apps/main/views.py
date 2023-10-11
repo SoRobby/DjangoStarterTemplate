@@ -4,19 +4,25 @@ import traceback
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.views.decorators.http import require_http_methods
 
 from apps.blog.models import Post
+
+# import sys
+# def log_view_function_name():
+#     # Get the name of the calling function
+#     calling_function_name = sys._getframe(1).f_globals["__name__"] + "." + sys._getframe(1).f_code.co_name
+#     logging.debug('[%s] Called' % calling_function_name)
 
 User = get_user_model()
 
 
 # Create your views here.
 def home(request: HttpResponse) -> HttpResponse:
-    context = {}
-    logging.debug('This is my home page...')
+    logging.debug('[MAIN.HOME] Called')
 
-    # posts = Post.objects.published()
+    # log_view_call()
+    context = {}
+
     posts = Post.objects.all()
     context['posts'] = posts
 
@@ -24,11 +30,13 @@ def home(request: HttpResponse) -> HttpResponse:
 
 
 def test(request: HttpResponse) -> HttpResponse:
-    context = {}
     logging.debug('[MAIN.TEST] View is for testing various items.')
+    context = {}
     return render(request, 'main/test.html', context)
 
+
 def terms_of_service(request):
+    logging.debug('[MAIN.TERMS_OF_SERVICE] Called')
     return render(request, 'main/terms-of-service.html')
 
 

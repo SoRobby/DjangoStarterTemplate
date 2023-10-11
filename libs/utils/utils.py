@@ -1,6 +1,8 @@
 from datetime import datetime
 from io import BytesIO
 from uuid import uuid4
+import inspect
+import logging
 
 from PIL import Image
 from django.contrib import messages
@@ -9,6 +11,7 @@ from django.core.files.storage import default_storage
 from django.db.models import Model
 from django.utils.encoding import force_str
 from django.utils.text import slugify
+
 
 
 def send_notification(request, tag: str, title: str = '', message: str = '') -> None:
@@ -237,5 +240,16 @@ def save_file_to_field(model_instance, field_name, file, directory_path, file_na
     setattr(model_instance, field_name, file_path)
     model_instance.save()
 
-# def get_yyyymmddhhmmss():
-#     return datetime.now().strftime('%Y%m%d%H%M%S')
+
+def log_view_call():
+    frame = inspect.stack()[1]
+    module = inspect.getmodule(frame[0])
+
+    if "self" in frame.frame.f_locals:
+        cls = frame.frame.f_locals["self"].__class__
+        caller_name = f"{cls.__name__}.{frame.function}"
+    else:
+        caller_name = frame.function
+
+    module_name = module.__name__.split('.')[-2] if module else 'unknown'
+    logging.debug(f'[{module_name.upper()}.{caller_name.upper()}] Called')
