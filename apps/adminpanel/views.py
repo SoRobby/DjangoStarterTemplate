@@ -1,7 +1,6 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.decorators import method_decorator
+from django.views.generic import TemplateView
 
 
 # Create your views here.

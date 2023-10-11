@@ -5,6 +5,8 @@ from django.db import models
 
 from db.abstract_models import DateCreatedAndModified
 
+User = settings.AUTH_USER_MODEL
+
 
 # Create your models here.
 class Feedback(DateCreatedAndModified):
@@ -20,7 +22,7 @@ class Feedback(DateCreatedAndModified):
     email = models.EmailField(max_length=255, blank=True, null=True,
                               help_text='Email of the individual providing feedback')
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='feedback_user',
+    user = models.ForeignKey(User, blank=True, null=True, related_name='feedback_user',
                              on_delete=models.SET_NULL, help_text='User that provided feedback')
 
     page_url = models.URLField(max_length=255, blank=True, null=True,

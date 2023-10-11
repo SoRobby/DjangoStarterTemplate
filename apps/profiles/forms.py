@@ -13,8 +13,6 @@ class ProfileEditGeneralForm(forms.ModelForm):
         fields = ('name', 'description', 'theme', 'is_profile_public', 'profile_image')
 
 
-
-
 class ChangeEmailForm(forms.Form):
     """
     Django Form to handle change of user email.
@@ -81,5 +79,3 @@ class SupportMessageForm(forms.Form):
 
     def clean_message(self) -> str:
         return self.cleaned_data.get('message')
-
-

@@ -2,8 +2,10 @@ import logging
 
 from PIL import Image
 from django.shortcuts import render, redirect
+from django.views.generic import DetailView
 
 from apps.accounts.models import Account
+from apps.analytics.mixins import ObjectViewMixin
 from libs.utils.utils import process_image, send_notification, save_file_to_field
 from .forms import PostForm
 from .models import Post, upload_to_featured_images
@@ -24,9 +26,23 @@ def post_list(request):
     return render(request, 'blog/post-list.html', content)
 
 
-def post(request, slug):
-    single_post = Post.objects.get(slug=slug)
-    return render(request, 'blog/post.html', {'post': single_post})
+# def post(request, slug):
+#     context = {}
+#     single_post = Post.objects.get(slug=slug)
+#     context['post'] = single_post
+#     return render(request, 'blog/post.html', context)
+
+class PostDetailView(ObjectViewMixin, DetailView):
+    model = Post
+    template_name = 'blog/post.html'
+    context_object_name = 'post'
+    slug_url_kwarg = 'slug'
+
+    # if you need to perform additional operations, you can override the get_context_data method
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     # add any additional context if needed
+    #     return context
 
 
 def create_post(request):

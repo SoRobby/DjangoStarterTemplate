@@ -11,7 +11,8 @@ urlpatterns = [
     path('posts/', views.post_list, name='post-list'),
     
     # path is /blog/<str:slug>/
-    path('posts/<str:slug>/', views.post, name='post'),
+    # path('posts/<str:slug>/', views.post, name='post'),
+    path('posts/<str:slug>/', views.PostDetailView.as_view(), name='post'),
 
     # path is /blog/edit/create-post/
 

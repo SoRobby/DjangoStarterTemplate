@@ -3,11 +3,9 @@ from math import ceil
 from uuid import uuid4
 
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.signals import pre_save, post_delete
-
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.text import slugify
@@ -17,8 +15,7 @@ from db.abstract_models import DateCreatedAndModified, DateDeleted
 from libs.utils.utils import generate_unique_slug
 from .managers import PostManager
 
-
-# Create your models here.
+User = settings.AUTH_USER_MODEL
 
 
 def upload_to_featured_images(instance, filename):
@@ -28,6 +25,7 @@ def upload_to_featured_images(instance, filename):
         return os.path.join('blog', str(instance.uuid), 'featured-image')
 
 
+# Create your models here.
 class Post(DateCreatedAndModified, DateDeleted):
     class ReleaseStatus(models.TextChoices):
         DRAFT = 'draft', 'Draft'
@@ -41,11 +39,11 @@ class Post(DateCreatedAndModified, DateDeleted):
                             help_text='The URL slug based on the post title, slug fields should be 50 characters or\
                             less')
 
-    lead_author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+    lead_author = models.ForeignKey(User, on_delete=models.CASCADE,
                                     related_name='authored_posts_as_lead',
                                     help_text='Lead author of the post')
 
-    authors = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='authored_posts', help_text='Post authors.')
+    authors = models.ManyToManyField(User, related_name='authored_posts', help_text='Post authors.')
 
     release_status = models.CharField(max_length=55, default=ReleaseStatus.DRAFT, choices=ReleaseStatus.choices,
                                       verbose_name='Release status',
@@ -83,16 +81,16 @@ class Post(DateCreatedAndModified, DateDeleted):
     uuid = models.UUIDField(default=uuid4, editable=False, unique=True, verbose_name='UUID',
                             help_text='Unique identifier for the post')
 
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created_posts',
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_posts',
                                    help_text='User who created the post')
 
-    modified_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='modified_posts',
+    modified_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='modified_posts',
                                     help_text='User who last modified the post')
 
     is_deleted = models.BooleanField(default=False, verbose_name='Is deleted',
                                      help_text='If checked, the post is deleted')
 
-    deleted_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE,
+    deleted_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE,
                                    related_name='deleted_posts', help_text='User who deleted the post')
 
     date_published = models.DateTimeField(auto_now_add=False, auto_now=False, blank=True, null=True,
@@ -177,15 +175,15 @@ class Comment(DateCreatedAndModified, DateDeleted):
                                        related_name='child_comments',
                                        help_text='The parent comment that this comment replied to')
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,
                              related_name='user_comment', help_text='User that made the comment')
 
     content = models.TextField(max_length=6000, blank=True, verbose_name='Content', help_text='Comment content')
 
-    upvotes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='comment_upvotes', blank=True,
+    upvotes = models.ManyToManyField(User, related_name='comment_upvotes', blank=True,
                                      help_text='Users who have upvoted this comment')
 
-    downvotes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='comment_downvotes', blank=True,
+    downvotes = models.ManyToManyField(User, related_name='comment_downvotes', blank=True,
                                        help_text='Users who have downvoted this comment')
 
     is_flagged = models.BooleanField(default=False, verbose_name='Is flagged',
