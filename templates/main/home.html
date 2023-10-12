@@ -21,24 +21,20 @@
     <div>
         <div class="text-xl text-gray-800">Content block goes here...</div>
         <div class="block">
-            <div>
-                <a href="{% url 'home' %}">Home</a>
+
+            <div class="font-medium text-gray-800 leading-6 py-2">Quick access pages</div>
+            <div class="border border-gray-200 rounded p-2">
+                <div class="text-sm font-medium text-blue-500">
+                    <ul class="list-disc list-inside pl-2">
+                        <li><a href="{% url 'home' %}" class="hover:text-blue-800 hover:underline">Home</a></li>
+                        <li><a href="{% url 'login' %}" class="hover:text-blue-800 hover:underline">Login</a></li>
+                        <li><a href="{% url 'logout' %}" class="hover:text-blue-800 hover:underline">Logout</a></li>
+                        <li><a href="{% url 'register' %}" class="hover:text-blue-800 hover:underline">Register</a></li>
+                        <li><a href="{% url 'test' %}" class="hover:text-blue-800 hover:underline">Test page</a></li>
+                    </ul>
+                </div>
             </div>
-            <div>
-                <a href="{% url 'login' %}">Login</a>
-            </div>
-            <div>
-                <a href="{% url 'logout' %}">Logout</a>
-            </div>
-            <div>
-                <a href="{% url 'register' %}">Register</a>
-            </div>
-            <div>
-                <a href="#">Change password</a>
-            </div>
-            <div>
-                <a href="#">Reset password</a>
-            </div>
+
         </div>
     </div>
 {% endblock content %}
