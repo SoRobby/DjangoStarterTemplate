@@ -79,6 +79,9 @@ class ObjectViewed(models.Model):
         ordering = ['-timestamp']
 
 
+# analytics/models.py
+
+
 def object_viewed_receiver(sender, instance, request, *args, **kwargs):
     c_type = ContentType.objects.get_for_model(sender)
     ip_address = get_client_ip_address(request) if hasattr(request, 'META') else None

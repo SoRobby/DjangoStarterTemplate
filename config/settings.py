@@ -87,6 +87,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'apps.analytics.middleware.AnalyticsMiddleware',
+    'apps.analytics.middleware.ObjectViewedMiddleware',
 ]
 
 # Conditional app

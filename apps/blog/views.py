@@ -5,7 +5,6 @@ from django.shortcuts import render, redirect
 from django.views.generic import DetailView
 
 from apps.accounts.models import Account
-from apps.analytics.mixins import ObjectViewMixin
 from libs.utils.utils import process_image, send_notification, save_file_to_field
 from .forms import PostForm
 from .models import Post, upload_to_featured_images
@@ -32,7 +31,7 @@ def post_list(request):
 #     context['post'] = single_post
 #     return render(request, 'blog/post.html', context)
 
-class PostDetailView(ObjectViewMixin, DetailView):
+class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/post.html'
     context_object_name = 'post'

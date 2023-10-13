@@ -3,6 +3,9 @@ from django.contrib import admin
 from .models import ObjectViewed
 
 
+# Quick view register
+
+
 # Register your models here.
 @admin.register(ObjectViewed)
 class ObjectViewedAdmin(admin.ModelAdmin):

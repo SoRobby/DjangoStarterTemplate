@@ -1,4 +1,3 @@
-
 def get_client_ip_address(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
 
@@ -8,3 +7,5 @@ def get_client_ip_address(request):
         ip_address = request.META.get('REMOTE_ADDR', None)
 
     return ip_address
+
+
