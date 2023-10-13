@@ -10,31 +10,49 @@ const getOffLoadUserData = () => {
     const offLoadData = {};
 
     offLoadData.currentTime = new Date().toISOString();
-    offLoadData.userAgent = navigator.userAgent;
-    offLoadData.window = {
-        width: window.innerWidth,
-        height: window.innerHeight,
+
+    if (typeof performance !== 'undefined' && typeof performance.timing !== 'undefined') {
+        // Page Load Time: The total time taken from initiating the navigation until the document is fully loaded.
+        offLoadData.pageLoadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+
+        // Time To First Byte (TTFB): Time taken from the user initiating the navigation until the first byte of the
+        // response is received. It's a measure of the latency of the server and can include time in queue and other
+        // backend delays.
+        offLoadData.ttfb = performance.timing.responseStart - performance.timing.navigationStart;
+
+        // DOM Interactive: Time taken from the navigation initiation until the document's DOM is fully constructed, but
+        // not necessarily fully loaded (like images).
+        offLoadData.domInteractiveTime = performance.timing.domInteractive - performance.timing.navigationStart;
+
+        // DOM Content Loaded: Time taken until the DOMContentLoaded event end. This event is fired when the initial HTML
+        // document has been completely loaded and parsed, without waiting for stylesheets, images, and subframes to finish
+        // loading.
+        offLoadData.domContentLoadedTime = performance.timing.domContentLoadedEventEnd - performance.timing.navigationStart;
+
+        // Redirect Time: If there have been redirects, this captures the time for them.
+        offLoadData.redirectTime = performance.timing.redirectEnd - performance.timing.redirectStart;
+
+        // DNS Lookup Time: Time taken to resolve the domain name of the site.
+        offLoadData.dnsTime = performance.timing.domainLookupEnd - performance.timing.domainLookupStart;
+
+        // TCP Handshake Time: Time taken to complete the three-way handshake and establish a TCP connection.
+        offLoadData.tcpTime = performance.timing.connectEnd - performance.timing.connectStart;
+
+        // Secure Connection Time (HTTPS): If the site is served over HTTPS, this is the time taken to do the TLS handshake.
+        offLoadData.tlsTime = performance.timing.secureConnectionStart ? performance.timing.connectEnd - performance.timing.secureConnectionStart : 0;
+
+        // Request Time: Time taken for the server to process the request and send back the response.
+        offLoadData.requestTime = performance.timing.responseEnd - performance.timing.requestStart;
+
+        // Response Time: Time taken to read the response/data from the server.
+        offLoadData.responseTime = performance.timing.responseEnd - performance.timing.responseStart;
+
+        // Duration the user spent on the page
+        offLoadData.duration = Date.now() - performance.timing.navigationStart;
     }
-    offLoadData.preferredLanguage = navigator.language;
-    offLoadData.platform = navigator.platform;
-    offLoadData.referrer = document.referrer;
-
-    // Page Load Time
-    offLoadData.pageLoadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
-
-    // Duration the user spent on the page
-    offLoadData.duration_ms = Date.now() - performance.timing.navigationStart;
 
     // Times the user clicked on the page
     offLoadData.clickCount = clickCount;
-
-    // Determine if user is likely a bot based on the user agent string
-    // Note: This is a simplistic method and may not catch all bots
-    const botPatterns = [
-        /bot/, /crawl/, /spider/, /slurp/, /search/, /archiver/, /archive/, /wget/, /curl/, /linkchecker/
-    ];
-    offLoadData.isLikelyBot = botPatterns.some(pattern => pattern.test(offLoadData.userAgent.toLowerCase()));
-
 
     return offLoadData;
 }
@@ -45,7 +63,7 @@ const sendDataToServer = (endpoint, data) => {
         headers: {
             'Content-Type': 'application/json',
             'X-CSRFToken': csrfToken,
-            'X-Custom-Header': 'Analytics',
+            'X-Custom-Header': 'analytics-beforeunload',
         },
         body: JSON.stringify(data)
     })
@@ -70,137 +88,5 @@ window.addEventListener('beforeunload', (event) => {
     // event.returnValue = '';  // Setting this can show a warning to the user, which may not be desirable.
 });
 
-
-// const gatherUserData = () => {
-//             const userData = {};
-//
-//             // Browser and System Information
-//             userData.userAgent = navigator.userAgent;
-//             userData.platform = navigator.platform;
-//             userData.cpuCores = navigator.hardwareConcurrency;
-//
-//             // Screen & Window Information
-//             userData.screenResolution = {
-//                 width: screen.width,
-//                 height: screen.height,
-//             };
-//             userData.windowSize = {
-//                 width: window.innerWidth,
-//                 height: window.innerHeight,
-//             };
-//             userData.availableScreenSize = {
-//                 width: screen.availWidth,
-//                 height: screen.availHeight,
-//             };
-//             userData.colorDepth = screen.colorDepth;
-//             userData.pixelDepth = screen.pixelDepth;
-//
-//             // Location Data
-//             userData.referrerURL = document.referrer;
-//
-//             // Note: Geolocation often prompts the user for permission
-//             if ('geolocation' in navigator) {
-//                 navigator.geolocation.getCurrentPosition(position => {
-//                     userData.location = {
-//                         latitude: position.coords.latitude,
-//                         longitude: position.coords.longitude,
-//                     };
-//                 });
-//             }
-//
-//             // Connection Information (may not be available on all browsers)
-//             if (navigator.connection) {
-//                 userData.networkInfo = {
-//                     type: navigator.connection.effectiveType,
-//                     downlink: navigator.connection.downlink,
-//                     rtt: navigator.connection.rtt,
-//                 };
-//             }
-//
-//             // Device Capabilities & Features
-//             userData.touchSupported = 'ontouchstart' in window;
-//             userData.isOnline = navigator.onLine;
-//             userData.preferredLanguage = navigator.language || navigator.userLanguage;
-//             {#userData.timezoneOffset = new Date().getTimezoneOffset();#}
-//
-//             // Browser Preferences
-//             userData.doNotTrack = navigator.doNotTrack === "1" ? true : false;
-//             if (window.matchMedia && window.matchMedia('(prefers-color-scheme)').matches) {
-//                 userData.colorSchemePreference = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-//             }
-//
-//             // Page Load Time # TODO - need to fix, not working properly
-//             userData.pageLoadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
-//
-//
-//             // User Clicks
-//             userData.clickCount = 0;
-//             document.addEventListener('click', function () {
-//                 userData.clickCount++;
-//             });
-//
-//
-//             // Time Spent on Page
-//             userData.pageEnterTime = Date.now();
-//             window.addEventListener('beforeunload', function () {
-//                 userData.timeSpentOnPage = Date.now() - userData.pageEnterTime;
-//
-//                 // Here, you might want to send this data to your server, because the user is leaving the page
-//             });
-//
-//
-//             // Cookies & Storage
-//             // Note: This will only get the size of storage items, not their content.
-//             userData.localStorageSize = Object.keys(localStorage).length;
-//             userData.sessionStorageSize = Object.keys(sessionStorage).length;
-//
-//             // Device Orientation & Motion
-//             if ('DeviceOrientationEvent' in window) {
-//                 window.addEventListener('deviceorientation', event => {
-//                     userData.deviceOrientation = {
-//                         alpha: event.alpha,
-//                         beta: event.beta,
-//                         gamma: event.gamma,
-//                     };
-//                 });
-//             }
-//             if ('DeviceMotionEvent' in window) {
-//                 window.addEventListener('devicemotion', event => {
-//                     userData.deviceMotion = {
-//                         acceleration: event.acceleration,
-//                         accelerationIncludingGravity: event.accelerationIncludingGravity,
-//                         rotationRate: event.rotationRate,
-//                     };
-//                 });
-//             }
-//
-//             // WebGL Renderer
-//             const canvas = document.createElement('canvas');
-//             const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-//             if (gl) {
-//                 const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-//                 userData.webglVendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
-//                 userData.webglRenderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-//             }
-//
-//             // Performance Data (simple example for navigation timing)
-//             if (window.performance) {
-//                 userData.navigationStart = performance.timing.navigationStart;
-//                 userData.loadEventEnd = performance.timing.loadEventEnd;
-//             }
-//
-//             // Memory Information (Chrome specific)
-//             if (window.performance && performance.memory) {
-//                 userData.memory = {
-//                     jsHeapSizeLimit: performance.memory.jsHeapSizeLimit,
-//                     totalJSHeapSize: performance.memory.totalJSHeapSize,
-//                     usedJSHeapSize: performance.memory.usedJSHeapSize
-//                 };
-//             }
-//
-//             return userData;
-//         }
-//
-//         console.log(gatherUserData());
 
 

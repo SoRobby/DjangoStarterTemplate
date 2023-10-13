@@ -40,13 +40,12 @@ class AnalyticsMiddleware:
         # logging.debug(f'\t\tUser cookie: {user_cookie}')
 
         custom_header = request.META.get('HTTP_X_CUSTOM_HEADER', None)
-        # logging.debug(f'\t\tCustom header: {custom_header}')
+        logging.debug(f'\t\tCustom header: {custom_header}')
 
-        if request.method == 'POST':
+        if request.method == 'POST' and custom_header:
             logging.debug('\t\tMETHOD: POST')
-            # logging.debug(f'test: {json.loads(request.body)}')
-            body = json.loads(request.body.decode('utf-8'))
-            logging.debug(f'\t\tData: {body}')
+            data = json.loads(request.body.decode('utf-8'))
+            logging.debug(f'\t\tUser analytic data: {data}')
 
         else:
             logging.debug('METHOD: GET')

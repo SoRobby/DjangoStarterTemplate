@@ -1589,6 +1589,14 @@ input.input-text:focus, textarea.input-text:focus {
   margin-right: auto;
 }
 
+.-ml-0 {
+  margin-left: -0px;
+}
+
+.-ml-0\.5 {
+  margin-left: -0.125rem;
+}
+
 .-ml-1 {
   margin-left: -0.25rem;
 }
@@ -1689,6 +1697,10 @@ input.input-text:focus, textarea.input-text:focus {
   display: inline-flex;
 }
 
+.table {
+  display: table;
+}
+
 .flow-root {
   display: flow-root;
 }
@@ -1761,6 +1773,10 @@ input.input-text:focus, textarea.input-text:focus {
   width: 0px;
 }
 
+.w-1\/2 {
+  width: 50%;
+}
+
 .w-10 {
   width: 2.5rem;
 }
@@ -1819,6 +1835,10 @@ input.input-text:focus, textarea.input-text:focus {
 
 .w-screen {
   width: 100vw;
+}
+
+.min-w-full {
+  min-width: 100%;
 }
 
 .max-w-2xl {
@@ -1962,6 +1982,10 @@ input.input-text:focus, textarea.input-text:focus {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.grid-cols-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .grid-cols-6 {
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
@@ -2039,6 +2063,11 @@ input.input-text:focus, textarea.input-text:focus {
        column-gap: 0.25rem;
 }
 
+.gap-x-1\.5 {
+  -moz-column-gap: 0.375rem;
+       column-gap: 0.375rem;
+}
+
 .gap-x-12 {
   -moz-column-gap: 3rem;
        column-gap: 3rem;
@@ -2081,6 +2110,12 @@ input.input-text:focus, textarea.input-text:focus {
 
 .gap-y-1 {
   row-gap: 0.25rem;
+}
+
+.-space-x-px > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(-1px * var(--tw-space-x-reverse));
+  margin-left: calc(-1px * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .space-x-4 > :not([hidden]) ~ :not([hidden]) {
@@ -2163,6 +2198,11 @@ input.input-text:focus, textarea.input-text:focus {
   border-color: rgb(229 231 235 / var(--tw-divide-opacity));
 }
 
+.divide-gray-300 > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-opacity: 1;
+  border-color: rgb(209 213 219 / var(--tw-divide-opacity));
+}
+
 .divide-gray-50 > :not([hidden]) ~ :not([hidden]) {
   --tw-divide-opacity: 1;
   border-color: rgb(249 250 251 / var(--tw-divide-opacity));
@@ -2224,6 +2264,11 @@ input.input-text:focus, textarea.input-text:focus {
 
 .rounded-xl {
   border-radius: 0.75rem;
+}
+
+.rounded-l-md {
+  border-top-left-radius: 0.375rem;
+  border-bottom-left-radius: 0.375rem;
 }
 
 .rounded-r-md {
@@ -2473,6 +2518,11 @@ input.input-text:focus, textarea.input-text:focus {
   padding-bottom: 0.75rem;
 }
 
+.py-3\.5 {
+  padding-top: 0.875rem;
+  padding-bottom: 0.875rem;
+}
+
 .py-32 {
   padding-top: 8rem;
   padding-bottom: 8rem;
@@ -2580,16 +2630,20 @@ input.input-text:focus, textarea.input-text:focus {
   padding-top: 2rem;
 }
 
-.pl-4 {
-  padding-left: 1rem;
-}
-
 .text-left {
   text-align: left;
 }
 
 .text-center {
   text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.align-middle {
+  vertical-align: middle;
 }
 
 .text-2xl {
@@ -2643,6 +2697,10 @@ input.input-text:focus, textarea.input-text:focus {
   font-weight: 600;
 }
 
+.uppercase {
+  text-transform: uppercase;
+}
+
 .leading-5 {
   line-height: 1.25rem;
 }
@@ -2672,9 +2730,9 @@ input.input-text:focus, textarea.input-text:focus {
   color: rgb(96 165 250 / var(--tw-text-opacity));
 }
 
-.text-blue-600 {
+.text-blue-500 {
   --tw-text-opacity: 1;
-  color: rgb(37 99 235 / var(--tw-text-opacity));
+  color: rgb(59 130 246 / var(--tw-text-opacity));
 }
 
 .text-gray-300 {
@@ -2717,6 +2775,11 @@ input.input-text:focus, textarea.input-text:focus {
   color: rgb(74 222 128 / var(--tw-text-opacity));
 }
 
+.text-green-600 {
+  --tw-text-opacity: 1;
+  color: rgb(22 163 74 / var(--tw-text-opacity));
+}
+
 .text-indigo-600 {
   --tw-text-opacity: 1;
   color: rgb(79 70 229 / var(--tw-text-opacity));
@@ -2750,11 +2813,6 @@ input.input-text:focus, textarea.input-text:focus {
 .text-yellow-400 {
   --tw-text-opacity: 1;
   color: rgb(250 204 21 / var(--tw-text-opacity));
-}
-
-.text-blue-500 {
-  --tw-text-opacity: 1;
-  color: rgb(59 130 246 / var(--tw-text-opacity));
 }
 
 .underline {
@@ -2953,6 +3011,11 @@ input.input-text:focus, textarea.input-text:focus {
   background-color: rgb(239 68 68 / var(--tw-bg-opacity));
 }
 
+.hover\:text-blue-800:hover {
+  --tw-text-opacity: 1;
+  color: rgb(30 64 175 / var(--tw-text-opacity));
+}
+
 .hover\:text-gray-500:hover {
   --tw-text-opacity: 1;
   color: rgb(107 114 128 / var(--tw-text-opacity));
@@ -2978,23 +3041,31 @@ input.input-text:focus, textarea.input-text:focus {
   color: rgb(79 70 229 / var(--tw-text-opacity));
 }
 
+.hover\:text-indigo-900:hover {
+  --tw-text-opacity: 1;
+  color: rgb(49 46 129 / var(--tw-text-opacity));
+}
+
 .hover\:text-red-500:hover {
   --tw-text-opacity: 1;
   color: rgb(239 68 68 / var(--tw-text-opacity));
-}
-
-.hover\:text-blue-800:hover {
-  --tw-text-opacity: 1;
-  color: rgb(30 64 175 / var(--tw-text-opacity));
 }
 
 .hover\:underline:hover {
   text-decoration-line: underline;
 }
 
+.focus\:z-20:focus {
+  z-index: 20;
+}
+
 .focus\:outline-none:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
+}
+
+.focus\:outline-offset-0:focus {
+  outline-offset: 0px;
 }
 
 .focus\:ring-1:focus {
@@ -3080,6 +3151,11 @@ input.input-text:focus, textarea.input-text:focus {
   outline-color: #4f46e5;
 }
 
+.group:hover .group-hover\:bg-indigo-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(238 242 255 / var(--tw-bg-opacity));
+}
+
 .group:hover .group-hover\:bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
@@ -3144,6 +3220,10 @@ input.input-text:focus, textarea.input-text:focus {
     display: flex;
   }
 
+  .sm\:hidden {
+    display: none;
+  }
+
   .sm\:aspect-\[2\/1\] {
     aspect-ratio: 2/1;
   }
@@ -3182,6 +3262,10 @@ input.input-text:focus, textarea.input-text:focus {
 
   .sm\:max-w-sm {
     max-width: 24rem;
+  }
+
+  .sm\:flex-1 {
+    flex: 1 1 0%;
   }
 
   .sm\:flex-none {
@@ -3349,6 +3433,10 @@ input.input-text:focus, textarea.input-text:focus {
     display: flex;
   }
 
+  .md\:inline-flex {
+    display: inline-flex;
+  }
+
   .md\:hidden {
     display: none;
   }
@@ -3391,6 +3479,12 @@ input.input-text:focus, textarea.input-text:focus {
     --tw-space-x-reverse: 0;
     margin-right: calc(1rem * var(--tw-space-x-reverse));
     margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+
+  .md\:space-y-0 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(0px * var(--tw-space-y-reverse));
   }
 
   .md\:pt-4 {

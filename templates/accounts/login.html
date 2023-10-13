@@ -23,7 +23,9 @@
             </div>
             <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
                 <div class="px-6 py-12 bg-white shadow rounded-lg sm:px-12" id="login-form-container">
-                    <form action="#" method="POST" x-data="{ isEmailValid: false, isPasswordValid: false }">
+                    <form action="#" method="POST"
+                          x-data="{ isEmailValid: false, isPasswordValid: false, isSigningIn: false }"
+                          @keydown.enter="isSigningIn=true">
                         {% csrf_token %}
                         <div class="space-y-6">
                             {% comment %} Email field {% endcomment %}
@@ -68,7 +70,7 @@
 
 
                             {% comment %} Submit form button {% endcomment %}
-                            <div x-data="{ isSigningIn: false }">
+                            <div>
                                 <button type="submit" x-show="!isEmailValid || !isPasswordValid"
                                         class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                                     Sign
@@ -95,8 +97,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
                     </form>
 
