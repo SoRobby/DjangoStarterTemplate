@@ -31,9 +31,10 @@ def post_list(request):
 #     context['post'] = single_post
 #     return render(request, 'blog/post.html', context)
 
-# from apps.analytics.views_registry import register_view
+from apps.analytics.views_registry import register_view
 
-# @register_view(namespace="blog", url_name="post", app_name="blog", model_name="post")
+
+@register_view(namespace="blog", url_name="post", app_name="blog", model=Post)
 class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/post.html'
