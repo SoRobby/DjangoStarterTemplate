@@ -3,9 +3,6 @@ from django.contrib import admin
 from .models import ObjectViewed
 
 
-# Quick view register
-
-
 # Register your models here.
 @admin.register(ObjectViewed)
 class ObjectViewedAdmin(admin.ModelAdmin):
@@ -20,15 +17,15 @@ class ObjectViewedAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'timestamp')
 
     fieldsets = (
+        ('Object information', {
+            'fields': ('content_type', 'object_id'),
+            'description': 'Object related information'}
+         ),
+
         ('User properties', {
             'fields': (
                 'user', 'ip_address'),
             'description': 'User related information'}
-         ),
-
-        ('Object information', {
-            'fields': ('content_type', 'object_id'),
-            'description': 'Object related information'}
          ),
 
         ('Read only properties', {

@@ -6,7 +6,7 @@ from django.urls import resolve
 
 from .models import ObjectViewed
 from .registered_views import views_registry
-
+from .utils import get_client_ip_address
 
 class ObjectViewedMiddleware:
     def __init__(self, get_response):
@@ -46,38 +46,11 @@ class ObjectViewedMiddleware:
                 user=request.user if request.user.is_authenticated else None,
                 content_type=content_type,
                 object_id=model_instance.id,
+                ip_address=get_client_ip_address(request),
                 # ... other fields ...
             )
         except (ContentType.DoesNotExist, content_type.model_class().DoesNotExist):
             pass
-
-    # def process_viewed_object(self, request):
-    #     # Determine the current URL's name and namespace
-    #     match = resolve(request.path_info)
-    #     url_name = match.url_name
-    #     namespace = match.namespace
-    #
-    #     # Check if this URL name exists in our registered views
-    #     target_view = next((view for view in VIEWS_TO_TRACK if
-    #                         view['url_name'] == url_name and view['namespace'] == namespace), None)
-    #     if not target_view:
-    #         return
-    #
-    #     # Fetch the content type and model instance
-    #     try:
-    #         content_type = ContentType.objects.get(app_label=target_view['app_name'], model=target_view['model_name'])
-    #
-    #         object_identifier = match.kwargs.get('slug')  # Or 'pk' or other fields
-    #         model_instance = content_type.model_class().objects.get(slug=object_identifier)
-    #
-    #         ObjectViewed.objects.create(
-    #             user=request.user if request.user.is_authenticated else None,
-    #             content_type=content_type,
-    #             object_id=model_instance.id,
-    #             # ... other fields
-    #         )
-    #     except (ContentType.DoesNotExist, content_type.model_class().DoesNotExist):
-    #         pass
 
 
 class AnalyticsMiddleware:
