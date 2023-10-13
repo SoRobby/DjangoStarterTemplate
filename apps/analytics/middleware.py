@@ -5,8 +5,9 @@ from django.contrib.contenttypes.models import ContentType
 from django.urls import resolve
 
 from .models import ObjectViewed
-from .registered_views import views_registry
 from .utils import get_client_ip_address
+from .registered_views import views_registry
+
 
 class ObjectViewedMiddleware:
     def __init__(self, get_response):
