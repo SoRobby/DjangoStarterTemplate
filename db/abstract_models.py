@@ -1,6 +1,8 @@
-from datetime import datetime, timedelta
+import logging
+from datetime import timedelta
 
 from django.db import models
+from django.utils import timezone
 from django.utils.timezone import is_aware, make_naive, utc
 
 
@@ -39,23 +41,34 @@ class DateCreatedAndModified(models.Model):
     @classmethod
     def percent_change(cls, delta_days: int):
         # Get the dates for the past week and the week before
-        end_date = datetime.now()
+        # end_date = datetime.now()
+        end_date = timezone.now()
+
         start_date = end_date - timedelta(days=delta_days)
-        week_before_start_date = start_date - timedelta(days=delta_days)
-        week_before_end_date = start_date
+        period_before_start_date = start_date - timedelta(days=delta_days)
+        period_before_end_date = start_date
+
+        logging.debug(f'start_date: {start_date}')
+        logging.debug(f'end_date: {end_date}')
+        logging.debug(f'period_before_start_date: {period_before_start_date}')
+        logging.debug(f'period_before_end_date: {period_before_end_date}')
 
         # Get the count of feedback entries for the past week
-        last_week_count = cls.objects.filter(date_created__range=(start_date, end_date)).count()
+        last_period_count = cls.objects.filter(date_created__range=(start_date, end_date)).count()
+
+        logging.debug(f'last_period_count: {last_period_count}')
 
         # Get the count of feedback entries for the week before the past week
-        week_before_count = cls.objects.filter(
-            date_created__range=(week_before_start_date, week_before_end_date)).count()
+        period_before_count = cls.objects.filter(
+            date_created__range=(period_before_start_date, period_before_end_date)).count()
+
+        logging.debug(f'period_before_count: {period_before_count}')
 
         # Calculate the percent increase
         try:
-            percent_increase = ((last_week_count - week_before_count) / week_before_count) * 100
+            percent_increase = ((last_period_count - period_before_count) / period_before_count) * 100
         except ZeroDivisionError:
-            if last_week_count == 0:
+            if last_period_count == 0:
                 return 0  # If both counts are zero, the increase is zero
             return 100  # If week_before_count is zero but last_week_count isn't, the increase is 100%
 
@@ -69,7 +82,7 @@ class DateCreatedAndModified(models.Model):
     @classmethod
     def percent_change_last_week(cls):
         # Get the percent change for the last week
-        return cls.percent_change(delta_days=7)
+        return cls.percent_change(delta_days=15)
 
     @classmethod
     def percent_change_last_month(cls):

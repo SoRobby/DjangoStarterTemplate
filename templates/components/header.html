@@ -79,12 +79,14 @@
                                     <div x-data="{ isOpen: false }" class="-mx-3">
                                         <button type="button"
                                                 class="flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-800 hover:bg-gray-50"
-                                                aria-controls="disclosure-1" @click="isOpen=!isOpen" aria-expanded="true"
+                                                aria-controls="disclosure-1" @click="isOpen=!isOpen"
+                                                aria-expanded="true"
                                                 x-bind:aria-expanded="isOpen.toString()">
                                             Mega Menu
                                             <svg class="h-5 w-5 flex-none rotate-180"
                                                  x-description="Expand/collapse icon, toggle classes based on menu open state."
-                                                 x-state:on="Open" x-state:off="Closed" :class="{ 'rotate-180': isOpen }"
+                                                 x-state:on="Open" x-state:off="Closed"
+                                                 :class="{ 'rotate-180': isOpen }"
                                                  viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                 <path fill-rule="evenodd"
                                                       d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
@@ -743,13 +745,20 @@
                                tabindex="-1"
                                id="user-menu-item-2">Sign out</a>
 
-                            {% if user.is_superuser %}
+                            {% if user.is_staff %}
                                 <hr>
-                                <a href="{% url 'admin:index' %}"
+                                <a href="{% url 'adminpanel:home' %}"
                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                    role="menuitem"
                                    tabindex="-1"
                                    id="user-menu-item-2">Admin panel</a>
+                                {% if user.is_superuser %}
+                                    <a href="{% url 'admin:index' %}"
+                                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                       role="menuitem"
+                                       tabindex="-1"
+                                       id="user-menu-item-2">Django panel</a>
+                                {% endif %}
                             {% endif %}
 
                         </div>

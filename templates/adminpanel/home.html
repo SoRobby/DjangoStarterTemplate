@@ -61,7 +61,7 @@
                                     <dt class="text-sm font-medium leading-6 text-muted">New feedback</dt>
                                     {% if feedback_last_week_percent_change > 0 %}
                                         <dd class="text-xs font-medium tracking-tight text-green-600">
-                                            +{{ feedback_last_week_percent_change }}%
+                                            +{{ feedback_last_week_percent_change|floatformat:"0" }}%
                                         </dd>
                                     {% elif feedback_last_week_percent_change == 0 %}
                                         <dd class="text-xs font-medium tracking-tight text-muted">
@@ -69,7 +69,7 @@
                                         </dd>
                                     {% else %}
                                         <dd class="text-xs font-medium tracking-tight text-red-600">
-                                            -{{ feedback_last_week_percent_change }}%
+                                            {{ feedback_last_week_percent_change|floatformat:"0" }}%
                                         </dd>
                                     {% endif %}
                                 </div>
@@ -92,7 +92,6 @@
                             </div>
                         </dl>
                     </div>
-
 
 
                     {# Table #}
@@ -157,6 +156,7 @@
                                     </th>
                                 </tr>
                                 </thead>
+
                                 <tbody class="divide-y divide-gray-200 bg-white">
                                 {% for item in feedback %}
                                     <tr class="group">
@@ -170,6 +170,8 @@
                                         </td>
                                     </tr>
                                 {% endfor %}
+                                </tbody>
+
                             </table>
                             <div class="border-t border-gray-200">
 

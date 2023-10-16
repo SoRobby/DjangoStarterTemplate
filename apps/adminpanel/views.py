@@ -3,6 +3,7 @@ import logging
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, ListView
 
@@ -38,6 +39,7 @@ class AdminPanelHomeView(TemplateView):
         feedback = Feedback.objects.all()
 
         feedback_last_week_percent_change = Feedback.percent_change_last_week()
+
         logging.debug(f'feedback_last_week_percent_change: {feedback_last_week_percent_change}')
 
         context['users'] = users
@@ -77,6 +79,41 @@ class AdminPanelFeedbackListView(UserPassesTestMixin, ListView):
 
     def test_func(self):
         return self.request.user.is_staff
+
+
+class AdminPanelFeedbackSearchView(TemplateView):
+    template_name = 'adminpanel/feedback/partials/tbody.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        search_text = self.request.GET.get('feedback_search', None)
+
+        logging.debug(f'feedback_search: {search_text}')
+
+        if search_text:
+            feedbacks = Feedback.objects.filter(content__icontains=search_text)
+        else:
+            feedbacks = Feedback.objects.all()
+
+        context['feedbacks'] = feedbacks
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        return render(request, self.template_name, context)
+
+
+# def feedback_search(request):
+#     search_text = request.GET.get('feedback_search', None)
+#
+#     logging.debug(f'feedback_search: {feedback_search}')
+#
+#     if search_text:
+#         feedbacks = Feedback.objects.filter(content__icontains=search_text)
+#     else:
+#         feedbacks = Feedback.objects.all()
+#
+#     return render(request, 'adminpanel/feedback/partials/tbody.html', {'feedbacks': feedbacks})
 
 
 class ExportFeedbacksToCSV(ExportToCSVView):
