@@ -1,8 +1,7 @@
-from datetime import datetime
-from io import BytesIO
-from uuid import uuid4
 import inspect
 import logging
+from io import BytesIO
+from uuid import uuid4
 
 from PIL import Image
 from django.contrib import messages
@@ -11,7 +10,6 @@ from django.core.files.storage import default_storage
 from django.db.models import Model
 from django.utils.encoding import force_str
 from django.utils.text import slugify
-
 
 
 def send_notification(request, tag: str, title: str = '', message: str = '') -> None:

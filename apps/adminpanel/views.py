@@ -1,11 +1,12 @@
 import logging
 
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, DetailView
 
 from apps.feedback.models import Feedback
 from libs.utils import ExportToCSVView
@@ -103,17 +104,13 @@ class AdminPanelFeedbackSearchView(TemplateView):
         return render(request, self.template_name, context)
 
 
-# def feedback_search(request):
-#     search_text = request.GET.get('feedback_search', None)
-#
-#     logging.debug(f'feedback_search: {feedback_search}')
-#
-#     if search_text:
-#         feedbacks = Feedback.objects.filter(content__icontains=search_text)
-#     else:
-#         feedbacks = Feedback.objects.all()
-#
-#     return render(request, 'adminpanel/feedback/partials/tbody.html', {'feedbacks': feedbacks})
+@method_decorator(staff_member_required, name='dispatch')
+class FeedbackDetailView(DetailView):
+    model = Feedback
+    template_name = 'adminpanel/feedback/view.html'
+    context_object_name = 'feedback'
+    slug_field = 'uuid'
+    slug_url_kwarg = 'uuid'
 
 
 class ExportFeedbacksToCSV(ExportToCSVView):
