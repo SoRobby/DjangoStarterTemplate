@@ -161,3 +161,6 @@ cython_debug/
 
 # Exclude node_modules
 libs/npm/node_modules/
+
+# Exclude PyCharm .idea folder
+.idea/
