@@ -44,7 +44,7 @@ SITE_ID = 1
 # The site domain
 SITE_DOMAIN = '127.0.0.1:8000'
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 # Application definition
 DJANGO_APPS = [
@@ -95,6 +95,9 @@ MIDDLEWARE = [
 if ENABLE_DEBUG_TOOLBAR:
     INSTALLED_APPS.append('debug_toolbar')
     MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
+    DEBUG_TOOLBAR_CONFIG = {
+        "ROOT_TAG_EXTRA_ATTRS": "hx-preserve"
+    }
     INTERNAL_IPS = ['127.0.0.1']
 
 ROOT_URLCONF = 'config.urls'

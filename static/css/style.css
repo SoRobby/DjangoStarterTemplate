@@ -1600,18 +1600,6 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
   grid-column: span 6 / span 6;
 }
 
-.col-start-2 {
-  grid-column-start: 2;
-}
-
-.col-start-1 {
-  grid-column-start: 1;
-}
-
-.col-start-4 {
-  grid-column-start: 4;
-}
-
 .float-right {
   float: right;
 }
@@ -1893,18 +1881,6 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
 
 .w-screen {
   width: 100vw;
-}
-
-.w-1\/4 {
-  width: 25%;
-}
-
-.w-32 {
-  width: 8rem;
-}
-
-.w-16 {
-  width: 4rem;
 }
 
 .min-w-full {
@@ -3694,8 +3670,4 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
     --tw-bg-opacity: 1;
     background-color: rgb(243 244 246 / var(--tw-bg-opacity));
   }
-}
-
-.\[\&\:not\(first\)\]\:pt-2:not(first) {
-  padding-top: 0.5rem;
 }
