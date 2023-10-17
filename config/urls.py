@@ -24,7 +24,7 @@ urlpatterns = [
     path('', include('apps.accounts.urls')),
     path('adminpanel/', include('apps.adminpanel.urls')),
     path('', include('apps.analytics.urls')),
-    path('', include('apps.main.urls')),
+    path('', include('apps.core.urls')),
     path('blog/', include('apps.blog.urls', namespace='blog')),
     path('', include('apps.feedback.urls', namespace='feedback')),
     path('', include('apps.profiles.urls', namespace='profiles')),
@@ -45,7 +45,7 @@ if settings.ENABLE_DEBUG_TOOLBAR:
     urlpatterns.append(path('__debug__/', include('debug_toolbar.urls')))
 
 # Page error handlers
-handler400 = 'apps.main.views.handle400'
-handler403 = 'apps.main.views.handle403'
-handler404 = 'apps.main.views.handle404'
-handler500 = 'apps.main.views.handle500'
+handler400 = 'apps.core.views.handle400'
+handler403 = 'apps.core.views.handle403'
+handler404 = 'apps.core.views.handle404'
+handler500 = 'apps.core.views.handle500'

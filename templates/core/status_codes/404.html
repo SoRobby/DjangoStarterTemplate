@@ -1,0 +1,20 @@
+{% extends 'core/status_codes/status_codes_base.html' %}
+{% load static %}
+
+
+{% block title %}<title>404 Page not found</title>{% endblock title %}
+
+
+{% block status_code %}
+    404
+{% endblock status_code %}
+
+
+{% block status_title %}
+    Page not found
+{% endblock status_title %}
+
+
+{% block status_description %}
+    Please check the URL in the address bar and try again
+{% endblock status_description %}

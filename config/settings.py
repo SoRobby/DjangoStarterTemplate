@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load and read the environment variables from the .env file
 env = environ.Env()
-env.read_env(os.path.join(BASE_DIR, ".env"))
+env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -69,9 +69,9 @@ PROJECT_APPS = [
     'apps.adminpanel',
     'apps.analytics',
     'apps.blog',
+    'apps.core',
     'apps.feedback',
-    'apps.main',
-    'apps.profiles'
+    'apps.profiles',
 ]
 
 # Installed apps
@@ -112,7 +112,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 
                 # Project / app context_processors
-                'apps.main.context_processors.google_analytics_id',
+                'apps.core.context_processors.google_analytics_id',
             ],
         },
     },

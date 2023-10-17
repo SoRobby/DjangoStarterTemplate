@@ -79,40 +79,19 @@
                             <div class="text-gray-800 p-2">
                                 <h3 class="text-gray-800 font-medium text-lg border-b pb-2">User information</h3>
                                 <div class="space-y-2 divide-y divide-gray-100 mt-2 text-xs">
-                                    <dl class="grid grid-cols-3">
-                                        <dt class="font-medium text-muted">{{ feedback|verbose_name:"name" }}</dt>
-                                        <dd class="col-span-2 text-normal">{{ feedback.name }}</dd>
-                                    </dl>
-                                    <dl class="pt-2 grid grid-cols-3">
-                                        <dt class="font-medium text-muted">{{ feedback|verbose_name:"email" }}</dt>
-                                        <dd class="col-span-2 text-normal">{{ feedback.email }}</dd>
-                                    </dl>
-                                    <dl class="pt-2 grid grid-cols-3">
-                                        <dt class="font-medium text-muted">{{ feedback|verbose_name:"user" }}</dt>
-                                        <dd class="col-span-2 text-normal">{{ feedback.user }}</dd>
-                                    </dl>
+                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=feedback field_name="name" %}
+                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=feedback field_name="email" %}
+                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=feedback field_name="user" %}
                                 </div>
                             </div>
 
                             <div class="text-gray-800 p-2">
                                 <h3 class="text-gray-800 font-medium text-lg border-b pb-2">Object properties</h3>
                                 <div class="space-y-2 divide-y divide-gray-100 mt-2 text-xs">
-                                    <dl class="grid grid-cols-3">
-                                        <dt class="font-medium text-muted">{{ feedback|verbose_name:"page_url" }}</dt>
-                                        <dd class="col-span-2 text-normal">{{ feedback.page_url }}</dd>
-                                    </dl>
-                                    <dl class="pt-2 grid grid-cols-3">
-                                        <dt class="font-medium text-muted">{{ feedback|verbose_name:"category" }}</dt>
-                                        <dd class="col-span-2 text-normal">{{ feedback.category }}</dd>
-                                    </dl>
-                                    <dl class="pt-2 grid grid-cols-3">
-                                        <dt class="font-medium text-muted">Date created</dt>
-                                        <dd class="col-span-2 text-normal">{{ feedback.date_created }}</dd>
-                                    </dl>
-                                    <dl class="pt-2 grid grid-cols-3">
-                                        <dt class="font-medium text-muted">Date modified</dt>
-                                        <dd class="col-span-2 text-normal">{{ feedback.date_modified }}</dd>
-                                    </dl>
+                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=feedback field_name="page_url" %}
+                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=feedback field_name="category" %}
+                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=feedback field_name="content" %}
+                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=feedback field_name="is_processed" %}
                                 </div>
                             </div>
 
@@ -129,11 +108,47 @@
                                     </dl>
                                     <dl class="grid grid-cols-1 sm:grid-cols-3">
                                         <dt class="font-medium text-muted">Date created</dt>
-                                        <dd class="sm:col-span-2 text-normal">{{ feedback.date_created }}</dd>
+                                        <dd class="sm:col-span-2 text-normal">
+                                            <div class="flex">
+                                                <div class="w-12 text-muted">
+                                                    Server
+                                                </div>
+                                                <div>
+                                                    {{ feedback.date_created|date:"m/d/Y, h:i:s A" }}
+                                                </div>
+                                            </div>
+                                            <div class="flex">
+                                                <div class="w-12 text-muted">
+                                                    Local
+                                                </div>
+                                                <div data-utc-time="{{ feedback.date_created.isoformat }}"
+                                                     class="convert-time">
+                                                    {{ feedback.date_created|date:"m/d/Y, h:i:s A" }}
+                                                </div>
+                                            </div>
+                                        </dd>
                                     </dl>
                                     <dl class="grid grid-cols-1 sm:grid-cols-3">
                                         <dt class="font-medium text-muted">Date modified</dt>
-                                        <dd class="sm:col-span-2 text-normal">{{ feedback.date_modified }}</dd>
+                                        <dd class="sm:col-span-2 text-normal">
+                                            <div class="flex">
+                                                <div class="w-12 text-muted">
+                                                    Server
+                                                </div>
+                                                <div>
+                                                    {{ feedback.date_modified|date:"m/d/Y, h:i:s A" }}
+                                                </div>
+                                            </div>
+                                            <div class="flex">
+                                                <div class="w-12 text-muted">
+                                                    Local
+                                                </div>
+                                                <div data-utc-time="{{ feedback.date_modified.isoformat }}"
+                                                     class="convert-time">
+                                                    {{ feedback.date_modified|date:"m/d/Y, h:i:s A" }}
+                                                </div>
+                                            </div>
+                                        </dd>
                                     </dl>
                                 </div>
                             </div>
@@ -148,7 +163,7 @@
                                     Cancel
                                 </button>
                                 <button type="button" class="btn-primary-lg">
-                                    Send message
+                                    Action item...
                                 </button>
                             </div>
 

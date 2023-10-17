@@ -1,5 +1,5 @@
 # Project's apps sitemaps
-from apps.main.sitemaps import MainStaticSitemap
+from apps.core.sitemaps import CoreStaticSitemap
 from django.contrib.sitemaps.views import sitemap
 from django.urls import path
 
@@ -7,9 +7,9 @@ from django.urls import path
 # https://docs.djangoproject.com/en/4.2/ref/contrib/sitemaps/
 
 # Dictionary of project sitemaps
-sitemap_main = {'sitemap': MainStaticSitemap}
+sitemap_core = {'sitemap': CoreStaticSitemap}
 
 # Sitemap base URL: '/sitemap/'
 urlpatterns = [
-    path('sitemap.xml', sitemap, {'sitemaps': sitemap_main}, name='django.contrib.sitemaps.views.sitemap'),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemap_core}, name='django.contrib.sitemaps.views.sitemap'),
 ]
