@@ -11,7 +11,7 @@ class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ['title', 'content', 'release_status', 'allow_comments', 'allow_sharing',
+        fields = ['title', 'content', 'content2', 'release_status', 'allow_comments', 'allow_sharing',
                   'meta_title', 'meta_description', 'meta_keywords']
 
     def save(self, commit=True):

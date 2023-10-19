@@ -2,8 +2,9 @@ import logging
 import traceback
 
 from django.contrib.auth import get_user_model
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 
 # Retrieve the current user model
 User = get_user_model()
@@ -31,6 +32,49 @@ def terms_of_service(request: HttpResponse) -> HttpResponse:
     """
     logging.debug('[MAIN.TERMS_OF_SERVICE] Called')
     return render(request, 'core/terms-of-service.html')
+
+
+from apps.blog.models import Post
+import os
+from django.conf import settings
+from uuid import uuid4
+
+
+@csrf_exempt
+def upload_image(request):
+
+    print('CALLED!!!!')
+
+    pass
+
+    # if request.method != "POST":
+    #     return JsonResponse({'Error Message': "Wrong request"})
+    #
+    # # If it's not series and not article, handle it differently
+    # matching_article = Post.objects.filter(series__slug=series, article_slug=article).first()
+    # if not matching_article:
+    #     return JsonResponse({'Error Message': f"Wrong series ({series}) or article ({article})"})
+    #
+    # file_obj = request.FILES['file']
+    # file_name_suffix = file_obj.name.split(".")[-1]
+    # if file_name_suffix not in ["jpg", "png", "gif", "jpeg"]:
+    #     return JsonResponse(
+    #         {"Error Message": f"Wrong file suffix ({file_name_suffix}), supported are .jpg, .png, .gif, .jpeg"})
+    #
+    # file_path = os.path.join(settings.MEDIA_ROOT, 'ArticleSeries', matching_article.slug, file_obj.name)
+    #
+    # if os.path.exists(file_path):
+    #     file_obj.name = str(uuid4()) + '.' + file_name_suffix
+    #     file_path = os.path.join(settings.MEDIA_ROOT, 'ArticleSeries', matching_article.slug, file_obj.name)
+    #
+    # with open(file_path, 'wb+') as f:
+    #     for chunk in file_obj.chunks():
+    #         f.write(chunk)
+    #
+    #     return JsonResponse({
+    #         'message': 'Image uploaded successfully',
+    #         'location': os.path.join(settings.MEDIA_URL, 'ArticleSeries', matching_article.slug, file_obj.name)
+    #     })
 
 
 # HTTP status codes

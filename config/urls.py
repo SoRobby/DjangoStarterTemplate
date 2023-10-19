@@ -24,12 +24,19 @@ urlpatterns = [
     path('', include('apps.accounts.urls')),
     path('adminpanel/', include('apps.adminpanel.urls')),
     path('', include('apps.analytics.urls')),
-    path('', include('apps.core.urls')),
     path('blog/', include('apps.blog.urls', namespace='blog')),
+    path('', include('apps.core.urls')),
     path('', include('apps.feedback.urls', namespace='feedback')),
     path('', include('apps.profiles.urls', namespace='profiles')),
-
 ]
+
+# Third party app urls
+third_party_urlpatterns = [
+    path('tinymce/', include('tinymce.urls')),
+]
+
+# Combine the urlpatterns
+urlpatterns.extend(third_party_urlpatterns)
 
 # CKEditor5 url pattern
 urlpatterns.append(path("ckeditor5/", include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"))

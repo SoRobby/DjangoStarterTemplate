@@ -61,6 +61,7 @@ DJANGO_APPS = [
 # Third party apps
 THIRD_PARTY_APPS = [
     'django_ckeditor_5',
+    'tinymce',
 ]
 
 # Project apps
@@ -337,3 +338,21 @@ CKEDITOR_5_CONFIGS = {
 }
 
 CKEDITOR_5_FILE_STORAGE = "apps.blog.storage.CustomStorage"
+
+# TinyMCE settings
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5 MB
+
+TINYMCE_DEFAULT_CONFIG = {
+    "theme": "silver",
+    "height": 500,
+    "menubar": True,
+    "plugins": "image",
+    # "plugins": "advlist,autolink,lists,link,image,charmap,print,preview,anchor,"
+    #            "searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,paste,"
+    #            "code,help,wordcount",
+    "toolbar": "undo redo | formatselect | "
+               "bold italic backcolor | alignleft aligncenter "
+               "alignright alignjustify | bullist numlist outdent indent | "
+               "removeformat | help | image",
+    "images_upload_url": "upload_image/",
+}

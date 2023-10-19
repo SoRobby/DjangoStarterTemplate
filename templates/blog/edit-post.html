@@ -96,6 +96,7 @@
 {% block head_script %}
     {#    <script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>#}
     {#    <script type="text/javascript" src="{% static 'ckeditor5-build-classic/build/ckeditor.js' %}"></script>#}
+    <script src="{% static 'js/tinymce-uploader.js' %}"></script>
 {% endblock head_script %}
 
 
@@ -174,6 +175,17 @@
                                 </label>
                                 <div class="mt-2">
                                     {{ form.content }}
+                                </div>
+                            </div>
+
+
+                            <div class="sm:col-span-6 mt-2">
+                                <label for="{{ form.content2.id_for_label }}"
+                                       class="sr-only">
+                                    Editor2
+                                </label>
+                                <div class="mt-2">
+                                    {{ form.content2 }}
                                 </div>
                             </div>
 

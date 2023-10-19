@@ -15,6 +15,8 @@ from db.abstract_models import DateCreatedAndModified, DateDeleted
 from libs.utils.utils import generate_unique_slug
 from .managers import PostManager
 
+from tinymce.models import HTMLField
+
 User = settings.AUTH_USER_MODEL
 
 
@@ -51,6 +53,8 @@ class Post(DateCreatedAndModified, DateDeleted):
 
     content = CKEditor5Field(config_name='extends', verbose_name='Content',
                              help_text='Primary content of the post using rich text editor')
+
+    content2 = HTMLField(verbose_name='Content2', blank=True, null=True, help_text='Primary content of the post using rich text editor')
 
     featured_image_raw = models.ImageField(upload_to=upload_to_featured_images, blank=True, null=True,
                                            help_text='Original unedited image of the post')
