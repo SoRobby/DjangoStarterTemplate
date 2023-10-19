@@ -32,24 +32,24 @@
                         </div>
                         <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                             <h3 class="text-base font-semibold leading-6 text-gray-900"
-                                id="modal-title">Delete post</h3>
+                                id="modal-title">Delete article</h3>
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500">Are you sure you want
-                                    to delete the post? All the post data will be permanently deleted. This action
+                                    to delete the article? All the article data will be permanently deleted. This action
                                     cannot be undone.</p>
                             </div>
                         </div>
                     </div>
 
-                    <form hx-delete="{% url 'blog:delete-post' uuid=post.uuid %}"
+                    <form hx-delete="{% url 'blog:delete-article' uuid=article.uuid %}"
                           hx-target="body"
-                          hx-replace-url="{% url 'blog:post-list' %}"
+                          hx-replace-url="{% url 'blog:article-list' %}"
                           class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse"
                           x-data="{ isDeleting: false }">
                         <button type="submit" x-show="!isDeleting"
                                 @click="isDeleting=true"
                                 class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">
-                            Delete post
+                            Delete article
                         </button>
                         <button type="button" x-show="!isDeleting"
                                 @click="isDeleteModalOpen=false"
@@ -65,7 +65,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                       d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"></path>
                             </svg>
-                            Deleting post...
+                            Deleting article...
                         </div>
                     </form>
 

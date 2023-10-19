@@ -70,8 +70,18 @@ class ObjectViewed(models.Model):
 
     timestamp = models.DateTimeField(auto_now_add=True, help_text='Date and time when the object was viewed')
 
+
     def __str__(self, ):
         return str(f'{self.content_object} ({self.timestamp})')
+
+    @property
+    def name_of_user(self):
+        if self.user:
+            return self.user.username
+        return 'AnonymousUser'
+
+    def get_content_object_url(self):
+        return self.content_object.get_absolute_url()
 
     class Meta:
         verbose_name = 'Object viewed'

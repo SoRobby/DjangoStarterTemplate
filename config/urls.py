@@ -38,9 +38,6 @@ third_party_urlpatterns = [
 # Combine the urlpatterns
 urlpatterns.extend(third_party_urlpatterns)
 
-# CKEditor5 url pattern
-urlpatterns.append(path("ckeditor5/", include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"))
-
 # Sitemap url pattern
 urlpatterns.append(path('sitemaps/', include('config.sitemaps')))
 

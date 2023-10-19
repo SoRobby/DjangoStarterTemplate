@@ -2,9 +2,9 @@ from django.apps import apps
 from django.db import models
 
 
-class PostManager(models.Manager):
+class ArticleManager(models.Manager):
     def get_model(self):
-        return apps.get_model('blog', 'Post')
+        return apps.get_model('blog', 'Article')
 
     def published(self):
         return self.filter(release_status=self.get_model().ReleaseStatus.PUBLISHED, is_deleted=False)
@@ -17,5 +17,3 @@ class PostManager(models.Manager):
 
     def not_published(self):
         return self.exclude(release_status=self.get_model().ReleaseStatus.PUBLISHED).exclude(is_deleted=True)
-
-

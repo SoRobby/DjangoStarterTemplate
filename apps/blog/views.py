@@ -7,22 +7,22 @@ from django.views.generic import DetailView
 from apps.accounts.models import Account
 from libs.utils.utils import process_image, send_notification, save_file_to_field
 from .forms import PostForm
-from .models import Post, upload_to_featured_images
+from .models import Article, upload_to_featured_images
 
 
 # Create your views here.
-def post_list(request):
+def article_list(request):
     content = {}
 
-    published_posts = Post.objects.published()
-    content['published_posts'] = published_posts
+    published_articles = Article.objects.published()
+    content['published_articles'] = published_articles
 
     # Check if user is admin/superuser
     if request.user.is_superuser:
-        not_published_posts = Post.objects.not_published()
-        content['not_published_posts'] = not_published_posts
+        unpublished_articles = Article.objects.not_published()
+        content['unpublished_articles'] = unpublished_articles
 
-    return render(request, 'blog/post-list.html', content)
+    return render(request, 'blog/articles-list.html', content)
 
 
 # def post(request, slug):
@@ -34,9 +34,9 @@ def post_list(request):
 from apps.analytics.views_registry import register_view
 
 
-@register_view(namespace="blog", url_name="post", app_name="blog", model=Post)
+@register_view(namespace="blog", url_name="post", app_name="blog", model=Article)
 class PostDetailView(DetailView):
-    model = Post
+    model = Article
     template_name = 'blog/post.html'
     context_object_name = 'post'
     slug_url_kwarg = 'slug'
@@ -81,17 +81,17 @@ def create_post(request):
         print(request.POST)
 
         # Create blog post
-        mew_post = Post.objects.create(title=title,
-                                       content=content,
-                                       release_status=release_status,
-                                       created_by=request.user,
-                                       modified_by=request.user,
-                                       lead_author=lead_author,
-                                       meta_title=meta_title,
-                                       meta_description=meta_description,
-                                       meta_keywords=meta_keywords,
-                                       allow_comments=allow_comments,
-                                       allow_sharing=allow_sharing)
+        mew_post = Article.objects.create(title=title,
+                                          content=content,
+                                          release_status=release_status,
+                                          created_by=request.user,
+                                          modified_by=request.user,
+                                          lead_author=lead_author,
+                                          meta_title=meta_title,
+                                          meta_description=meta_description,
+                                          meta_keywords=meta_keywords,
+                                          allow_comments=allow_comments,
+                                          allow_sharing=allow_sharing)
 
         mew_post.authors.add(request.user)
 
@@ -100,18 +100,18 @@ def create_post(request):
                           message='Your post has been successfully created')
         return redirect('blog:edit-post', uuid=mew_post.uuid)
 
-    context['release_status_choices_as_list'] = Post.get_release_status_choices_as_list()
+    context['release_status_choices_as_list'] = Article.get_release_status_choices_as_list()
 
     return render(request, 'blog/create-post.html', context)
 
 
 def edit_post(request, uuid):
     context = {}
-    blog_post = Post.objects.get(uuid=uuid)
+    article = Article.objects.get(uuid=uuid)
 
     print('path: ')
-    print(Post._meta.get_field('featured_image').name)
-    print(upload_to_featured_images(blog_post, 'raw.png'))
+    print(Article._meta.get_field('featured_image').name)
+    print(upload_to_featured_images(article, 'raw.png'))
 
     if request.method == 'POST':
 
@@ -216,16 +216,16 @@ def edit_post(request, uuid):
             send_notification(request, tag='error', title='Unable to save post',
                               message=error_message)
 
-    context['form'] = PostForm(instance=blog_post)
-    context['post'] = blog_post
+    context['form'] = PostForm(instance=article)
+    context['article'] = article
     return render(request, 'blog/edit-post.html', context)
 
 
-def delete_post(request, uuid):
+def delete_article(request, uuid):
     logging.debug(f'[BLOG.DELETE_POST] Soft deleting blog post of uuid={uuid}')
 
     # Only the blog post owner or superuser can delete a blog post
-    post_to_delete = Post.objects.get(uuid=uuid)
+    post_to_delete = Article.objects.get(uuid=uuid)
 
     if post_to_delete.created_by == request.user or post_to_delete.lead_author == request.user or request.user.is_superuser:
         post_to_delete.deleted_by = request.user

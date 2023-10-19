@@ -1,12 +1,12 @@
 from django.contrib import admin
 
-from apps.blog.models import Post, Comment
+from apps.blog.models import Article, Comment
 
 
 # Blog objects
 
-@admin.register(Post)
-class PostAdmin(admin.ModelAdmin):
+@admin.register(Article)
+class ArticleAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'slug', 'release_status', 'date_created', 'date_modified', 'date_published')
 
     list_filter = ('release_status',)
@@ -20,7 +20,7 @@ class PostAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Post', {
             'fields': (
-                'title', 'slug', 'lead_author', 'release_status', 'content', 'content2', 'featured_image',
+                'title', 'slug', 'lead_author', 'release_status', 'content', 'featured_image',
                 'featured_image_thumbnail', 'featured_image_raw', 'date_published'),
             'description': 'Primary post fields and content'}
          ),
@@ -49,9 +49,9 @@ class PostAdmin(admin.ModelAdmin):
             'fields': (),
             'description': '''
                     <b>Query manager:</b><br>
-                    - published: Returns all Post's that have the status of "published"<br>
-                    - in_review: Returns all Post's that have the status of "review"<br>
-                    - in_draft: Returns all Post's that have the status of "draft"<br>
+                    - published: Returns all article's that have the status of "published"<br>
+                    - in_review: Returns all article's that have the status of "review"<br>
+                    - in_draft: Returns all article's that have the status of "draft"<br>
                 '''}
          ),
     )
@@ -71,7 +71,7 @@ class CommentAdmin(admin.ModelAdmin):
 
     list_filter = ('is_deleted',)
 
-    filter_horizontal = ('upvotes', 'downvotes')
+    filter_horizontal = ('likes', 'dislikes')
 
     search_fields = ('content',)
 
@@ -80,13 +80,13 @@ class CommentAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Comment', {
             'fields': (
-                'post', 'parent_comment', 'user', 'content'),
+                'article', 'parent_comment', 'user', 'content'),
             'description': 'Primary comment fields and content'}
          ),
 
         ('Social properties', {
-            'fields': ('upvotes', 'downvotes'),
-            'description': 'Post vote information'}
+            'fields': ('likes', 'dislikes'),
+            'description': 'Article user like and dislike information'}
          ),
 
         ('Audit information', {

@@ -8,7 +8,7 @@ app_name = 'blog'
 urlpatterns = [
     # Account profile urls
     # URL of blog post by slug
-    path('posts/', views.post_list, name='post-list'),
+    path('articles/', views.article_list, name='article-list'),
     
     # path is /blog/<str:slug>/
     # path('posts/<str:slug>/', views.post, name='post'),
@@ -18,6 +18,6 @@ urlpatterns = [
 
     path('edit/create/', views.create_post, name='create-post'),
     path('edit/<str:uuid>/', views.edit_post, name='edit-post'),
-    path('edit/<str:uuid>/delete/', views.delete_post, name='delete-post'),
+    path('edit/<str:uuid>/delete/', views.delete_article, name='delete-article'),
 
 ]

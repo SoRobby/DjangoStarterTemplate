@@ -1,8 +1,9 @@
 from django import forms
-from django_ckeditor_5.widgets import CKEditor5Widget
+from django.conf import settings
+from tinymce.widgets import TinyMCE
 
 from apps.accounts.models import Account
-from .models import Post
+from .models import Article
 
 
 class PostForm(forms.ModelForm):
@@ -10,9 +11,12 @@ class PostForm(forms.ModelForm):
     lead_author_email = forms.EmailField(label="Lead Author's Email", required=True)
 
     class Meta:
-        model = Post
-        fields = ['title', 'content', 'content2', 'release_status', 'allow_comments', 'allow_sharing',
+        model = Article
+        fields = ['title', 'release_status', 'allow_comments', 'content', 'allow_sharing',
                   'meta_title', 'meta_description', 'meta_keywords']
+        widgets = {
+            'content': TinyMCE(mce_attrs=settings.TINYMCE_DEFAULT_CONFIG),
+        }
 
     def save(self, commit=True):
         # Call the parent class's save method and get the Post object
