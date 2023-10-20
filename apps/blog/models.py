@@ -1,4 +1,5 @@
 import os
+import shutil
 from math import ceil
 from uuid import uuid4
 
@@ -25,10 +26,21 @@ def upload_to_featured_images(instance, filename):
         return os.path.join('blog', str(instance.uuid), 'featured-image')
 
 
-# Create your models here.
+# Models
+# class Category(DateCreatedAndModified):
+#     name = models.CharField(max_length=200, unique=True, verbose_name='Name',
+#                             help_text='Name of the category')
+#     slug = models.SlugField(max_length=200, unique=True, blank=True, null=True, verbose_name='Slug', help_text='The\
+#                             URL slug based on the category name, slug fields should be 50 characters or less')
+#     description = models.TextField(max_length=6000, blank=True, null=True, verbose_name='Description',
+#                                       help_text='Description of the category')
+#     uuid = models.UUIDField(default=uuid4, editable=False, unique=True, verbose_name='UUID',
+#                             help_text='Unique identifier for the category')
+
+
 class Article(DateCreatedAndModified, DateDeleted):
-
-
+    FEATURED_IMAGE_ASPECT_RATIO = 16 / 9
+    FEATURED_IMAGE_SIZE = (730, 428)
     FEATURED_IMAGE_THUMBNAIL_SIZE = (300, 300)
 
     class ReleaseStatus(models.TextChoices):
@@ -271,7 +283,7 @@ def delete_old_files(sender, instance, **kwargs):
 
 
 @receiver(post_delete, sender=Article)
-def submission_delete(sender, instance, **kwargs):
+def article_delete_files(sender, instance, **kwargs):
     # Delete the featured_image_raw file
     if instance.featured_image_raw:
         if os.path.isfile(os.path.join(settings.MEDIA_ROOT, instance.featured_image_raw.path)):
@@ -287,10 +299,17 @@ def submission_delete(sender, instance, **kwargs):
         if os.path.isfile(os.path.join(settings.MEDIA_ROOT, instance.featured_image_thumbnail.path)):
             os.remove(os.path.join(settings.MEDIA_ROOT, instance.featured_image_thumbnail.path))
 
-# @receiver(pre_save, sender=Post)
-# def post_pre_save(sender, instance, *args, **kwargs):
-#     if instance.slug is None:
-#         generated_slug = generate_unique_slug(instance, 'slug', 'title')
-#         instance.slug = generated_slug
-#
-#     print('PRE SAVE SIGNAL CALLED!!!!')
+    # Delete content associated with the article
+    content_directory = os.path.join(settings.MEDIA_ROOT, f'blog/{instance.uuid}/content')
+    if os.path.exists(content_directory):
+        shutil.rmtree(content_directory)
+
+    # # Find all files in the path of blog/<article_uuid>/content and delete all data
+    # if os.path.exists(os.path.join(settings.MEDIA_ROOT, 'blog', str(instance.uuid), 'content')):
+    #     for filename in os.listdir(os.path.join(settings.MEDIA_ROOT, 'blog', str(instance.uuid), 'content')):
+    #         file_path = os.path.join(settings.MEDIA_ROOT, 'blog', str(instance.uuid), 'content', filename)
+    #         try:
+    #             if os.path.isfile(file_path) or os.path.islink(file_path):
+    #                 os.unlink(file_path)
+    #         except Exception as e:
+    #             print('Failed to delete %s. Reason: %s' % (file_path, e))

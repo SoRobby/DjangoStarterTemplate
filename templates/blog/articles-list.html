@@ -2,7 +2,7 @@
 {% load static %}
 
 {# Title #}
-{% block title %}<title>Blog</title>{% endblock title %}
+{% block title %}<title>Untitled</title>{% endblock title %}
 
 
 {# General meta information (i.e. Description, tags, etc...) #}
@@ -27,129 +27,483 @@
 
 
 {# Page content #}
-{% block content %}
+{% block main %}
 
-    <div class="bg-white py-24 sm:py-32">
-        <div class="mx-auto max-w-7xl px-6 lg:px-8">
-            <div class="mx-auto max-w-2xl lg:max-w-4xl">
-                <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">From the blog</h2>
-                <p class="mt-2 text-lg leading-8 text-gray-600">Learn how to grow your business with our expert
-                    advice.</p>
 
-                <div class="py-2">
-                    <a href="{% url 'blog:create-post' %}"
-                       class="bg-gray-100 text-gray-800 font-semibold rounded px-2 py-2 hover:bg-gray-200">Create
-                        post</a>
+    <div class="bg-gray-50">
+        <div class="py-10">
+            <div class="mx-auto max-w-7xl px-6 lg:px-8">
+                <div class="mx-auto max-w-2xl lg:mx-0">
+                    <h2 class="text-4xl font-bold leading-6 text-gray-800">Blog center</h2>
+                    <p class="mt-6 text-xl leading-8 text-gray-600">Anim aute id magna aliqua ad ad non deserunt
+                        sunt.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gray-50 border-b border-gray-200">
+            <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 py-4">
+                <div class="flex justify-between">
+                    <div class="flex gap-8 items-end">
+                        <div class="text-gray-500 uppercase text-sm hover:text-gray-800 px-4 py-2 hover:bg-gray-200 rounded-md">
+                            All
+                        </div>
+                        <div class="text-gray-500 uppercase text-sm hover:text-gray-800 px-4 py-2 hover:bg-gray-200 rounded-md">
+                            Editor picks
+                        </div>
+                        <div class="text-gray-500 uppercase text-sm hover:text-gray-800 px-4 py-2 hover:bg-gray-200 rounded-md">
+                            Publish a story
+                        </div>
+                        <div class="text-gray-500 uppercase text-sm hover:text-gray-800 px-4 py-2 hover:bg-gray-200 rounded-md">
+                            Receive our newsletter
+                        </div>
+                    </div>
+                    <div>
+
+                        <button type="button"
+                                class="inline-flex items-center gap-x-1.5 px-4 py-2 text-sm hover:text-gray-800 font-semibold text-gray-500 hover:bg-gray-200 rounded-md">
+                            <svg class="-ml-0.5 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+                            </svg>
+                            Search
+                        </button>
+
+                        <div class="hidden">
+                            <label for="blog_search" class="sr-only">Email</label>
+                            <div class="relative mt-2 rounded-md shadow-sm">
+                                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+                                    </svg>
+
+                                </div>
+                                <input type="search" name="blog_search" id="blog_search"
+                                       class="block w-full rounded-md border-0 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                       placeholder="Search for an article...">
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
 
-                <div class="mt-16 space-y-20 lg:mt-20 lg:space-y-20">
 
-                    {% for post in published_posts %}
-                        <article class="relative isolate flex flex-col gap-8 lg:flex-row">
-                            <div class="relative aspect-[16/9] sm:aspect-[2/1] lg:aspect-square lg:w-64 lg:shrink-0">
-                                <img src="https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3603&q=80"
-                                     alt="" class="absolute inset-0 h-full w-full rounded-2xl bg-gray-50 object-cover">
-                                <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-x-4 text-xs">
-                                    <time datetime="{{ post.date_published|date:"M d, Y" }}"
-                                          class="text-gray-500">{{ post.date_published|date:"M d, Y" }}</time>
-                                    <a href="#"
-                                       class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100">Marketing</a>
-                                </div>
-                                <div class="group relative max-w-xl">
-                                    <h3 class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
-                                        <a href="{% url 'blog:post' slug=post.slug %}">
-                                            <span class="absolute inset-0"></span>
-                                            {{ post.title }}
-                                        </a>
-                                    </h3>
-                                    <p class="mt-5 text-sm leading-6 text-gray-600">Illo sint voluptas. Error voluptates
-                                        culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus
-                                        unde.
-                                        Sed exercitationem placeat consectetur nulla deserunt vel iusto corrupti dicta
-                                        laboris incididunt.</p>
-                                </div>
-                                <div class="mt-6 flex border-t border-gray-900/5 pt-6">
-                                    <div class="relative flex items-center gap-x-4">
-                                        <img src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                             alt="" class="h-10 w-10 rounded-full bg-gray-50">
-                                        <div class="text-sm leading-6">
-                                            <p class="font-semibold text-gray-900">
-                                                <a href="#">
-                                                    <span class="absolute inset-0"></span>
-                                                    Michael Foster
-                                                </a>
-                                            </p>
-                                            <p class="text-gray-600">Co-Founder / CTO</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                    {% endfor %}
-
-                    <hr>
-                    <div class="text-gray-800 font-semibold ">Non-Published Posts (Admin Only)</div>
-
-                    {% for article in unpublished_articles %}
-                        <article class="relative isolate flex flex-col gap-8 lg:flex-row">
-                            <div class="relative aspect-[16/9] sm:aspect-[2/1] lg:aspect-square lg:w-64 lg:shrink-0">
-                                <img src="https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3603&q=80"
-                                     alt="" class="absolute inset-0 h-full w-full rounded-2xl bg-gray-50 object-cover">
-                                <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-x-4 text-xs">
-                                    <time datetime="{{ article.date_published|date:"M d, Y" }}"
-                                          class="text-gray-500">{{ article.date_published|date:"M d, Y" }}</time>
-                                    <div
-                                            class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100">
-                                        Marketing
-                                    </div>
-                                </div>
-                                <div class="group relative max-w-xl">
-                                    <h3 class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
-                                        <a href="{% url 'blog:post' slug=article.slug %}">
-                                            <span class="absolute inset-0"></span>
-                                            {{ article.title }}
-                                        </a>
-                                    </h3>
-                                    <p class="mt-5 text-sm leading-6 text-gray-600">Post description goes here...</p>
-                                </div>
-                                <a href="{% url 'blog:edit-post' uuid=article.uuid %}"
-                                   class="rounded bg-white px-2 py-1 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                    Edit post
-                                </a>
-                                <div class="mt-6 flex border-t border-gray-900/5 pt-6">
-                                    {% for author in article.authors.all %}
-                                        <div class="relative flex items-center gap-x-4">
-                                            {% include 'components/avatar/avatar-10x10.html' %}
-                                            <div class="text-sm leading-6">
-                                                <p class="font-semibold text-gray-900">
-                                                    <a href="#">
-                                                        <span class="absolute inset-0"></span>
-                                                        {{ author.username }}
-                                                    </a>
-                                                </p>
-                                                <p class="text-gray-600">Co-Founder / CTO</p>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-
-                                </div>
-                            </div>
-                        </article>
-                    {% endfor %}
-
-                </div>
             </div>
         </div>
     </div>
 
+    <main class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 py-4 sm:py-6">
 
-{% endblock content %}
+
+        {% block content %}
+            {# Top banner #}
+
+            <div class="py-8 flex justify-between">
+                <div class="text-gray-800 font-medium text-2xl">
+                    Trending stories
+                </div>
+                <div class="text-gray-600 hover:text-blue-600">
+                    View all
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-8">
+                <div class="col-span-2">
+                    <div class="flex flex-col justify-between h-full rounded-md overflow-hidden">
+                        <div class="bg-slate-50 flex-grow flex flex-col items-center justify-center space-y-6">
+                            <h3 class="text-3xl font-semibold text-gray-800">Sit amet consectetur adipisicing eli</h3>
+                            <p class="text-muted text-lg">Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                                Quisquam, voluptatum.</p>
+
+                            <div class="flex justify-center">
+                                <div class="gap-4 flex text-left">
+                                    {% include 'components/avatar/avatar-10x10.html' %}
+                                    <div class="text-muted text-sm items-center">
+                                        <p class="text-gray-600 font-medium">John Doe</p>
+                                        <p class="text-gray-500">2 days ago
+                                            <span class="px-2">•</span>12 min read</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-blue-100">
+                            <img class="w-full" src="https://placehold.jp/3d4070/ffffff/160x90.png" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 gap-4 divide-y space-y-4">
+                    <div class="space-y-4">
+                        <img class="w-full rounded-md" src="https://placehold.jp/3d4070/ffffff/160x90.png" alt="">
+                        <div class="space-y-2">
+                            <h3 class="text-xl font-semibold text-gray-800">Sit amet consectetur adipisicing eli</h3>
+                            <p class="text-muted">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
+                                voluptatum.</p>
+                        </div>
+                        <div class="flex gap-4">
+                            {% include 'components/avatar/avatar-10x10.html' %}
+                            <div class="text-muted text-sm items-center">
+                                <p class="text-gray-600 font-medium">John Doe</p>
+                                <p class="text-gray-500">2 days ago
+                                    <span class="px-2">•</span>12 min read</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-4 pt-8">
+                        <img class="w-full rounded-md" src="https://placehold.jp/3d4070/ffffff/160x90.png" alt="">
+                        <div class="space-y-2">
+                            <h3 class="text-xl font-semibold text-gray-800">Sit amet consectetur adipisicing eli</h3>
+                            <p class="text-muted">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
+                                voluptatum.</p>
+                        </div>
+                        <div class="flex gap-4">
+                            {% include 'components/avatar/avatar-10x10.html' %}
+                            <div class="text-muted text-sm items-center">
+                                <p class="text-gray-600 font-medium">John Doe</p>
+                                <p class="text-gray-500">2 days ago
+                                    <span class="px-2">•</span>12 min read</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="mt-24 flex justify-between">
+                <div class="text-gray-800 font-medium text-2xl">
+                    Latest stories
+                </div>
+                <div class="text-gray-600 hover:text-blue-600">
+                    View all
+                </div>
+            </div>
+
+
+            <div class="grid grid-cols-3 gap-x-8">
+
+
+            </div>
+
+
+
+            <div class="bg-white py-24 sm:py-32">
+                <div class="text-gray-800 font-medium text-2xl">
+                    Latest stories
+                </div>
+                <div class="text-gray-600 hover:text-blue-600">
+                    View all
+                </div>
+                <div class="">
+                    <div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+
+
+                        <article class="flex flex-col items-start justify-between">
+                            <div class="relative w-full">
+                                <img src="https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3603&q=80"
+                                     alt=""
+                                     class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]">
+                                <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
+                            </div>
+                            <div class="max-w-xl">
+                                <div class="mt-8 flex items-center gap-x-4 text-xs">
+                                    <time datetime="2020-03-16" class="text-gray-500">Mar 16, 2020</time>
+                                    <a href="#"
+                                       class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100">Marketing</a>
+                                </div>
+                                <div class="group relative">
+                                    <h3 class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
+                                        <a href="#">
+                                            <span class="absolute inset-0"></span>
+                                            Boost your conversion rate
+                                        </a>
+                                    </h3>
+                                    <p class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">Illo sint voluptas.
+                                        Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo
+                                        necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel.
+                                        Iusto corrupti dicta.</p>
+                                </div>
+                                <div class="relative mt-8 flex items-center gap-x-4">
+                                    <img src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                         alt="" class="h-10 w-10 rounded-full bg-gray-100">
+                                    <div class="text-sm leading-6">
+                                        <p class="font-semibold text-gray-900">
+                                            <a href="#">
+                                                <span class="absolute inset-0"></span>
+                                                Michael Foster
+                                            </a>
+                                        </p>
+                                        <p class="text-gray-600">Co-Founder / CTO</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="flex flex-col items-start justify-between">
+                            <div class="relative w-full">
+                                <img src="https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3603&q=80"
+                                     alt=""
+                                     class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]">
+                                <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
+                            </div>
+                            <div class="max-w-xl">
+                                <div class="mt-8 flex items-center gap-x-4 text-xs">
+                                    <time datetime="2020-03-16" class="text-gray-500">Mar 16, 2020</time>
+                                    <a href="#"
+                                       class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100">Marketing</a>
+                                </div>
+                                <div class="group relative">
+                                    <h3 class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
+                                        <a href="#">
+                                            <span class="absolute inset-0"></span>
+                                            Boost your conversion rate
+                                        </a>
+                                    </h3>
+                                    <p class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">Illo sint voluptas.
+                                        Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo
+                                        necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel.
+                                        Iusto corrupti dicta.</p>
+                                </div>
+                                <div class="relative mt-8 flex items-center gap-x-4">
+                                    <img src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                         alt="" class="h-10 w-10 rounded-full bg-gray-100">
+                                    <div class="text-sm leading-6">
+                                        <p class="font-semibold text-gray-900">
+                                            <a href="#">
+                                                <span class="absolute inset-0"></span>
+                                                Michael Foster
+                                            </a>
+                                        </p>
+                                        <p class="text-gray-600">Co-Founder / CTO</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="flex flex-col items-start justify-between">
+                            <div class="relative w-full">
+                                <img src="https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3603&q=80"
+                                     alt=""
+                                     class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]">
+                                <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
+                            </div>
+                            <div class="max-w-xl">
+                                <div class="mt-8 flex items-center gap-x-4 text-xs">
+                                    <time datetime="2020-03-16" class="text-gray-500">Mar 16, 2020</time>
+                                    <a href="#"
+                                       class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100">Marketing</a>
+                                </div>
+                                <div class="group relative">
+                                    <h3 class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
+                                        <a href="#">
+                                            <span class="absolute inset-0"></span>
+                                            Boost your conversion rate
+                                        </a>
+                                    </h3>
+                                    <p class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">Illo sint voluptas.
+                                        Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo
+                                        necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel.
+                                        Iusto corrupti dicta.</p>
+                                </div>
+                                <div class="relative mt-8 flex items-center gap-x-4">
+                                    <img src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                         alt="" class="h-10 w-10 rounded-full bg-gray-100">
+                                    <div class="text-sm leading-6">
+                                        <p class="font-semibold text-gray-900">
+                                            <a href="#">
+                                                <span class="absolute inset-0"></span>
+                                                Michael Foster
+                                            </a>
+                                        </p>
+                                        <p class="text-gray-600">Co-Founder / CTO</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="flex flex-col items-start justify-between">
+                            <div class="relative w-full">
+                                <img src="https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3603&q=80"
+                                     alt=""
+                                     class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]">
+                                <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
+                            </div>
+                            <div class="max-w-xl">
+                                <div class="mt-8 flex items-center gap-x-4 text-xs">
+                                    <time datetime="2020-03-16" class="text-gray-500">Mar 16, 2020</time>
+                                    <a href="#"
+                                       class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100">Marketing</a>
+                                </div>
+                                <div class="group relative">
+                                    <h3 class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
+                                        <a href="#">
+                                            <span class="absolute inset-0"></span>
+                                            Boost your conversion rate
+                                        </a>
+                                    </h3>
+                                    <p class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">Illo sint voluptas.
+                                        Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo
+                                        necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel.
+                                        Iusto corrupti dicta.</p>
+                                </div>
+                                <div class="relative mt-8 flex items-center gap-x-4">
+                                    <img src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                         alt="" class="h-10 w-10 rounded-full bg-gray-100">
+                                    <div class="text-sm leading-6">
+                                        <p class="font-semibold text-gray-900">
+                                            <a href="#">
+                                                <span class="absolute inset-0"></span>
+                                                Michael Foster
+                                            </a>
+                                        </p>
+                                        <p class="text-gray-600">Co-Founder / CTO</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="flex flex-col items-start justify-between">
+                            <div class="relative w-full">
+                                <img src="https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3603&q=80"
+                                     alt=""
+                                     class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]">
+                                <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
+                            </div>
+                            <div class="max-w-xl">
+                                <div class="mt-8 flex items-center gap-x-4 text-xs">
+                                    <time datetime="2020-03-16" class="text-gray-500">Mar 16, 2020</time>
+                                    <a href="#"
+                                       class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100">Marketing</a>
+                                </div>
+                                <div class="group relative">
+                                    <h3 class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
+                                        <a href="#">
+                                            <span class="absolute inset-0"></span>
+                                            Boost your conversion rate
+                                        </a>
+                                    </h3>
+                                    <p class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">Illo sint voluptas.
+                                        Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo
+                                        necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel.
+                                        Iusto corrupti dicta.</p>
+                                </div>
+                                <div class="relative mt-8 flex items-center gap-x-4">
+                                    <img src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                         alt="" class="h-10 w-10 rounded-full bg-gray-100">
+                                    <div class="text-sm leading-6">
+                                        <p class="font-semibold text-gray-900">
+                                            <a href="#">
+                                                <span class="absolute inset-0"></span>
+                                                Michael Foster
+                                            </a>
+                                        </p>
+                                        <p class="text-gray-600">Co-Founder / CTO</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="flex flex-col items-start justify-between">
+                            <div class="relative w-full">
+                                <img src="https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3603&q=80"
+                                     alt=""
+                                     class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]">
+                                <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
+                            </div>
+                            <div class="max-w-xl">
+                                <div class="mt-8 flex items-center gap-x-4 text-xs">
+                                    <time datetime="2020-03-16" class="text-gray-500">Mar 16, 2020</time>
+                                    <a href="#"
+                                       class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100">Marketing</a>
+                                </div>
+                                <div class="group relative">
+                                    <h3 class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
+                                        <a href="#">
+                                            <span class="absolute inset-0"></span>
+                                            Boost your conversion rate
+                                        </a>
+                                    </h3>
+                                    <p class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">Illo sint voluptas.
+                                        Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo
+                                        necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel.
+                                        Iusto corrupti dicta.</p>
+                                </div>
+                                <div class="relative mt-8 flex items-center gap-x-4">
+                                    <img src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                         alt="" class="h-10 w-10 rounded-full bg-gray-100">
+                                    <div class="text-sm leading-6">
+                                        <p class="font-semibold text-gray-900">
+                                            <a href="#">
+                                                <span class="absolute inset-0"></span>
+                                                Michael Foster
+                                            </a>
+                                        </p>
+                                        <p class="text-gray-600">Co-Founder / CTO</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="flex flex-col items-start justify-between">
+                            <div class="relative w-full">
+                                <img src="https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3603&q=80"
+                                     alt=""
+                                     class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]">
+                                <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
+                            </div>
+                            <div class="max-w-xl">
+                                <div class="mt-8 flex items-center gap-x-4 text-xs">
+                                    <time datetime="2020-03-16" class="text-gray-500">Mar 16, 2020</time>
+                                    <a href="#"
+                                       class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100">Marketing</a>
+                                </div>
+                                <div class="group relative">
+                                    <h3 class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
+                                        <a href="#">
+                                            <span class="absolute inset-0"></span>
+                                            Boost your conversion rate
+                                        </a>
+                                    </h3>
+                                    <p class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">Illo sint voluptas.
+                                        Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo
+                                        necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel.
+                                        Iusto corrupti dicta.</p>
+                                </div>
+                                <div class="relative mt-8 flex items-center gap-x-4">
+                                    <img src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                         alt="" class="h-10 w-10 rounded-full bg-gray-100">
+                                    <div class="text-sm leading-6">
+                                        <p class="font-semibold text-gray-900">
+                                            <a href="#">
+                                                <span class="absolute inset-0"></span>
+                                                Michael Foster
+                                            </a>
+                                        </p>
+                                        <p class="text-gray-600">Co-Founder / CTO</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- More posts... -->
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+            {# Articles start #}
+        {% endblock content %}
+    </main>
+{% endblock main %}
 
 
 {# Footer #}

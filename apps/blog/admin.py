@@ -9,7 +9,7 @@ from apps.blog.models import Article, Comment
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'slug', 'release_status', 'date_created', 'date_modified', 'date_published')
 
-    list_filter = ('release_status',)
+    list_filter = ('release_status', 'is_deleted')
 
     filter_horizontal = ()
 
@@ -52,7 +52,10 @@ class ArticleAdmin(admin.ModelAdmin):
                     - published: Returns all article's that have the status of "published"<br>
                     - in_review: Returns all article's that have the status of "review"<br>
                     - in_draft: Returns all article's that have the status of "draft"<br>
-                '''}
+                    - not_published: Returns all article's that have not been published<br>
+                    <b>Deleting logic:</b><br>
+                    - On deletion: When an instance is deleted, all of the instance data (featured images and images in the rich text editor will be deleted)<br>
+                ''',}
          ),
     )
 

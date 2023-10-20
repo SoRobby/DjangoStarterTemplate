@@ -60,7 +60,6 @@ DJANGO_APPS = [
 
 # Third party apps
 THIRD_PARTY_APPS = [
-    'django_ckeditor_5',
     'tinymce',
 ]
 
@@ -174,7 +173,6 @@ STATICFILES_DIRS = [
     BASE_DIR / 'libs/npm/node_modules/alpinejs/dist/',
     BASE_DIR / 'libs/npm/node_modules/@alpinejs/',
     BASE_DIR / 'libs/npm/node_modules/htmx.org/dist/',
-    BASE_DIR / 'libs/npm/node_modules/@ckeditor/',
     BASE_DIR / 'libs/npm/node_modules/jquery/dist/',
 ]
 
@@ -273,7 +271,7 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5 MB
 TINYMCE_DEFAULT_CONFIG = {
     "theme": "silver",
     "height": 512,
-    "menubar": True,
+    "menubar": False,
     "plugins": "image",
     # "plugins": "advlist,autolink,lists,link,image,charmap,print,preview,anchor,"
     #            "searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,paste,"
@@ -281,6 +279,19 @@ TINYMCE_DEFAULT_CONFIG = {
     "toolbar": "undo redo | formatselect | "
                "bold italic backcolor | alignleft aligncenter "
                "alignright alignjustify | bullist numlist outdent indent | "
-               "removeformat | help | image",
-    "images_upload_url": "upload_image/",
+               "removeformat | help ",
+}
+
+TINYMCE_BLOG_ARTICLE_CONFIG = {
+    "theme": "silver",
+    "height": 512,
+    "menubar": True,
+    "plugins": "advlist,autolink,lists,link,image,charmap,print,preview,anchor,"
+               "searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,paste,"
+               "code,help,wordcount,image",
+    "toolbar": "undo redo | formatselect | "
+               "bold italic backcolor | alignleft aligncenter "
+               "alignright alignjustify | bullist numlist outdent indent | "
+               "removeformat | image | help ",
+    "images_upload_url": "upload-article-image",
 }

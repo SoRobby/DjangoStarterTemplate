@@ -6,7 +6,7 @@ from apps.accounts.models import Account
 from .models import Article
 
 
-class PostForm(forms.ModelForm):
+class ArticleForm(forms.ModelForm):
     # content = forms.CharField(required=False, widget=forms.Textarea())
     lead_author_email = forms.EmailField(label="Lead Author's Email", required=True)
 
@@ -15,7 +15,7 @@ class PostForm(forms.ModelForm):
         fields = ['title', 'release_status', 'allow_comments', 'content', 'allow_sharing',
                   'meta_title', 'meta_description', 'meta_keywords']
         widgets = {
-            'content': TinyMCE(mce_attrs=settings.TINYMCE_DEFAULT_CONFIG),
+            'content': TinyMCE(mce_attrs=settings.TINYMCE_BLOG_ARTICLE_CONFIG),
         }
 
     def save(self, commit=True):

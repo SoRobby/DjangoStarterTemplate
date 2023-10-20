@@ -4,7 +4,7 @@
 
 {# Title #}
 {% block title %}
-    <title>Create a post</title>
+    <title>Edit article</title>
 {% endblock title %}
 
 
@@ -16,87 +16,12 @@
 {# Stylesheets #}
 {% block style %}
     <link rel="stylesheet" type="text/css" href="{% static 'cropper.min.css' %}">
-    <style>
-        .ck.ck-balloon-panel.ck-powered-by-balloon[class*=position_border] {
-            display: none;
-        }
-
-        .ck-editor__editable_inline {
-            min-height: 20rem;
-        {#border-bottom-left-radius: 0.5rem !important;#}{#border-bottom-right-radius: 0.5rem !important;#}
-        }
-
-        .ck-rounded-corners .ck.ck-editor__main > .ck-editor__editable, .ck.ck-editor__main > .ck-editor__editable.ck-rounded-corners {
-            border-bottom-left-radius: 0.5rem !important;
-            border-bottom-right-radius: 0.5rem !important;
-        }
-
-        .ck-rounded-corners .ck.ck-editor__top .ck-sticky-panel .ck-toolbar, .ck.ck-editor__top .ck-sticky-panel .ck-toolbar.ck-rounded-corners {
-            border-top-left-radius: 0.5rem !important;
-            border-top-right-radius: 0.5rem !important;
-        }
-
-        .ck-content > h2 {
-            font-size: 1.5rem;
-            line-height: 2.25rem;
-            border-bottom: 1px solid #e5e7eb;
-            padding-bottom: 2px;
-        }
-
-        .ck-content > h3 {
-            font-size: 1.25rem;
-            line-height: 1.75rem;
-        }
-
-        .ck-content > h4 {
-            font-size: 1.125rem;
-            line-height: 1.75rem;
-        }
-
-        .ck-content > p {
-            font-size: 1rem;
-            line-height: 1.5rem;
-        }
-
-        .ck-content a {
-            color: #2563eb !important;
-            text-decoration-line: underline !important;
-        }
-
-        /* Bulleted list */
-        .ck-content ul {
-            list-style-type: disc;
-            list-style-position: inside;
-            padding-left: 1rem;
-        }
-
-        /* Ordered list */
-        .ck-content ol {
-            list-style-type: decimal;
-            list-style-position: inside;
-            padding-left: 1rem;
-        }
-
-        textarea.django_ckeditor_5 {
-            display: none;
-        }
-
-        .ck-word-count {
-            color: #4b5563;
-            font-size: 0.75rem;
-            margin-top: 0.25rem !important;
-        }
-
-
-    </style>
+    <style></style>
 {% endblock style %}
 
 
 {# Head Scripts #}
 {% block head_script %}
-    {#    <script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>#}
-    {#    <script type="text/javascript" src="{% static 'ckeditor5-build-classic/build/ckeditor.js' %}"></script>#}
-    <script src="{% static 'js/tinymce-uploader.js' %}"></script>
 {% endblock head_script %}
 
 
@@ -110,7 +35,7 @@
 {% block main %}
     <main class="mx-auto" x-data="{ isDeleteModalOpen: false }">
 
-        {% if post %}
+        {% if article %}
             {% include 'blog/edit/modals/delete-article-confirm-modal.html' %}
         {% endif %}
 
@@ -124,10 +49,10 @@
                         <div class="sm:flex sm:items-center sm:justify-between">
                             <div>
                                 <h2 class="text-2xl text-gray-800">
-                                    {% if post %}
-                                        Edit post
+                                    {% if article %}
+                                        Edit article
                                     {% else %}
-                                        Create a post
+                                        Create an article
                                     {% endif %}
                                 </h2>
                             </div>
@@ -163,7 +88,7 @@
                                 </label>
                                 <div class="mt-2">
                                     <input type="text" name="title" id="title" placeholder="Add title..."
-                                           value="{{ post.title }}"
+                                           value="{{ article.title }}"
                                            class="iblock w-full rounded-md border-0 py-3 font-bold text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 input-focus sm:text-2xl sm:leading-6">
                                 </div>
                             </div>
@@ -178,16 +103,6 @@
                                 </div>
                             </div>
 
-
-                            <div class="sm:col-span-6 mt-2">
-                                <label for="{{ form.content2.id_for_label }}"
-                                       class="sr-only">
-                                    Editor2
-                                </label>
-                                <div class="mt-2">
-                                    {{ form.content2 }}
-                                </div>
-                            </div>
 
                             <div class="pt-8">
                                 <div class="flex w-full items-start gap-x-8" x-data="{ selectedNav: 'main' }">
@@ -223,7 +138,7 @@
                                                     Properties
                                                 </button>
                                             </li>
-                                            {% if post %}
+                                            {% if article %}
                                                 <li>
                                                     <button @click="selectedNav='metrics'" type="button"
                                                             class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
@@ -256,13 +171,13 @@
                                                             Allow comments
                                                         </label>
                                                         <div class="text-xs text-gray-600 font-normal">
-                                                            Allow users to comment on the post
+                                                            Allow users to comment on the article
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-span-12 md:col-span-6 flex justify-end">
-                                                    {% if post %}
-                                                        {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=post.allow_comments id='allow_comments' name='allow_comments' %}
+                                                    {% if article %}
+                                                        {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=article.allow_comments id='allow_comments' name='allow_comments' %}
                                                     {% else %}
                                                         {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=True id='allow_comments' name='allow_comments' %}
                                                     {% endif %}
@@ -278,14 +193,14 @@
                                                             Enable social media sharing
                                                         </label>
                                                         <div class="text-xs text-gray-600 font-normal">
-                                                            Allowing the post to be easily shared on social media
+                                                            Allowing the article to be easily shared on social media
                                                             platforms
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-span-12 md:col-span-6 flex justify-end">
-                                                    {% if post %}
-                                                        {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=post.allow_sharing id='allow_sharing' name='allow_sharing' %}
+                                                    {% if article %}
+                                                        {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=article.allow_sharing id='allow_sharing' name='allow_sharing' %}
                                                     {% else %}
                                                         {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=True id='allow_sharing' name='allow_sharing' %}
                                                     {% endif %}
@@ -314,8 +229,8 @@
                                                         <input type="text" id="lead_author_email"
                                                                name="lead_author_email"
                                                                maxlength="{{ form.name.field.max_length }}"
-                                                                {% if post.lead_author %}
-                                                               value="{{ post.lead_author.email }}"
+                                                                {% if article.lead_author %}
+                                                               value="{{ article.lead_author.email }}"
                                                                 {% else %}
                                                                value="{{ user.email }}"
                                                                 {% endif %}
@@ -339,7 +254,7 @@
                                                         </label>
                                                         <div class="text-xs text-gray-600 font-normal">Add additional
                                                             authors
-                                                            to the post
+                                                            to the article
                                                         </div>
                                                     </div>
                                                 </div>
@@ -397,10 +312,10 @@
                                                     <div class="w-full">
                                                         <input type="text" id="meta_title" name="meta_title"
                                                                maxlength="{{ form.meta_title.field.max_length }}"
-                                                                {% if post.meta_title %}
-                                                               value="{{ post.meta_title }}"
+                                                                {% if article.meta_title %}
+                                                               value="{{ article.meta_title }}"
                                                                 {% endif %}
-                                                               placeholder="{{ post.title }}"
+                                                               placeholder="{{ article.title }}"
                                                                class="input-text">
                                                         <div x-show="showError"
                                                              class="mt-2 text-xs text-red-600 font-normal">
@@ -420,7 +335,7 @@
                                                             Meta description
                                                         </label>
                                                         <div class="text-xs text-gray-600 font-normal">High level
-                                                            summary that describes the post. Recommended length is
+                                                            summary that describes the article. Recommended length is
                                                             50-160 characters.
                                                         </div>
                                                     </div>
@@ -431,8 +346,8 @@
                                                                   id="meta_description"
                                                                   rows="4"
                                                                   maxlength="{{ form.meta_description.field.max_length }}"
-                                                                  class="input-text">{% if post.meta_description %}
-                                                            {{ post.meta_description }}{% endif %}</textarea>
+                                                                  class="input-text">{% if article.meta_description %}
+                                                            {{ article.meta_description }}{% endif %}</textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -448,9 +363,8 @@
                                                             Meta keywords
                                                         </label>
                                                         <div class="text-xs text-gray-600 font-normal">
-                                                            Comma separated keywords that describe the post. Recommended
-                                                            number of
-                                                            keywords is 3-8.
+                                                            Comma separated keywords that describe the article.
+                                                            Recommended number of keywords is 3-8.
                                                         </div>
                                                     </div>
                                                 </div>
@@ -458,8 +372,8 @@
                                                     <div class="w-full">
                                                         <input type="text" id="meta_keywords" name="meta_keywords"
                                                                maxlength="255"
-                                                                {% if post.meta_keywords %}
-                                                               value="{{ post.meta_keywords }}"
+                                                                {% if article.meta_keywords %}
+                                                               value="{{ article.meta_keywords }}"
                                                                 {% endif %}
                                                                class="input-text">
                                                         <div x-show="showError"
@@ -471,7 +385,7 @@
                                             </div>
                                         </div>
 
-                                        {% if post %}
+                                        {% if article %}
                                             <div x-show="selectedNav === 'metrics'" x-transition:enter x-cloak
                                                  class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
                                                 {# Name (centered) #}
@@ -493,7 +407,7 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p data-utc-time="{{ post.date_created.isoformat }}"
+                                                            <p data-utc-time="{{ article.date_created.isoformat }}"
                                                                class="text-gray-900 convert-time"></p>
                                                         </div>
                                                     </div>
@@ -515,7 +429,7 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p data-utc-time="{{ post.date_modified.isoformat }}"
+                                                            <p data-utc-time="{{ article.date_modified.isoformat }}"
                                                                class="text-gray-900 convert-time"></p>
                                                         </div>
                                                     </div>
@@ -564,8 +478,8 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p class="text-gray-900">{{ post.created_by.username }}
-                                                                ({{ post.created_by.email }})</p>
+                                                            <p class="text-gray-900">{{ article.created_by.username }}
+                                                                ({{ article.created_by.email }})</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -589,8 +503,8 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p class="text-gray-900">{{ post.modified_by.username }}
-                                                                ({{ post.modified_by.email }})</p>
+                                                            <p class="text-gray-900">{{ article.modified_by.username }}
+                                                                ({{ article.modified_by.email }})</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -607,17 +521,17 @@
                                                     <div class="w-full">
                                                         <label for="meta_title"
                                                                class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                            Delete post
+                                                            Delete article
                                                         </label>
                                                         <div class="text-xs text-gray-600 font-normal">
-                                                            Deleting a post is permanent and cannot be undone.
+                                                            Deleting an article is permanent and cannot be undone.
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-span-12 md:col-span-6 flex items-center md:justify-end">
                                                     <button type="button" @click="isDeleteModalOpen=true"
                                                             class="font-semibold text-gray-600 hover:text-red-500 focus:outline-none">
-                                                        Delete post
+                                                        Delete article
                                                     </button>
                                                 </div>
                                             </div>
@@ -633,9 +547,9 @@
                                 <h3 class="text-base font-medium leading-6 text-gray-800">Status & visibility</h3>
                                 <div class="grid grid-cols-2 items-center">
                                     <p class="text-sm text-gray-700">Status</p>
-                                    {% include 'components/forms/select/custom-select.html' with id="release_status" name="release_status" selected_option_key=post.release_status selected_option_name=post.get_release_status_display options=post.get_release_status_choices_as_list %}
+                                    {% include 'components/forms/select/custom-select.html' with id="release_status" name="release_status" selected_option_key=article.release_status selected_option_name=article.get_release_status_display options=article.get_release_status_choices_as_list %}
                                     <div class="col-span-2 text-xs text-gray-600 mt-2">
-                                        Non-published posts are only visible to you and other admins.
+                                        Non-published articles are only visible to you and other admins.
                                     </div>
                                 </div>
 
@@ -643,7 +557,7 @@
                                     <p class="text-sm text-gray-700">Visibility</p>
                                     {% include 'components/forms/select/custom-select.html' with id="visibility" name="visibility" selected_option_key='public' selected_option_name="Public" options="[{'key': 'public', 'name': 'Public'}, {'key': 'private', 'name': 'Private'}]" %}
                                     <div class="col-span-2 text-xs text-gray-600 mt-2">
-                                        Non-published posts are only visible to you and other admins.
+                                        Non-published articles are only visible to you and other admins.
                                     </div>
                                 </div>
                             </div>
@@ -657,8 +571,8 @@
                                 </label>
 
                                 <div class="aspect-video rounded text-gray-300 border border-gray-200 bg-white overflow-hidden">
-                                    {% if post.featured_image %}
-                                        <img src="{{ post.featured_image.url }}?lastmod={{ post.get_date_modified_utc_standard }}"
+                                    {% if article.featured_image %}
+                                        <img src="{{ article.featured_image.url }}?lastmod={{ article.get_date_modified_utc_standard }}"
                                              alt="" class="cropper-cropped-preview">
                                     {% else %}
                                         <img src="" alt="" class="cropper-cropped-preview">

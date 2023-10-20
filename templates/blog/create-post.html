@@ -24,7 +24,6 @@
 
 {# Head Scripts #}
 {% block head_script %}
-    <script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>
 {% endblock head_script %}
 
 
@@ -604,12 +603,6 @@
             integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
     <script src="{% static 'cropper.js' %}"></script>
     <script>
-        ClassicEditor
-            .create(document.querySelector('#content'))
-            .catch(error => {
-                console.error(error);
-            });
-
         document.addEventListener("DOMContentLoaded", function (event) {
             // On change show image with crop options
             cropperCropImage("cropper-featured-image-container", 1024 * 1024, 16 / 9);

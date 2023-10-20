@@ -1,12 +1,19 @@
 import logging
+import os
+from uuid import uuid4
 
 from PIL import Image
-from django.shortcuts import render, redirect
+from django.conf import settings
+from django.http import JsonResponse
+from django.shortcuts import redirect
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView
 
 from apps.accounts.models import Account
+from apps.analytics.views_registry import register_view
 from libs.utils.utils import process_image, send_notification, save_file_to_field
-from .forms import PostForm
+from .forms import ArticleForm
 from .models import Article, upload_to_featured_images
 
 
@@ -31,8 +38,6 @@ def article_list(request):
 #     context['post'] = single_post
 #     return render(request, 'blog/post.html', context)
 
-from apps.analytics.views_registry import register_view
-
 
 @register_view(namespace="blog", url_name="post", app_name="blog", model=Article)
 class PostDetailView(DetailView):
@@ -53,7 +58,7 @@ def create_post(request):
     if request.method == 'POST':
 
         # Check if form is valid
-        form = PostForm(request.POST)
+        form = ArticleForm(request.POST)
         if form.is_valid():
             print('FORM IS VALID')
         else:
@@ -105,11 +110,13 @@ def create_post(request):
     return render(request, 'blog/create-post.html', context)
 
 
-def edit_post(request, uuid):
+def edit_article(request, uuid):
+    logging.debug('[EDIT_ARTICLE] Called')
     context = {}
     article = Article.objects.get(uuid=uuid)
 
-    print('path: ')
+    logging.debug(article.FEATURED_IMAGE_ASPECT_RATIO)
+
     print(Article._meta.get_field('featured_image').name)
     print(upload_to_featured_images(article, 'raw.png'))
 
@@ -118,8 +125,6 @@ def edit_post(request, uuid):
         # Get post data
         if 'cropper-distance-x' in request.POST:
             if request.POST.get('cropper-distance-x') != '':
-                # current_datetime = get_yyyymmddhhmmss()
-
                 image_crop_x = float(request.POST.get('cropper-distance-x'))
                 image_crop_y = float(request.POST.get('cropper-distance-y'))
                 image_crop_width = float(request.POST.get('cropper-width'))
@@ -132,10 +137,13 @@ def edit_post(request, uuid):
                 logging.debug(f'[EDIT_POST] image_crop_y = {image_crop_y}')
                 logging.debug(f'[EDIT_POST] image_crop_width = {image_crop_width}')
                 logging.debug(f'[EDIT_POST] image_crop_height = {image_crop_height}')
-                if image_crop_width / image_crop_height != 16 / 9:
-                    logging.debug('[EDIT_POST] Image aspect ratio is not 16:9')
+
+                if image_crop_width / image_crop_height != article.FEATURED_IMAGE_ASPECT_RATIO:
+                    logging.debug(f'[EDIT_ARTICLE] Image aspect ratio is not\
+                    {str(article.FEATURED_IMAGE_ASPECT_RATIO)}')
                 else:
-                    logging.debug('[EDIT_POST] Image aspect ratio is 16:9')
+                    logging.debug(f'[EDIT_ARTICLE] Image aspect ratio is not\
+                    {str(article.FEATURED_IMAGE_ASPECT_RATIO)}')
 
                 # Get image file that was uploaded
                 featured_image_raw = Image.open(request.FILES.get('featured_image'))
@@ -148,26 +156,27 @@ def edit_post(request, uuid):
                     file_format=None,
                 )
                 save_file_to_field(
-                    model_instance=blog_post,
+                    model_instance=article,
                     field_name='featured_image_raw',
                     file=featured_image_raw_file,
-                    directory_path=upload_to_featured_images(blog_post, None),
+                    directory_path=upload_to_featured_images(article, None),
                     file_name=f'raw.{featured_image_raw.format.lower()}'
                 )
-                # blog_post.featured_image_raw.save(f'raw-{current_datetime}.{featured_image_raw.format.lower()}', featured_image_raw_file)
+                # blog_post.featured_image_raw.save(f'raw-{current_datetime}.{featured_image_raw.format.lower()}',\
+                # featured_image_raw_file)
 
                 # Featured image logic
                 featured_image_file = process_image(
                     image=featured_image_raw,
                     crop_dimensions=crop_dimensions,
-                    resize_dimensions=(730, 428),
+                    resize_dimensions=article.FEATURED_IMAGE_SIZE,
                     file_format='png'
                 )
                 save_file_to_field(
-                    model_instance=blog_post,
+                    model_instance=article,
                     field_name='featured_image',
                     file=featured_image_raw_file,
-                    directory_path=upload_to_featured_images(blog_post, None),
+                    directory_path=upload_to_featured_images(article, None),
                     file_name=f'featured.webp'
                 )
                 # blog_post.featured_image.save(f'featured-{current_datetime}.webp', featured_image_file)
@@ -176,26 +185,27 @@ def edit_post(request, uuid):
                 featured_image_thumbnail_file = process_image(
                     image=featured_image_raw,
                     crop_dimensions=crop_dimensions,
-                    resize_dimensions=(200, 200),
+                    resize_dimensions=article.FEATURED_IMAGE_THUMBNAIL_SIZE,
                     file_format='png'
                 )
                 save_file_to_field(
-                    model_instance=blog_post,
+                    model_instance=article,
                     field_name='featured_image_thumbnail',
                     file=featured_image_thumbnail_file,
-                    directory_path=upload_to_featured_images(blog_post, None),
+                    directory_path=upload_to_featured_images(article, None),
                     file_name=f'thumbnail.webp'
                 )
-                # blog_post.featured_image_thumbnail.save(f'thumbnail-{current_datetime}.webp', featured_image_thumbnail_file)
+                # blog_post.featured_image_thumbnail.save(f'thumbnail-{current_datetime}.webp',\
+                # featured_image_thumbnail_file)
 
-                blog_post.save()
+                article.save()
 
             else:
                 logging.debug('[EDIT_POST] Cropper values are empty and no image was uploaded')
 
-        form = PostForm(request.POST, instance=blog_post)
+        form = ArticleForm(request.POST, instance=article)
 
-        # form = PostForm(request.POST)
+        # form = ArticleForm(request.POST)
         if form.is_valid():
             logging.debug('[EDIT_POST] Form is valid')
 
@@ -216,23 +226,83 @@ def edit_post(request, uuid):
             send_notification(request, tag='error', title='Unable to save post',
                               message=error_message)
 
-    context['form'] = PostForm(instance=article)
+    context['form'] = ArticleForm(instance=article)
     context['article'] = article
     return render(request, 'blog/edit-post.html', context)
 
 
+@csrf_exempt
+def upload_article_image(request, uuid):
+    # Supported image formats
+    supported_image_formats = ['jpg', 'png', 'gif', 'jpeg', 'git', 'pjeg']
+
+    print('[BLOG.UPLOAD_IMAGE] Called')
+    # book = Book.objects.get(id=book_id)
+
+    if request.method != 'POST':
+        return JsonResponse({"Error Message": "Wrong request"})
+
+    article = Article.objects.get(uuid=uuid)
+
+    print(f'article = {article}')
+
+    file_obj = request.FILES['file']
+    file_name_suffix = file_obj.name.split('.')[-1]
+
+    print('Debug 01')
+
+    if file_name_suffix not in supported_image_formats:
+        return JsonResponse(
+            {"Error Message": f"Wrong file suffix ({file_name_suffix}), supported are {supported_image_formats}"})
+    else:
+        print('File image format is valid')
+
+    file_path = os.path.join(settings.MEDIA_ROOT, 'blog', str(article.uuid), 'content', file_obj.name)
+    print(f'file_path = {file_path}')
+
+    # Ensure the directory exists. If directory already exists, this function does nothing.
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+    if os.path.exists(file_path):
+        file_obj.name = str(uuid4()) + '.' + file_name_suffix
+        file_path = os.path.join(settings.MEDIA_ROOT, 'blog', str(article.uuid), 'content', file_obj.name)
+
+    with open(file_path, 'wb+') as f:
+        for chunk in file_obj.chunks():
+            f.write(chunk)
+
+    article = Article.objects.get(uuid=uuid)
+    context = {}
+    form = ArticleForm(instance=article)
+    context['article'] = article
+    context['form'] = form
+    return JsonResponse({
+        "Message": "Image upload successfully",
+        "location": os.path.join(settings.MEDIA_URL, 'blog', str(article.uuid), 'content', file_obj.name)
+    })
+
+
 def delete_article(request, uuid):
+    """
+    Soft deletes an article. Article is not deleted from the database. Article and all artical data is only deleted
+    from the database through the admin panel.
+    """
     logging.debug(f'[BLOG.DELETE_POST] Soft deleting blog post of uuid={uuid}')
 
     # Only the blog post owner or superuser can delete a blog post
     post_to_delete = Article.objects.get(uuid=uuid)
 
-    if post_to_delete.created_by == request.user or post_to_delete.lead_author == request.user or request.user.is_superuser:
-        post_to_delete.deleted_by = request.user
+    # Get the current user
+    user = request.user
+
+    valid_users = [post_to_delete.created_by, post_to_delete.lead_author]
+
+    if user in valid_users or user.is_staff or user.is_superuser:
+        post_to_delete.deleted_by = user
         post_to_delete.is_deleted = True
         post_to_delete.save()
 
     send_notification(request, tag='success', title='Blog post deleted',
                       message='Your post has been successfully deleted')
 
-    return redirect('blog:post-list')
+    return redirect('blog:article-list')

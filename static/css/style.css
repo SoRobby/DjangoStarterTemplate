@@ -1600,18 +1600,6 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
   grid-column: span 6 / span 6;
 }
 
-.col-start-2 {
-  grid-column-start: 2;
-}
-
-.col-start-1 {
-  grid-column-start: 1;
-}
-
-.col-start-4 {
-  grid-column-start: 4;
-}
-
 .float-right {
   float: right;
 }
@@ -1737,6 +1725,17 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
 
 .mt-8 {
   margin-top: 2rem;
+}
+
+.mt-24 {
+  margin-top: 6rem;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 .block {
@@ -1895,18 +1894,6 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
   width: 100vw;
 }
 
-.w-1\/4 {
-  width: 25%;
-}
-
-.w-32 {
-  width: 8rem;
-}
-
-.w-16 {
-  width: 4rem;
-}
-
 .min-w-full {
   min-width: 100%;
 }
@@ -1970,6 +1957,10 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
 
 .shrink-0 {
   flex-shrink: 0;
+}
+
+.flex-grow {
+  flex-grow: 1;
 }
 
 .grow {
@@ -2186,6 +2177,10 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
   row-gap: 0.25rem;
 }
 
+.gap-y-20 {
+  row-gap: 5rem;
+}
+
 .-space-x-px > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
   margin-right: calc(-1px * var(--tw-space-x-reverse));
@@ -2238,6 +2233,12 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
   --tw-space-y-reverse: 0;
   margin-top: calc(2rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(2rem * var(--tw-space-y-reverse));
+}
+
+.space-y-12 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(3rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(3rem * var(--tw-space-y-reverse));
 }
 
 .space-y-reverse > :not([hidden]) ~ :not([hidden]) {
@@ -2419,6 +2420,11 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
   border-color: transparent;
 }
 
+.bg-blue-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(219 234 254 / var(--tw-bg-opacity));
+}
+
 .bg-gray-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
@@ -2481,6 +2487,11 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.bg-slate-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(248 250 252 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-75 {
@@ -2571,6 +2582,11 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
   padding-bottom: 0.375rem;
 }
 
+.py-10 {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
 .py-12 {
   padding-top: 3rem;
   padding-bottom: 3rem;
@@ -2614,6 +2630,16 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
 .py-6 {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
+}
+
+.py-8 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.py-16 {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
 }
 
 .pb-2 {
@@ -2732,6 +2758,11 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
 .text-3xl {
   font-size: 1.875rem;
   line-height: 2.25rem;
+}
+
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
 }
 
 .text-base {
@@ -3095,6 +3126,11 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
 .hover\:bg-red-500:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(239 68 68 / var(--tw-bg-opacity));
+}
+
+.hover\:text-blue-600:hover {
+  --tw-text-opacity: 1;
+  color: rgb(37 99 235 / var(--tw-text-opacity));
 }
 
 .hover\:text-blue-800:hover {
@@ -3617,6 +3653,10 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
     aspect-ratio: 1 / 1;
   }
 
+  .lg\:aspect-\[3\/2\] {
+    aspect-ratio: 3/2;
+  }
+
   .lg\:w-64 {
     width: 16rem;
   }
@@ -3647,6 +3687,10 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
 
   .lg\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .lg\:flex-row {
@@ -3694,8 +3738,4 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
     --tw-bg-opacity: 1;
     background-color: rgb(243 244 246 / var(--tw-bg-opacity));
   }
-}
-
-.\[\&\:not\(first\)\]\:pt-2:not(first) {
-  padding-top: 0.5rem;
 }

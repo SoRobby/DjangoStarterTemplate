@@ -1,4 +1,15 @@
-from .models import Comment
+import os
+
+from django.conf import settings
+
+
+class ArticleService:
+    def __init__(self, article):
+        self.article = article
+
+
+
+
 
 
 class CommentService:
