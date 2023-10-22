@@ -17,7 +17,7 @@ urlpatterns = [
 
     # path is /blog/edit/create-post/
 
-    path('edit/create/', views.create_post, name='create-post'),
+    path('edit/create/', views.create_article, name='create-article'),
     path('edit/<str:uuid>/', views.edit_article, name='edit-article'),
     path('edit/<str:uuid>/upload-article-image', views.upload_article_image, name='upload-article-image'),
 

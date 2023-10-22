@@ -53,7 +53,7 @@ class PostDetailView(DetailView):
     #     return context
 
 
-def create_post(request):
+def create_article(request):
     context = {}
     if request.method == 'POST':
 
@@ -105,9 +105,11 @@ def create_post(request):
                           message='Your post has been successfully created')
         return redirect('blog:edit-post', uuid=mew_post.uuid)
 
+    form = ArticleForm()
+    context['form'] = form
     context['release_status_choices_as_list'] = Article.get_release_status_choices_as_list()
 
-    return render(request, 'blog/create-post.html', context)
+    return render(request, 'blog/edit/create-article.html', context)
 
 
 def edit_article(request, uuid):

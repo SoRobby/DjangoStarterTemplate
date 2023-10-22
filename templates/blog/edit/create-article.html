@@ -1,10 +1,9 @@
 {% extends 'base-ultrawide.html' %}
 {% load static %}
-{% load utc_datetime_tags %}
 
 {# Title #}
 {% block title %}
-    <title>Edit article</title>
+    <title>Create an article</title>
 {% endblock title %}
 
 
@@ -16,7 +15,10 @@
 {# Stylesheets #}
 {% block style %}
     <link rel="stylesheet" type="text/css" href="{% static 'cropper.min.css' %}">
-    <style></style>
+    <style>
+
+
+    </style>
 {% endblock style %}
 
 
@@ -40,70 +42,26 @@
         {% endif %}
 
         {% block content %}
-            <form action="." method="POST" enctype="multipart/form-data">
+
+            <form action="#" method="POST">
                 {% csrf_token %}
                 {{ form.media }}
 
-                <div class="sticky top-0 z-10 mx-auto bg-white border-b border-gray-300">
-                    <div class="px-4 mx-auto sm:px-6 lg:px-8 py-4">
-                        <div class="sm:flex sm:items-center sm:justify-between">
-                            <div>
-                                <h2 class="text-2xl text-gray-800">
-                                    {% if article %}
-                                        Edit article
-                                    {% else %}
-                                        Create an article
-                                    {% endif %}
-                                </h2>
-                            </div>
-                            <div class="flex gap-4" x-data="{ isSaving: false, isPublishing: false }">
-                                <button type="submit" name="save_type" value="draft" x-show="!isSaving && !isPublishing"
-                                        @click="isSaving=true"
-                                        class="btn-secondary-lg">
-                                    Save draft
-                                </button>
-                                <button type="submit" name="save_type" value="publish"
-                                        x-show="!isSaving && !isPublishing" @click="isPublishing=true"
-                                        class="btn-secondary-lg">
-                                    Publish
-                                </button>
-                                <div class="flex items-center" x-show="isSaving" x-cloak>
-                                    {% include 'components/processing/processing-xs.html' with include_padding=False text="Saving..." %}
-                                </div>
-                                <div class="flex items-center" x-show="isPublishing" x-cloak>
-                                    {% include 'components/processing/processing-xs.html' with include_padding=False text="Publishing..." %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% include 'blog/edit/components/save-publish-buttons.html' %}
+
 
                 <div class="mx-auto">
                     <div class="flex w-full items-stretch gap-x-8">
-
                         <div class="flex-1 px-4 mx-auto max-w-7xl py-4 sm:py-6 sm:px-6 lg:px-8 space-y-4">
 
                             <div class="sm:col-span-6">
-                                <label for="title"
-                                       class="block text-sm font-medium leading-6 text-gray-900 sr-only">
-                                    Title
-                                </label>
-                                <div class="mt-2">
-                                    <input type="text" name="title" id="title" placeholder="Add title..."
-                                           value="{{ article.title }}"
-                                           class="iblock w-full rounded-md border-0 py-3 font-bold text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 input-focus sm:text-2xl sm:leading-6">
-                                </div>
+                                {% include 'blog/edit/components/title-input.html' %}
                             </div>
 
                             <div class="sm:col-span-6 mt-2">
-                                <label for="{{ form.content.id_for_label }}"
-                                       class="sr-only">
-                                    Editor
-                                </label>
-                                <div class="mt-2">
-                                    {{ form.content }}
-                                </div>
+                                {% include 'blog/edit/components/rich-text-editor.html' %}
                             </div>
+
 
                             <div class="pt-8">
                                 <div class="flex w-full items-start gap-x-8" x-data="{ selectedNav: 'main' }">
@@ -201,9 +159,9 @@
                                                 </div>
                                                 <div class="col-span-12 md:col-span-6 flex justify-end">
                                                     {% if article %}
-                                                        {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=article.allow_sharing id='allow_sharing' name='allow_sharing' %}
+                                                        {% include 'components/forms/toggles/toggle.html' with state=article.allow_sharing id='allow_sharing' name='allow_sharing' %}
                                                     {% else %}
-                                                        {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=True id='allow_sharing' name='allow_sharing' %}
+                                                        {% include 'components/forms/toggles/toggle.html' with state="true" id='allow_sharing' name='allow_sharing' %}
                                                     {% endif %}
                                                 </div>
                                             </div>
@@ -216,7 +174,7 @@
                                                  x-data="{ showError: false }">
                                                 <div class="col-span-12 md:col-span-6 flex items-center">
                                                     <div class="w-full">
-                                                        <label for="lead_author_email"
+                                                        <label for="lead_author"
                                                                class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
                                                             Lead author email
                                                         </label>
@@ -227,15 +185,10 @@
                                                 </div>
                                                 <div class="col-span-12 md:col-span-6 flex items-center">
                                                     <div class="w-full">
-                                                        <input type="text" id="lead_author_email"
-                                                               name="lead_author_email"
+                                                        <input type="text" id="lead_author" name="lead_author"
                                                                maxlength="{{ form.name.field.max_length }}"
-                                                                {% if article.lead_author %}
-                                                               value="{{ article.lead_author.email }}"
-                                                                {% else %}
                                                                value="{{ user.email }}"
-                                                                {% endif %}
-                                                               class="input-text">
+                                                               class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                         <div class="mt-2 text-xs text-gray-600 font-normal">
                                                             Enter the lead authors email address
                                                         </div>
@@ -268,7 +221,7 @@
                                                                            name="meta-title"
                                                                            maxlength="{{ form.name.field.max_length }}"
                                                                            value="{{ user.email }}"
-                                                                           class="input-text">
+                                                                           class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                                     <button type="button"
                                                                             class="px-2 text-gray-600 text-sm hover:text-gray-800"
                                                                             x-on:click="authors.splice(index, 1)">Remove
@@ -312,12 +265,9 @@
                                                 <div class="col-span-12 md:col-span-6 flex items-center">
                                                     <div class="w-full">
                                                         <input type="text" id="meta_title" name="meta_title"
-                                                               maxlength="{{ form.meta_title.field.max_length }}"
-                                                                {% if article.meta_title %}
-                                                               value="{{ article.meta_title }}"
-                                                                {% endif %}
-                                                               placeholder="{{ article.title }}"
-                                                               class="input-text">
+                                                               maxlength="{{ form.name.field.max_length }}"
+                                                               value="{{ article.title }}"
+                                                               class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                         <div x-show="showError"
                                                              class="mt-2 text-xs text-red-600 font-normal">
                                                             Invalid input
@@ -346,9 +296,8 @@
                                                         <textarea type="text" name="meta_description"
                                                                   id="meta_description"
                                                                   rows="4"
-                                                                  maxlength="{{ form.meta_description.field.max_length }}"
-                                                                  class="input-text">{% if article.meta_description %}
-                                                            {{ article.meta_description }}{% endif %}</textarea>
+                                                                  maxlength="{{ form.description.field.max_length }}"
+                                                                  class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{{ user.description }}</textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -372,11 +321,9 @@
                                                 <div class="col-span-12 md:col-span-6 flex items-center">
                                                     <div class="w-full">
                                                         <input type="text" id="meta_keywords" name="meta_keywords"
-                                                               maxlength="255"
-                                                                {% if article.meta_keywords %}
-                                                               value="{{ article.meta_keywords }}"
-                                                                {% endif %}
-                                                               class="input-text">
+                                                               maxlength="{{ form.name.field.max_length }}"
+                                                               value="{{ article.title }}"
+                                                               class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                         <div x-show="showError"
                                                              class="mt-2 text-xs text-red-600 font-normal">
                                                             Invalid input
@@ -408,8 +355,7 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p data-utc-time="{{ article.date_created.isoformat }}"
-                                                               class="text-gray-900 convert-time"></p>
+                                                            <p class="text-gray-900">{{ article.date_created }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -423,15 +369,13 @@
                                                                 Date last updated
                                                             </div>
                                                             <div class="text-xs text-gray-600 font-normal sr-only">A
-                                                                unique
-                                                                name to identify you
+                                                                unique name to identify you
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p data-utc-time="{{ article.date_modified.isoformat }}"
-                                                               class="text-gray-900 convert-time"></p>
+                                                            <p class="text-gray-900">{{ article.date_modified }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -455,12 +399,12 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p class="text-gray-900">TBD</p>
+                                                            <p class="text-gray-900">admin</p>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                {# Created by #}
+                                                {# Date updated (centered) #}
                                                 <div class="grid grid-cols-12 pt-4 gap-12"
                                                      x-data="{ showError: false }">
                                                     <div class="col-span-6 flex items-center">
@@ -469,23 +413,17 @@
                                                                 Created by
                                                             </div>
                                                             <div class="text-xs text-gray-600 font-normal sr-only">A
-                                                                unique
-                                                                name
-                                                                to
-                                                                identify
-                                                                you
+                                                                The user who created the article
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p class="text-gray-900">{{ article.created_by.username }}
-                                                                ({{ article.created_by.email }})</p>
+                                                            <p class="text-gray-900">{{ article.created_by }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                {# Last changed by #}
                                                 <div class="grid grid-cols-12 pt-4 gap-12"
                                                      x-data="{ showError: false }">
                                                     <div class="col-span-6 flex items-center">
@@ -494,21 +432,17 @@
                                                                 Last changed by
                                                             </div>
                                                             <div class="text-xs text-gray-600 font-normal sr-only">A
-                                                                unique
-                                                                name
-                                                                to
-                                                                identify
-                                                                you
+                                                                The user who last changed the article
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p class="text-gray-900">{{ article.modified_by.username }}
-                                                                ({{ article.modified_by.email }})</p>
+                                                            <p class="text-gray-900">{{ article.modified_by }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
+
                                             </div>
                                         {% endif %}
 
@@ -525,7 +459,7 @@
                                                             Delete article
                                                         </label>
                                                         <div class="text-xs text-gray-600 font-normal">
-                                                            Deleting an article is permanent and cannot be undone.
+                                                            Deleting a article is permanent and cannot be undone.
                                                         </div>
                                                     </div>
                                                 </div>
@@ -542,12 +476,13 @@
                             </div>
                         </div>
 
+
                         <aside class="border-l border-gray-200 bg-gray-50 w-80 space-y-4 divide-y divide-gray-200">
                             <div class="space-y-4 pt-4 px-4 sm:px-6">
                                 <h3 class="text-base font-medium leading-6 text-gray-800">Status & visibility</h3>
                                 <div class="grid grid-cols-2 items-center">
                                     <p class="text-sm text-gray-700">Status</p>
-                                    {% include 'components/forms/select/custom-select.html' with id="release_status" name="release_status" selected_option_key=article.release_status selected_option_name=article.get_release_status_display options=article.get_release_status_choices_as_list %}
+                                    {% include 'components/forms/select/custom-select.html' with id="release_status" name="release_status" selected_option_key="draft" selected_option_name="Draft" options=release_status_choices_as_list %}
                                     <div class="col-span-2 text-xs text-gray-600 mt-2">
                                         Non-published articles are only visible to you and other admins.
                                     </div>
@@ -571,12 +506,7 @@
                                 </label>
 
                                 <div class="aspect-video rounded text-gray-300 border border-gray-200 bg-white overflow-hidden">
-                                    {% if article.featured_image %}
-                                        <img src="{{ article.featured_image.url }}?lastmod={{ article.get_date_modified_utc_standard }}"
-                                             alt="" class="cropper-cropped-preview">
-                                    {% else %}
-                                        <img src="" alt="" class="cropper-cropped-preview">
-                                    {% endif %}
+                                    <img src="" alt="" class="cropper-cropped-preview">
                                     <svg class="aspect-video text-gray-300 bg-white cropper-cropped-preview"
                                          xmlns="http://www.w3.org/2000/svg"
                                          fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -586,7 +516,7 @@
                                     </svg>
                                 </div>
 
-                                <label for="featured-image" class="cursor-pointer">
+                                <label for="profile-image" class="cursor-pointer">
                                     <ul class="mt-2 border border-gray-200 border-dashed divide-y divide-gray-200 rounded-md hover:bg-gray-100 overflow-hidden cropper-input-container bg-white">
                                         <li class="flex items-center py-2 px-4 text-sm">
                                             <svg class="flex-shrink-0 w-6 h-6 text-gray-400"
@@ -597,7 +527,7 @@
                                                       d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
                                                       clip-rule="evenodd"></path>
                                             </svg>
-                                            <input id="featured-image" name="featured_image"
+                                            <input id="profile-image" name="profile_image"
                                                    type="file"
                                                    accept="image/*" class="sr-only cropper-input">
                                             <div class="flex flex-shrink-0 ml-2 space-x-4 text-left">
@@ -615,11 +545,11 @@
                                 <div class="mt-1 text-xs text-red-600 font-normal cropper-error-message"></div>
                                 {% include 'components/cropperjs/crop-image-modal.html' %}
                             </div>
+
                         </aside>
                     </div>
                 </div>
             </form>
-
         {% endblock content %}
     </main>
 {% endblock main %}
@@ -633,20 +563,13 @@
 
 {# Scripts #}
 {% block scripts %}
-    <script type="text/javascript" src="{% static 'jquery.min.js' %}"></script>
-    {#    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>#}
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
     <script src="{% static 'cropper.js' %}"></script>
     <script>
-        {#ClassicEditor#}
-        {#    .create(document.querySelector('#content'))#}
-        {#    .catch(error => {#}
-        {#        console.error(error);#}
-        {#    });#}
-
         document.addEventListener("DOMContentLoaded", function (event) {
             // On change show image with crop options
             cropperCropImage("cropper-featured-image-container", 1024 * 1024, 16 / 9);
         });
-
     </script>
 {% endblock scripts %}

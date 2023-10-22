@@ -46,19 +46,19 @@
             <div class="mx-auto max-w-6xl px-4 py-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between">
                     <div class="flex items-end gap-8 overflow-x-auto">
-                        <div class="whitespace-nowrap rounded-md px-4 py-2 text-sm uppercase text-gray-500 hover:bg-gray-200 hover:text-gray-800">
+                        <a href="{% url 'blog:article-list' %}" class="whitespace-nowrap rounded-md px-4 py-2 text-sm uppercase text-gray-500 hover:bg-gray-200 hover:text-gray-800">
                             All
-                        </div>
-                        <a href="{% url 'blog:create-post' %}"
+                        </a>
+                        <a href="{% url 'blog:create-article' %}"
                            class="whitespace-nowrap rounded-md px-4 py-2 text-sm uppercase text-gray-500 hover:bg-gray-200 hover:text-gray-800 hidden sm:block">
                             Editor picks
                         </a>
-                        <div class="whitespace-nowrap rounded-md px-4 py-2 text-sm uppercase text-gray-500 hover:bg-gray-200 hover:text-gray-800">
+                        <a href="{% url 'blog:create-article' %}" class="whitespace-nowrap rounded-md px-4 py-2 text-sm uppercase text-gray-500 hover:bg-gray-200 hover:text-gray-800">
                             Publish a story
-                        </div>
-                        <div class="whitespace-nowrap rounded-md px-4 py-2 text-sm uppercase text-gray-500 hover:bg-gray-200 hover:text-gray-800">
+                        </a>
+                        <a href="#" class="whitespace-nowrap rounded-md px-4 py-2 text-sm uppercase text-gray-500 hover:bg-gray-200 hover:text-gray-800">
                             Receive our newsletter
-                        </div>
+                        </a>
                     </div>
                     <div>
                         <button type="button"
