@@ -231,7 +231,7 @@ def edit_article(request, uuid):
 
     context['form'] = ArticleForm(instance=article)
     context['article'] = article
-    return render(request, 'blog/edit-post.html', context)
+    return render(request, 'blog/edit/edit-article.html', context)
 
 
 @csrf_exempt

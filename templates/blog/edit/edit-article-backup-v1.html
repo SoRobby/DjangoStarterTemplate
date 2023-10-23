@@ -44,9 +44,11 @@
                 {% csrf_token %}
                 {{ form.media }}
 
+                {# Stick header #}
                 <div class="sticky top-0 z-10 mx-auto bg-white border-b border-gray-300">
                     <div class="px-4 mx-auto sm:px-6 lg:px-8 py-4">
                         <div class="sm:flex sm:items-center sm:justify-between">
+
                             <div>
                                 <h2 class="text-2xl text-gray-800">
                                     {% if article %}
@@ -56,6 +58,7 @@
                                     {% endif %}
                                 </h2>
                             </div>
+
                             <div class="flex gap-4" x-data="{ isSaving: false, isPublishing: false }">
                                 <button type="submit" name="save_type" value="draft" x-show="!isSaving && !isPublishing"
                                         @click="isSaving=true"
@@ -78,9 +81,10 @@
                     </div>
                 </div>
 
-                <div class="mx-auto">
-                    <div class="flex w-full items-stretch gap-x-8">
 
+                <div class="mx-auto">
+
+                    <div class="flex flex-row-reverse lg:flex-row w-full gap-x-8">
                         <div class="flex-1 px-4 mx-auto max-w-7xl py-4 sm:py-6 sm:px-6 lg:px-8 space-y-4">
 
                             <div class="sm:col-span-6">
@@ -106,7 +110,9 @@
                             </div>
 
                             <div class="pt-8">
+
                                 <div class="flex w-full items-start gap-x-8" x-data="{ selectedNav: 'main' }">
+
                                     <nav class="w-64 flex flex-col border-r border-gray-200" aria-label="Sidebar">
                                         <ul role="list" class="space-y-1 pr-2">
                                             <li>
@@ -540,9 +546,16 @@
                                     </div>
                                 </div>
                             </div>
+
+
+
+
+
+
                         </div>
 
                         <aside class="border-l border-gray-200 bg-gray-50 w-80 space-y-4 divide-y divide-gray-200">
+
                             <div class="space-y-4 pt-4 px-4 sm:px-6">
                                 <h3 class="text-base font-medium leading-6 text-gray-800">Status & visibility</h3>
                                 <div class="grid grid-cols-2 items-center">
@@ -562,7 +575,7 @@
                                 </div>
                             </div>
 
-                            <div class="space-y-4 pt-4 px-4 sm:px-6" id="cropper-featured-image-container">
+                           <div class="space-y-4 pt-4 px-4 sm:px-6" id="cropper-featured-image-container">
                                 <h3 class="text-base font-medium leading-6 text-gray-800">Featured image</h3>
 
                                 <label for="featured_image"
@@ -615,8 +628,11 @@
                                 <div class="mt-1 text-xs text-red-600 font-normal cropper-error-message"></div>
                                 {% include 'components/cropperjs/crop-image-modal.html' %}
                             </div>
+
+
                         </aside>
                     </div>
+
                 </div>
             </form>
 
@@ -634,15 +650,8 @@
 {# Scripts #}
 {% block scripts %}
     <script type="text/javascript" src="{% static 'jquery.min.js' %}"></script>
-    {#    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>#}
     <script src="{% static 'cropper.js' %}"></script>
     <script>
-        {#ClassicEditor#}
-        {#    .create(document.querySelector('#content'))#}
-        {#    .catch(error => {#}
-        {#        console.error(error);#}
-        {#    });#}
-
         document.addEventListener("DOMContentLoaded", function (event) {
             // On change show image with crop options
             cropperCropImage("cropper-featured-image-container", 1024 * 1024, 16 / 9);

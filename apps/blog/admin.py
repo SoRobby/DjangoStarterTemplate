@@ -55,7 +55,7 @@ class ArticleAdmin(admin.ModelAdmin):
                     - not_published: Returns all article's that have not been published<br>
                     <b>Deleting logic:</b><br>
                     - On deletion: When an instance is deleted, all of the instance data (featured images and images in the rich text editor will be deleted)<br>
-                ''',}
+                '''}
          ),
     )
 

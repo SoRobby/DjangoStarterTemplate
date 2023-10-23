@@ -37,3 +37,28 @@ def pluralize(value, arg='s'):
     if value != 1:
         return arg
     return ''
+
+
+@register.filter
+def iterate(number):
+    """
+    Create a range object for iteration in templates.
+
+    This custom template tag returns a range object that can be used
+    to loop over a block of code a specified number of times within a
+    Django template. This is useful for scenarios where you want to
+    repeat a block of HTML a specified number of times without
+    having to pass a range object from the view.
+
+    Usage in template:
+    {% for i in 10|iterate %}
+        <!-- Repeated HTML block -->
+    {% endfor %}
+
+    Parameters:
+    number (int): The number of times to repeat the block of code.
+
+    Returns:
+    range: A range object from 0 to number - 1.
+    """
+    return range(number)
