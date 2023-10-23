@@ -4,7 +4,7 @@ from . import views
 
 app_name = 'roadmap'
 
-# Base url is 'roadmap' (root) - defined in config.urls.py
+# Root url of "roadmap" is 'roadmap/', defined in config.urls.py
 urlpatterns = [
     # Account profile urls
     # URL of blog post by slug

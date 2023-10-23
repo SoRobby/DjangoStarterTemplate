@@ -4,7 +4,7 @@ from . import views
 
 app_name = 'adminpanel'
 
-# Base url of the profile app is 'adminpanel' (/adminpanel/)
+# Root url of "adminpanel" is '', defined in config.urls.py
 urlpatterns = [
     path('home/', views.AdminPanelHomeView.as_view(), name='home'),
 

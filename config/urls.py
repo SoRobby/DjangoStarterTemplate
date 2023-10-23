@@ -23,12 +23,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('apps.accounts.urls')),
     path('adminpanel/', include('apps.adminpanel.urls')),
-    path('', include('apps.analytics.urls')),
+    path('analytics/', include('apps.analytics.urls')),
     path('blog/', include('apps.blog.urls', namespace='blog')),
     path('', include('apps.core.urls')),
-    path('', include('apps.feedback.urls', namespace='feedback')),
+    path('feedback/', include('apps.feedback.urls', namespace='feedback')),
     path('', include('apps.profiles.urls', namespace='profiles')),
-    path('roadmap', include('apps.roadmap.urls', namespace='roadmap')),
+    path('roadmap/', include('apps.roadmap.urls', namespace='roadmap')),
 ]
 
 # Third party app urls

@@ -4,8 +4,8 @@ from . import views
 
 app_name = 'analytics'
 
-# Base url of the profile app is 'analytics' (root)
+# Root url of "analytics" is 'analytics/', defined in config.urls.py
 urlpatterns = [
-    path('analytics/onload-endpoint/', views.analytics_onload_endpoint, name='onload-endpoint'),
-    path('analytics/beforeunload-endpoint/', views.analytics_beforeunload_endpoint, name='beforeunload-endpoint'),
+    path('onload-endpoint/', views.analytics_onload_endpoint, name='onload-endpoint'),
+    path('beforeunload-endpoint/', views.analytics_beforeunload_endpoint, name='beforeunload-endpoint'),
 ]

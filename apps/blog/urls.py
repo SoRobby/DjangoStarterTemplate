@@ -4,7 +4,7 @@ from . import views
 
 app_name = 'blog'
 
-# Base url of the profile app is 'profile' (root)
+# Root url of "blog" is 'blog/', defined in config.urls.py
 urlpatterns = [
     # Account profile urls
     # URL of blog post by slug

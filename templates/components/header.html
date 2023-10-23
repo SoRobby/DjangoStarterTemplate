@@ -237,7 +237,8 @@
                 <div class="hidden md:flex gap-x-12"
                      x-data="{ isMegaMenuTypeOpen1: false, isMegaMenuTypeOpen2: false, isMegaMenuTypeOpen3: false }">
                     <a href="{% url 'home' %}" class="text-sm font-semibold leading-6 text-gray-800">Home</a>
-                    <a href="{% url 'blog:article-list' %}" class="text-sm font-semibold leading-6 text-gray-800">Blog</a>
+                    <a href="{% url 'blog:article-list' %}"
+                       class="text-sm font-semibold leading-6 text-gray-800">Blog</a>
 
                     <button @click="isMegaMenuTypeOpen1=!isMegaMenuTypeOpen1" type="button"
                             class="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900"
@@ -754,10 +755,20 @@
                                    id="user-menu-item-2">Admin panel</a>
                                 {% if user.is_superuser %}
                                     <a href="{% url 'admin:index' %}"
-                                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                       target="_blank"
+                                       @click="isUserMenuOpen=false"
+                                       class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex justify-between group"
                                        role="menuitem"
                                        tabindex="-1"
-                                       id="user-menu-item-2">Django panel</a>
+                                       id="user-menu-item-2">Django panel
+                                        <span class="text-gray-400 group-hover:text-gray-700">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                 stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
+                                        </svg>
+                                        </span>
+                                    </a>
                                 {% endif %}
                             {% endif %}
 

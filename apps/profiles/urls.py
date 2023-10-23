@@ -19,7 +19,7 @@ from apps.profiles import views
 
 app_name = 'profiles'
 
-# Base url of the profile app is 'profile' (root)
+# Root url of "profiles" is '', defined in config.urls.py
 urlpatterns = [
     # Account profile urls
     path('profiles/<str:username>/', views.ProfileView.as_view(), name='profile'),
