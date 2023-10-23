@@ -135,9 +135,11 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-8">
 
-                            {% include 'blog/components/article-list-item-type1.html' %}
+                            {% for article in published_articles %}
+                                {% include 'blog/components/article-list-item-type1.html' with article=article %}
+                                {% include 'blog/components/article-list-item-type1.html' with article=article %}
+                            {% endfor %}
 
-                            {% include 'blog/components/article-list-item-type1.html' %}
 
                         </div>
                     </div>

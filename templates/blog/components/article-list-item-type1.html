@@ -1,10 +1,19 @@
 <article class="flex flex-col items-start justify-between">
     <div class="relative w-full">
-        <a href="">
-            <img src="https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3603&q=80"
+
+        {% if article.lead_author == user or user.is_staff %}
+            <div class="absolute p-2 right-0">
+                <a href="{% url 'blog:edit-article' uuid=article.uuid %}"
+                   class="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-800">Edit</a>
+            </div>
+        {% endif %}
+
+        <a href="{% url 'blog:article' slug=article.slug %}" class="">
+            <img src="{{ article.featured_image.url }}?last_modified={{ article.last_modified|date:"U" }}"
                  alt=""
                  class="aspect-[16/9] w-full rounded-md bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]">
         </a>
+
     </div>
     <div class="max-w-xl">
         <div class="group relative">
@@ -30,7 +39,7 @@
                     </a>
                 </p>
                 <div class="flex items-center gap-x-2 text-xs text-gray-500">
-                    <time datetime="2020-03-16">Mar 16, 2020</time>
+                    <time datetime="{{ article.date_published|date:"Y-m-d" }}">{{ article.date_published|date:"M d, Y" }}</time>
                     <p>•</p>
                     <p>12 min read</p>
                 </div>

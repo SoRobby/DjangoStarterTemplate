@@ -27,109 +27,164 @@
 
 
 {# Page content #}
-{% block content %}
+{% block main %}
+    <main class="mx-auto">
+        {% block content %}
 
-    <div class="bg-white px-6 py-32 lg:px-8">
-        <div class="mx-auto max-w-3xl text-base leading-7 text-gray-700">
-            <p class="text-base font-semibold leading-7 text-indigo-600">Introducing</p>
-            <h1 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">JavaScript for Beginners</h1>
-            <p class="mt-6 text-xl leading-8">Aliquet nec orci mattis amet quisque ullamcorper neque, nibh sem. At arcu,
-                sit dui mi, nibh dui, diam eget aliquam. Quisque id at vitae feugiat egestas ac. Diam nulla orci at in
-                viverra scelerisque eget. Eleifend egestas fringilla sapien.</p>
-            <div class="mt-10 max-w-2xl">
-                <p>Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus enim. Mattis mauris semper sed
-                    amet vitae sed turpis id. Id dolor praesent donec est. Odio penatibus risus viverra tellus varius
-                    sit neque erat velit. Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus enim.
-                    Mattis mauris semper sed amet vitae sed turpis id.</p>
-                <ul role="list" class="mt-8 max-w-xl space-y-8 text-gray-600">
-                    <li class="flex gap-x-3">
-                        <svg class="mt-1 h-5 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor"
-                             aria-hidden="true">
-                            <path fill-rule="evenodd"
-                                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                  clip-rule="evenodd"/>
-                        </svg>
-                        <span><strong class="font-semibold text-gray-900">Data types.</strong> Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.</span>
-                    </li>
-                    <li class="flex gap-x-3">
-                        <svg class="mt-1 h-5 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor"
-                             aria-hidden="true">
-                            <path fill-rule="evenodd"
-                                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                  clip-rule="evenodd"/>
-                        </svg>
-                        <span><strong class="font-semibold text-gray-900">Loops.</strong> Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo.</span>
-                    </li>
-                    <li class="flex gap-x-3">
-                        <svg class="mt-1 h-5 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor"
-                             aria-hidden="true">
-                            <path fill-rule="evenodd"
-                                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                  clip-rule="evenodd"/>
-                        </svg>
-                        <span><strong class="font-semibold text-gray-900">Events.</strong> Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.</span>
-                    </li>
-                </ul>
-                <p class="mt-8">Et vitae blandit facilisi magna lacus commodo. Vitae sapien duis odio id et. Id blandit
-                    molestie auctor fermentum dignissim. Lacus diam tincidunt ac cursus in vel. Mauris varius vulputate
-                    et ultrices hac adipiscing egestas. Iaculis convallis ac tempor et ut. Ac lorem vel integer
-                    orci.</p>
-                <h2 class="mt-16 text-2xl font-bold tracking-tight text-gray-900">From beginner to expert in 3
-                    hours</h2>
-                <p class="mt-6">Id orci tellus laoreet id ac. Dolor, aenean leo, ac etiam consequat in. Convallis arcu
-                    ipsum urna nibh. Pharetra, euismod vitae interdum mauris enim, consequat vulputate nibh. Maecenas
-                    pellentesque id sed tellus mauris, ultrices mauris. Tincidunt enim cursus ridiculus mi. Pellentesque
-                    nam sed nullam sed diam turpis ipsum eu a sed convallis diam.</p>
-                <figure class="mt-10 border-l border-indigo-600 pl-9">
-                    <blockquote class="font-semibold text-gray-900">
-                        <p>“Vel ultricies morbi odio facilisi ultrices accumsan donec lacus purus. Lectus nibh
-                            ullamcorper ac dictum justo in euismod. Risus aenean ut elit massa. In amet aliquet eget
-                            cras. Sem volutpat enim tristique.”</p>
-                    </blockquote>
-                    <figcaption class="mt-6 flex gap-x-4">
-                        <img class="h-6 w-6 flex-none rounded-full bg-gray-50"
-                             src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                             alt="">
-                        <div class="text-sm leading-6"><strong class="font-semibold text-gray-900">Maria Hill</strong> –
-                            Marketing Manager
+            <div class="bg-[url('https://flowbite.s3.amazonaws.com/blocks/marketing-ui/articles/background.png')] w-full h-[460px] xl:h-[537px] bg-no-repeat bg-cover bg-center bg-blend-darken relative">
+                <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50"></div>
+                <div class="absolute top-20 left-1/2 px-4 mx-auto w-full max-w-screen-xl -translate-x-1/2 xl:top-1/2 xl:-translate-y-1/2 xl:px-0">
+                    <span class="block mb-4 text-gray-300">Published in <a href="#"
+                                                                           class="font-semibold text-white hover:underline">World News</a></span>
+                    <h1 class="mb-4 max-w-4xl text-2xl font-extrabold leading-none text-white sm:text-3xl lg:text-4xl">
+                        Flowbite Blocks Tutorial - Learn how to get started with custom sections using the Flowbite
+                        Blocks</h1>
+                    <p class="text-lg font-normal text-gray-300">Before going digital, you might scribbling down some
+                        ideas in a sketchbook.</p>
+                </div>
+            </div>
+
+
+            <div class="flex relative z-10 justify-between -m-36 p-6 mx-4 max-w-screen-xl bg-white rounded xl:-m-32 xl:p-10 xl:mx-auto gap-12">
+
+                <article class="w-full max-w-none format format-sm sm:format-base lg:format-lg space-y-8">
+
+                    <div class="flex flex-col lg:flex-row justify-between lg:items-center">
+                        <div class="flex items-center gap-x-2 text-gray-500 text-lg">
+                            <div>
+                                <span>By</span>
+                                <span class="font-semibold text-gray-800 hover:text-blue-800">{{ article.lead_author }}</span>
+                            </div>
+                            <p>•</p>
+                            <time datetime="{{ article.date_published|date:"Y-m-d" }}">{{ article.date_published|date:"M d, Y" }}</time>
                         </div>
-                    </figcaption>
-                </figure>
-                <p class="mt-10">Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus enim. Mattis mauris
-                    semper sed amet vitae sed turpis id. Id dolor praesent donec est. Odio penatibus risus viverra
-                    tellus varius sit neque erat velit.</p>
+
+                        <div class="flex gap-2">
+
+
+                            <button type="button"
+                                    class="block p-2 text-gray-500 hover:text-gray-900 bg-red-400 rounded-md focus:ring-4 focus:outline-none focus:ring-gray-50 hover:bg-gray-100"
+                                    id="options-menu-0-button" aria-expanded="false" aria-haspopup="true">
+                                <span class="sr-only">Open options</span>
+                                <svg class="w-5 h-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" height="1em"
+                                     viewBox="0 0 320 512">
+                                    <path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/>
+                                </svg>
+                            </button>
+
+                            <button type="button"
+                                    class="block p-2 text-gray-500 hover:text-gray-900 bg-red-400 rounded-md focus:ring-4 focus:outline-none focus:ring-gray-50 hover:bg-gray-100"
+                                    id="options-menu-0-button" aria-expanded="false" aria-haspopup="true">
+                                <span class="sr-only">Open options</span>
+                                <svg class="w-5 h-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" height="1em"
+                                     viewBox="0 0 512 512">
+                                    <path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/>
+                                </svg>
+                            </button>
+
+
+                            <button type="button"
+                                    class="block p-2 text-gray-500 hover:text-gray-900 bg-red-400 rounded-md focus:ring-4 focus:outline-none focus:ring-gray-50 hover:bg-gray-100"
+                                    id="options-menu-0-button" aria-expanded="false" aria-haspopup="true">
+                                <span class="sr-only">Open options</span>
+                                <svg class="w-5 h-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" height="1em"
+                                     viewBox="0 0 512 512">
+                                    <path d="M201.5 305.5c-13.8 0-24.9-11.1-24.9-24.6 0-13.8 11.1-24.9 24.9-24.9 13.6 0 24.6 11.1 24.6 24.9 0 13.6-11.1 24.6-24.6 24.6zM504 256c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zm-132.3-41.2c-9.4 0-17.7 3.9-23.8 10-22.4-15.5-52.6-25.5-86.1-26.6l17.4-78.3 55.4 12.5c0 13.6 11.1 24.6 24.6 24.6 13.8 0 24.9-11.3 24.9-24.9s-11.1-24.9-24.9-24.9c-9.7 0-18 5.8-22.1 13.8l-61.2-13.6c-3-.8-6.1 1.4-6.9 4.4l-19.1 86.4c-33.2 1.4-63.1 11.3-85.5 26.8-6.1-6.4-14.7-10.2-24.1-10.2-34.9 0-46.3 46.9-14.4 62.8-1.1 5-1.7 10.2-1.7 15.5 0 52.6 59.2 95.2 132 95.2 73.1 0 132.3-42.6 132.3-95.2 0-5.3-.6-10.8-1.9-15.8 31.3-16 19.8-62.5-14.9-62.5zM302.8 331c-18.2 18.2-76.1 17.9-93.6 0-2.2-2.2-6.1-2.2-8.3 0-2.5 2.5-2.5 6.4 0 8.6 22.8 22.8 87.3 22.8 110.2 0 2.5-2.2 2.5-6.1 0-8.6-2.2-2.2-6.1-2.2-8.3 0zm7.7-75c-13.6 0-24.6 11.1-24.6 24.9 0 13.6 11.1 24.6 24.6 24.6 13.8 0 24.9-11.1 24.9-24.6 0-13.8-11-24.9-24.9-24.9z"/>
+                                </svg>
+                            </button>
+
+                            <button type="button"
+                                    data-copy-url
+                                    class="block p-2 text-gray-500 hover:text-gray-900 bg-red-400 rounded-md focus:ring-4 focus:outline-none focus:ring-gray-50 hover:bg-gray-100"
+                                    id="options-menu-0-button" aria-expanded="false" aria-haspopup="true">
+                                <span class="sr-only">Open options</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                     class="w-5 h-5">
+                                    <path d="M12.232 4.232a2.5 2.5 0 013.536 3.536l-1.225 1.224a.75.75 0 001.061 1.06l1.224-1.224a4 4 0 00-5.656-5.656l-3 3a4 4 0 00.225 5.865.75.75 0 00.977-1.138 2.5 2.5 0 01-.142-3.667l3-3z"/>
+                                    <path d="M11.603 7.963a.75.75 0 00-.977 1.138 2.5 2.5 0 01.142 3.667l-3 3a2.5 2.5 0 01-3.536-3.536l1.225-1.224a.75.75 0 00-1.061-1.06l-1.224 1.224a4 4 0 105.656 5.656l3-3a4 4 0 00-.225-5.865z"/>
+                                </svg>
+                            </button>
+
+                            {% if article.lead_author == user or user.is_staff %}
+                                <div class="relative flex-none" x-data="{ isDropdownOpen: false }"
+                                     @click.away="isDropdownOpen=false" @keyup.escape.window="isDropdownOpen=false">
+                                    <button @click="isDropdownOpen=!isDropdownOpen" type="button"
+                                            class="block p-2 text-gray-500 hover:text-gray-900 bg-red-400 rounded-md focus:ring-4 focus:outline-none focus:ring-gray-50 hover:bg-gray-100"
+                                            id="options-menu-0-button" aria-expanded="false" aria-haspopup="true">
+                                        <span class="sr-only">Open options</span>
+                                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 15.5a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z"/>
+                                        </svg>
+                                    </button>
+
+                                    <div x-show="isDropdownOpen" x-transition x-cloak
+                                         class="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none"
+                                         role="menu" aria-orientation="vertical" aria-labelledby="options-menu-0-button"
+                                         tabindex="-1">
+                                        <a href="#"
+                                           class="whitespace-nowrap block px-3 py-1 text-sm leading-6 text-gray-900 hover:bg-gray-100"
+                                           role="menuitem"
+                                           tabindex="-1" id="options-menu-0-item-0">View profile<span class="sr-only">, Leslie Alexander</span></a>
+                                        <a href="#"
+                                           class="whitespace-nowrap block px-3 py-1 text-sm leading-6 text-gray-900 hover:bg-gray-100"
+                                           role="menuitem"
+                                           tabindex="-1" id="options-menu-0-item-1">Report<span class="sr-only">, Leslie Alexander</span></a>
+
+                                        <hr>
+
+                                        <a href="{% url 'blog:edit-article' uuid=article.uuid %}"
+                                           class="whitespace-nowrap block px-3 py-1 text-sm leading-6 text-gray-900 hover:bg-gray-100"
+                                           role="menuitem"
+                                           tabindex="-1" id="options-menu-0-item-1">Edit article<span class="sr-only">, Leslie Alexander</span></a>
+
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="text-gray-500 text-2xl">
+                        Flowbite is an open-source library of UI components built with the
+                        utility-first
+                        classes from Tailwind CSS. It also includes interactive elements such as dropdowns, modals,
+                        datepickers.
+                    </div>
+
+                    <div class="space-y-4 text-gray-600 text-xl">
+                        {{ article.content|safe }}
+                    </div>
+
+                </article>
+
+                <aside class="hidden xl:block">
+                    <div class="w-80 sticky top-6 space-y-12">
+                        <div>
+                            <h4 class="text-sm font-bold text-gray-900 uppercase">
+                                Platform News Headlines
+                            </h4>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                Get all the stories you need-to-know from the most powerful name in news delivered first
+                                thing every morning to your inbox
+                            </p>
+                            <button type="button" class="w-full mt-4 btn-primary-lg">Subscribe</button>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-bold text-gray-900 uppercase">
+                                Latest news
+                            </h4>
+                        </div>
+
+                    </div>
+                </aside>
+
+
             </div>
-            <figure class="mt-16">
-                <img class="aspect-video rounded-xl bg-gray-50 object-cover"
-                     src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=facearea&w=1310&h=873&q=80&facepad=3"
-                     alt="">
-                <figcaption class="mt-4 flex gap-x-2 text-sm leading-6 text-gray-500">
-                    <svg class="mt-0.5 h-5 w-5 flex-none text-gray-300" viewBox="0 0 20 20" fill="currentColor"
-                         aria-hidden="true">
-                        <path fill-rule="evenodd"
-                              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z"
-                              clip-rule="evenodd"/>
-                    </svg>
-                    Faucibus commodo massa rhoncus, volutpat.
-                </figcaption>
-            </figure>
-            <div class="mt-16 max-w-2xl">
-                <h2 class="text-2xl font-bold tracking-tight text-gray-900">Everything you need to get up and
-                    running</h2>
-                <p class="mt-6">Purus morbi dignissim senectus mattis adipiscing. Amet, massa quam varius orci dapibus
-                    volutpat cras. In amet eu ridiculus leo sodales cursus tristique. Tincidunt sed tempus ut viverra
-                    ridiculus non molestie. Gravida quis fringilla amet eget dui tempor dignissim. Facilisis auctor
-                    venenatis varius nunc, congue erat ac. Cras fermentum convallis quam.</p>
-                <p class="mt-8">Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus enim. Mattis mauris
-                    semper sed amet vitae sed turpis id. Id dolor praesent donec est. Odio penatibus risus viverra
-                    tellus varius sit neque erat velit.</p>
-            </div>
-        </div>
-    </div>
 
 
-
-{% endblock content %}
+        {% endblock content %}
+    </main>
+{% endblock main %}
 
 
 {# Footer #}
