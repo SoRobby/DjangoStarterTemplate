@@ -32,6 +32,7 @@ class ArticleForm(forms.ModelForm):
         save_type = self.cleaned_data['save_type']
         if save_type == 'publish':
             instance.release_status = 'published'
+
         elif save_type == 'draft':
             instance.release_status = 'draft'
 

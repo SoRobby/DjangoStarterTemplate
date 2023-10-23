@@ -1640,10 +1640,6 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
   margin: -0.625rem;
 }
 
-.-m-36 {
-  margin: -9rem;
-}
-
 .-mx-3 {
   margin-left: -0.75rem;
   margin-right: -0.75rem;
@@ -1682,6 +1678,10 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
 
 .-mt-1 {
   margin-top: -0.25rem;
+}
+
+.-mt-32 {
+  margin-top: -8rem;
 }
 
 .mb-4 {
@@ -1750,10 +1750,6 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
 
 .mt-6 {
   margin-top: 1.5rem;
-}
-
-.-mt-36 {
-  margin-top: -9rem;
 }
 
 .line-clamp-2 {
@@ -1933,6 +1929,10 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
 
 .w-screen {
   width: 100vw;
+}
+
+.min-w-0 {
+  min-width: 0px;
 }
 
 .min-w-full {
@@ -2531,11 +2531,6 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
   background-color: rgb(254 226 226 / var(--tw-bg-opacity));
 }
 
-.bg-red-400 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(248 113 113 / var(--tw-bg-opacity));
-}
-
 .bg-red-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(254 242 242 / var(--tw-bg-opacity));
@@ -2706,11 +2701,6 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
 .py-3\.5 {
   padding-top: 0.875rem;
   padding-bottom: 0.875rem;
-}
-
-.py-36 {
-  padding-top: 9rem;
-  padding-bottom: 9rem;
 }
 
 .py-4 {
@@ -3591,6 +3581,12 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
     margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
   }
 
+  .sm\:space-x-4 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(1rem * var(--tw-space-x-reverse));
+    margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+
   .sm\:space-y-0 > :not([hidden]) ~ :not([hidden]) {
     --tw-space-y-reverse: 0;
     margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
@@ -3932,17 +3928,9 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
     top: 50%;
   }
 
-  .xl\:-m-32 {
-    margin: -8rem;
-  }
-
   .xl\:mx-auto {
     margin-left: auto;
     margin-right: auto;
-  }
-
-  .xl\:-mt-32 {
-    margin-top: -8rem;
   }
 
   .xl\:block {

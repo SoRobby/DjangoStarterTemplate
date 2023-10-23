@@ -142,9 +142,13 @@ class Article(DateCreatedAndModified, DateDeleted):
             self.slug = self.generate_slug()
 
         # Set the date_published
+        print(f'self.release_status: {self.release_status}')
+        print(f'self.date_published: {self.date_published}')
+
         if self.release_status == self.ReleaseStatus.PUBLISHED and self.date_published is None:
+            print('SETTING DATE PUBLISHED')
             self.date_published = timezone.now()
-        else:
+        elif self.release_status != self.ReleaseStatus.PUBLISHED and self.date_published is not None:
             self.date_published = None
 
         # Set the date_deleted if the article is deleted
@@ -210,7 +214,7 @@ class Comment(DateCreatedAndModified, DateDeleted):
     # TODO - might want to rename this to ArticleComment to add clarity in the event other apps will also include
     # a model called Comment.
 
-    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='article_comment',
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comment',
                                 verbose_name='Article', help_text='The article that the comment is related to')
 
     parent_comment = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True,

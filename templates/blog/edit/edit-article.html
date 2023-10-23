@@ -35,7 +35,12 @@
 
 {# Page content #}
 {% block main %}
-    <main class="mx-auto">
+    <main class="mx-auto" x-data="{ isDeleteModalOpen: false }">
+
+        {% if article %}
+            {% include 'blog/edit/modals/delete-article-confirm-modal.html' %}
+        {% endif %}
+
         {% block content %}
 
             <form action="." method="POST" enctype="multipart/form-data"
@@ -58,9 +63,25 @@
                                 </h2>
                             </div>
 
-                            <div class="flex gap-4" x-data="{ isSaving: false, isPublishing: false }">
+                            <div class="flex gap-4 items-center" x-data="{ isSaving: false, isPublishing: false }">
+
+                                {% if user.is_superuser %}
+                                    <div>
+                                        <a href="{% url 'admin:blog_article_change' article.pk %}"
+                                           class="text-gray-500 hover:underline hover:text-gray-800">
+                                            Advanced edit
+                                        </a>
+                                    </div>
+                                {% endif %}
+
+
 
                                 {% if article.release_status == 'published' %}
+                                    <a href="{% url 'blog:article' slug=article.slug %}"
+                                       x-show="!isSaving && !isPublishing" @click="isPublishing=true"
+                                       class="btn-secondary-lg">
+                                        View
+                                    </a>
                                     <button type="submit" name="save_type" value="update"
                                             x-show="!isSaving && !isPublishing" @click="isPublishing=true"
                                             class="btn-secondary-lg">
@@ -206,7 +227,7 @@
                                                     Allow comments
                                                 </label>
                                                 <div class="text-xs text-gray-600 font-normal">
-                                                    Allow users to comment on the article
+                                                    Allow users to comment on the article. Disabling comments on an existing article will not delete existing comments.
                                                 </div>
                                             </div>
                                         </div>
@@ -483,6 +504,32 @@
                                             <div class="col-span-6 flex items-center">
                                                 <div class="w-full">
                                                     <p class="text-gray-900">{{ article.number_of_revisions }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {# Number of comments (centered) #}
+                                        <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 md:gap-12"
+                                             x-data="{ showError: false }">
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <div class="font-medium text-gray-900">
+                                                        Number of comments
+                                                    </div>
+                                                    <div class="text-xs text-gray-600 font-normal sr-only">Number of
+                                                        comments on the article
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <p class="text-gray-900">
+                                                        {% if article.allow_comments %}
+                                                            TBD
+                                                        {% else %}
+                                                            Comments disabled
+                                                        {% endif %}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
