@@ -1,6 +1,6 @@
 <article class="grid sm:grid-cols-2 items-start justify-between gap-4">
     <div class="relative w-full">
-        <a href="">
+        <a href="{% url 'blog:article' slug=article.slug %}">
             <img src="https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3603&q=80"
                  alt=""
                  class="aspect-[16/9] w-full rounded-md bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]">
@@ -9,30 +9,28 @@
     <div class="max-w-xl">
         <div class="group relative">
             <h3 class="text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
-                <a href="#">
+                <a href="{% url 'blog:article' slug=article.slug %}">
                     <span class="absolute inset-0"></span>
-                    Boost your conversion rate
+                    {{ article.title }}
                 </a>
             </h3>
-            <p class="mt-2 line-clamp-2 lg:line-clamp-2 text-sm leading-6 text-gray-600 group-hover:text-gray-500">Illo sint voluptas.
-                Error
-                voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo
-                necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel.
-                Iusto corrupti dicta.</p>
+            <p class="mt-2 line-clamp-2 lg:line-clamp-2 text-sm leading-6 text-gray-600 group-hover:text-gray-500">{{ article.meta_description }}</p>
         </div>
         <div class="mt-4 flex items-center gap-x-4">
             <div class="text-sm leading-6">
                 <p class="font-semibold text-gray-800 hover:text-blue-800">
-                    <a href="authorname">
-                        Michael Foster
+                    <a href="#">
+                        {{ article.lead_author }}
                     </a>
                 </p>
                 <div class="flex items-center gap-x-2 text-xs text-gray-500">
-                    <time datetime="2020-03-16">Mar 16, 2020</time>
+                    <time datetime="{{ article.date_published|date:"Y-m-d" }}">{{ article.date_published|date:"M d, Y" }}</time>
                     <p>•</p>
-                    <p>12 min read</p>
+                    <p>{{ article.reading_time_minutes }} min read</p>
                 </div>
             </div>
         </div>
+
+
     </div>
 </article>

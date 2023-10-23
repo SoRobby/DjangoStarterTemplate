@@ -13,7 +13,7 @@ urlpatterns = [
     # path is /blog/<str:slug>/
     # path('posts/<str:slug>/', views.post, name='post'),
     # TODO - NEED TO FIX URL FOR POSTS -> ARTICLES
-    path('posts/<str:slug>/', views.PostDetailView.as_view(), name='post'),
+    path('articles/<str:slug>/', views.ArticleDetailView.as_view(), name='article'),
 
     # path is /blog/edit/create-post/
 

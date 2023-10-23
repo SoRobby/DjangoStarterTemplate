@@ -13,6 +13,7 @@
 
 {# Stylesheets #}
 {% block style %}
+    <link rel="stylesheet" type="text/css" href="{% static 'cropper.min.css' %}">
     <style>
         .tox .tox-toolbar--scrolling {
             flex-wrap: wrap !important;
@@ -37,10 +38,11 @@
     <main class="mx-auto">
         {% block content %}
 
-            <form action="." method="POST" enctype="multipart/form-data" x-data="{ showSidebar: false }">
+            <form action="." method="POST" enctype="multipart/form-data"
+                  x-data="{ showSidebar: true }"
+                  x-init="showSidebar = (localStorage.getItem('showSidebar') !== null) ? (localStorage.getItem('showSidebar') === 'true') : true">
                 {% csrf_token %}
                 {{ form.media }}
-
 
                 <div class="sticky top-0 mx-auto bg-white border-b border-gray-300 z-20">
                     <div class="px-4 mx-auto sm:px-6 lg:px-8 py-4">
@@ -57,24 +59,38 @@
                             </div>
 
                             <div class="flex gap-4" x-data="{ isSaving: false, isPublishing: false }">
-                                <button type="submit" name="save_type" value="draft" x-show="!isSaving && !isPublishing"
-                                        @click="isSaving=true"
-                                        class="btn-secondary-lg">
-                                    Save draft
-                                </button>
-                                <button type="submit" name="save_type" value="publish"
-                                        x-show="!isSaving && !isPublishing" @click="isPublishing=true"
-                                        class="btn-secondary-lg">
-                                    Publish
-                                </button>
-                                <div class="flex items-center py-1.5" x-show="isSaving" x-cloak>
-                                    {% include 'components/processing/processing-xs.html' with include_padding=False text="Saving..." %}
-                                </div>
-                                <div class="flex items-center py-1.5" x-show="isPublishing" x-cloak>
-                                    {% include 'components/processing/processing-xs.html' with include_padding=False text="Publishing..." %}
-                                </div>
 
-                                <button @click=showSidebar=!showSidebar type="button"
+                                {% if article.release_status == 'published' %}
+                                    <button type="submit" name="save_type" value="update"
+                                            x-show="!isSaving && !isPublishing" @click="isPublishing=true"
+                                            class="btn-secondary-lg">
+                                        Update
+                                    </button>
+                                    <div class="flex items-center py-1.5" x-show="isPublishing" x-cloak>
+                                        {% include 'components/processing/processing-xs.html' with include_padding=False text="Updating..." %}
+                                    </div>
+                                {% else %}
+                                    <button type="submit" name="save_type" value="draft"
+                                            x-show="!isSaving && !isPublishing"
+                                            @click="isSaving=true"
+                                            class="btn-secondary-lg">
+                                        Save draft
+                                    </button>
+                                    <button type="submit" name="save_type" value="publish"
+                                            x-show="!isSaving && !isPublishing" @click="isPublishing=true"
+                                            class="btn-secondary-lg">
+                                        Publish
+                                    </button>
+                                    <div class="flex items-center py-1.5" x-show="isSaving" x-cloak>
+                                        {% include 'components/processing/processing-xs.html' with include_padding=False text="Saving..." %}
+                                    </div>
+                                    <div class="flex items-center py-1.5" x-show="isPublishing" x-cloak>
+                                        {% include 'components/processing/processing-xs.html' with include_padding=False text="Publishing..." %}
+                                    </div>
+                                {% endif %}
+
+                                <button @click="showSidebar = !showSidebar; localStorage.setItem('showSidebar', showSidebar);"
+                                        type="button"
                                         class="btn-text-lg text-gray-300 hover:text-gray-800"
                                         :class="{ 'text-gray-600': showSidebar==true }">
                                     <svg class="w-6 h-6" fill="currentColor" stroke="none" stroke-width="1.5"
@@ -108,7 +124,7 @@
                             </div>
 
 
-                            <div class="mt-2" style="height: 512px">
+                            <div class="mt-2">
                                 <label for="{{ form.content.id_for_label }}"
                                        class="sr-only">
                                     Editor
@@ -120,10 +136,14 @@
                         </div>
 
 
-                        <div x-data="{ selectedNav: 'main' }">
+                        <div class="flex flex-col md:flex-row w-full gap-8" x-data="{ selectedNav: 'main' }">
 
-                            <nav class="w-full bg-red-200" aria-label="Sidebar">
-                                <ul role="list" class="space-y-1 pr-2">
+                            <div class="w-full md:w-64 flex flex-col border-r border-gray-200" aria-label="Sidebar">
+                                <div class="md:hidden">
+                                    {% include 'components/forms/select/custom-select.html' with id="options-menu" name="options-menu" selected_option_key='main' selected_option_name='Main' options="[{'key': 'main', 'name': 'Main'}, {'key': 'authors', 'name': 'Authors'}, {'key': 'attached-documents', 'name': 'Attached documents'}, {'key': 'seo-properties', 'name': 'SEO properties'}, {'key': 'metrics', 'name': 'Metrics'}, {'key': 'danger-zone', 'name': 'Danger zone'}]" %}
+                                </div>
+
+                                <ul role="list" class="hidden md:block space-y-1 pr-2">
                                     <li>
                                         <button @click="selectedNav='main'" type="button"
                                                 class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
@@ -171,39 +191,386 @@
                                         </li>
                                     {% endif %}
                                 </ul>
-                            </nav>
+                            </div>
 
-                        </div>
+                            <div class="flex-1">
+                                <div x-show="selectedNav === 'main'" x-transition:enter
+                                     class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
 
+                                    {# Main > allow comments #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <label for="allow_comments"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Allow comments
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">
+                                                    Allow users to comment on the article
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex justify-end">
+                                            {% if article %}
+                                                {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=article.allow_comments id='allow_comments' name='allow_comments' %}
+                                            {% else %}
+                                                {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=True id='allow_comments' name='allow_comments' %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
 
-                        <div>
-                            {% for i in 12|iterate %}
-                                <div class="py-10 text-gray-500">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                    incididunt ut
-                                    labore et dolore magna aliqua. Habitasse platea dictumst vestibulum rhoncus est
-                                    pellentesque
-                                    elit ullamcorper. Tempor orci eu lobortis elementum nibh tellus molestie. Tristique
-                                    magna
-                                    sit amet purus gravida quis blandit turpis cursus. Nam aliquam sem et tortor
-                                    consequat id
-                                    porta. Metus aliquam eleifend mi in. Tincidunt eget nullam non nisi est sit amet
-                                    facilisis
-                                    magna. Dui ut ornare lectus sit amet est placerat in egestas. Augue ut lectus arcu
-                                    bibendum
-                                    at. Ornare arcu odio ut sem nulla pharetra diam sit amet. Ut diam quam nulla
-                                    porttitor massa
-                                    id neque.
+                                    {# Main > allow social media sharing #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <label for="allow_sharing"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Enable social media sharing
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">
+                                                    Allowing the article to be easily shared on social media
+                                                    platforms
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex justify-end">
+                                            {% if article %}
+                                                {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=article.allow_sharing id='allow_sharing' name='allow_sharing' %}
+                                            {% else %}
+                                                {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=True id='allow_sharing' name='allow_sharing' %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
                                 </div>
-                            {% endfor %}
+
+                                <div x-show="selectedNav === 'authors'" x-transition:enter x-cloak
+                                     class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
+                                    {# Authors > Lead author #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                         x-data="{ showError: false }">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <label for="lead_author_email"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Lead author email
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">
+                                                    The lead author will be listed first
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <input type="text" id="lead_author_email"
+                                                       name="lead_author_email"
+                                                       maxlength="{{ form.name.field.max_length }}"
+                                                        {% if article.lead_author %}
+                                                       value="{{ article.lead_author.email }}"
+                                                        {% else %}
+                                                       value="{{ user.email }}"
+                                                        {% endif %}
+                                                       class="input-text">
+                                                <div class="mt-2 text-xs text-gray-600 font-normal">
+                                                    Enter the lead authors email address
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    {# Authors > All authors #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                         x-data="{ showError: false }">
+                                        <div class="col-span-12 md:col-span-6 flex">
+                                            <div class="w-full">
+                                                <label for="authors"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Other author emails
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">Add additional
+                                                    authors
+                                                    to the article
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full" x-data="{ authors: [] }">
+                                                <div class="grid gap-2">
+                                                    <template x-for="(author, index) in authors" :key="index">
+                                                        <div class="flex items-center">
+                                                            <input type="text" x-model="authors[index]"
+                                                                   name="meta-title"
+                                                                   maxlength="{{ form.name.field.max_length }}"
+                                                                   value="{{ user.email }}"
+                                                                   class="input-text">
+                                                            <button type="button"
+                                                                    class="px-2 text-gray-600 text-sm hover:text-gray-800"
+                                                                    x-on:click="authors.splice(index, 1)">Remove
+                                                            </button>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                                <button type="button" class="mt-2 text-gray-800"
+                                                        x-on:click="authors.push('')">+ Add
+                                                    author
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div x-show="selectedNav === 'attach-documents'" x-transition:enter x-cloak>
+                                            <span class="font-semibold text-gray-600 text-sm">
+                                                Coming soon...
+                                            </span>
+                                </div>
+
+                                <div x-show="selectedNav === 'seo-properties'" x-transition:enter x-cloak
+                                     class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
+
+                                    {# Meta > title #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                         x-data="{ showError: false }">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <label for="meta_title"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Meta title
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">
+                                                    Title that will appear in search engines and browser tab.
+                                                    Recommended length is 50-60 characters.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <input type="text" id="meta_title" name="meta_title"
+                                                       maxlength="{{ form.meta_title.field.max_length }}"
+                                                        {% if article.meta_title %}
+                                                       value="{{ article.meta_title }}"
+                                                        {% endif %}
+                                                       placeholder="{{ article.title }}"
+                                                       class="input-text">
+                                                <div x-show="showError"
+                                                     class="mt-2 text-xs text-red-600 font-normal">
+                                                    Invalid input
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {# Meta > description #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                         x-data="{ showError: false }">
+                                        <div class="col-span-12 md:col-span-6 flex">
+                                            <div class="w-full">
+                                                <label for="meta_description"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Meta description
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">High level
+                                                    summary that describes the article. Recommended length is
+                                                    50-160 characters.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                        <textarea type="text" name="meta_description"
+                                                                  id="meta_description"
+                                                                  rows="4"
+                                                                  maxlength="{{ form.meta_description.field.max_length }}"
+                                                                  class="input-text">{% if article.meta_description %}
+                                                            {{ article.meta_description }}{% endif %}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    {# Meta > keywords #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                         x-data="{ showError: false }">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <label for="meta_keywords"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Meta keywords
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">
+                                                    Comma separated keywords that describe the article.
+                                                    Recommended number of keywords is 3-8.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <input type="text" id="meta_keywords" name="meta_keywords"
+                                                       maxlength="255"
+                                                        {% if article.meta_keywords %}
+                                                       value="{{ article.meta_keywords }}"
+                                                        {% endif %}
+                                                       class="input-text">
+                                                <div x-show="showError"
+                                                     class="mt-2 text-xs text-red-600 font-normal">
+                                                    Invalid input
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {% if article %}
+                                    <div x-show="selectedNav === 'metrics'" x-transition:enter x-cloak
+                                         class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
+
+                                        {# Date created (centered) #}
+                                        <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 md:gap-12"
+                                             x-data="{ showError: false }">
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <div class="font-medium text-gray-900">
+                                                        Date created
+                                                    </div>
+                                                    <div class="text-xs text-gray-600 font-normal sr-only">A unique name
+                                                        to identify you
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <p data-utc-time="{{ article.date_created.isoformat }}"
+                                                       class="text-gray-900 convert-time"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {# Date modified (centered) #}
+                                        <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 md:gap-12"
+                                             x-data="{ showError: false }">
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <div class="font-medium text-gray-900">
+                                                        Date last updated
+                                                    </div>
+                                                    <div class="text-xs text-gray-600 font-normal sr-only">A unique name
+                                                        to identify you
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <p data-utc-time="{{ article.date_modified.isoformat }}"
+                                                       class="text-gray-900 convert-time"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        {# Number of revisions / saves (centered) #}
+                                        <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 md:gap-12"
+                                             x-data="{ showError: false }">
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <div class="font-medium text-gray-900">
+                                                        Revisions
+                                                    </div>
+                                                    <div class="text-xs text-gray-600 font-normal sr-only">A unique name
+                                                        to identify you
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <p class="text-gray-900">{{ article.number_of_revisions }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        {# Created by (centered) #}
+                                        <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 md:gap-12"
+                                             x-data="{ showError: false }">
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <div class="font-medium text-gray-900">
+                                                        Created by
+                                                    </div>
+                                                    <div class="text-xs text-gray-600 font-normal sr-only">A unique name
+                                                        to identify you
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <p class="text-gray-900">{{ article.created_by.username }}
+                                                        ({{ article.created_by.email }})</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        {# Modified by (centered) #}
+                                        <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 md:gap-12"
+                                             x-data="{ showError: false }">
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <div class="font-medium text-gray-900">
+                                                        Last changed by
+                                                    </div>
+                                                    <div class="text-xs text-gray-600 font-normal sr-only">A unique name
+                                                        to identify you
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <p class="text-gray-900">{{ article.modified_by.username }}
+                                                        ({{ article.modified_by.email }})</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                {% endif %}
+
+                                <div x-show="selectedNav === 'danger-zone'" x-transition:enter x-cloak
+                                     class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
+
+                                    {# Meta > title #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                         x-data="{ showError: false }">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <label for="meta_title"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Delete article
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">
+                                                    Deleting an article is permanent and cannot be undone.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex items-center md:justify-end">
+                                            <button type="button" @click="isDeleteModalOpen=true"
+                                                    class="font-semibold text-gray-600 hover:text-red-500 focus:outline-none">
+                                                Delete article
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </div>
+
+
                     </div>
 
 
                     <aside x-show="showSidebar"
                            class="absolute md:static md:w-80 border-l border-gray-200 bg-gray-50 space-y-4 divide-y divide-gray-200 w-full z-10">
-                        <!-- Your side navigation content here -->
-
 
                         <div class="space-y-4 pt-4 px-4 sm:px-6">
                             <h3 class="text-base font-medium leading-6 text-gray-800">Status & visibility</h3>
@@ -222,6 +589,21 @@
                                     Non-published articles are only visible to you and other admins.
                                 </div>
                             </div>
+
+                            {#                            <div class="grid grid-cols-1 items-center relative">#}
+                            {#                                <p class="text-sm text-gray-700">URL</p>#}
+                            {#                                <a href="{% url 'blog:article' slug=article.slug %}"#}
+                            {#                                   class="flex items-center whitespace-nowrap gap-x-1.5 py-2 text-blue-500 sm:text-sm sm:leading-6 hover:underline">#}
+                            {#                                    <span>{{ request.META.HTTP_HOST }}</span><span#}
+                            {#                                        class="font-medium">{% url 'blog:article' slug=article.slug %}</span>#}
+                            {#                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"#}
+                            {#                                         stroke-width="1.5" stroke="currentColor" class="w-4 h-4">#}
+                            {#                                        <path stroke-linecap="round" stroke-linejoin="round"#}
+                            {#                                              d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"></path>#}
+                            {#                                    </svg>#}
+                            {#                                </a>#}
+                            {#                            </div>#}
+
                         </div>
 
                         <div class="space-y-4 pt-4 px-4 sm:px-6" id="cropper-featured-image-container">
@@ -277,17 +659,9 @@
                             <div class="mt-1 text-xs text-red-600 font-normal cropper-error-message"></div>
                             {% include 'components/cropperjs/crop-image-modal.html' %}
                         </div>
-
-
                     </aside>
                 </div>
-
-
             </form>
-
-
-
-
 
         {% endblock content %}
     </main>
@@ -302,4 +676,12 @@
 
 {# Scripts #}
 {% block scripts %}
+    <script type="text/javascript" src="{% static 'jquery.min.js' %}"></script>
+    <script src="{% static 'cropper.js' %}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function (event) {
+            // On change show image with crop options
+            cropperCropImage("cropper-featured-image-container", 1024 * 1024, 16 / 9);
+        });
+    </script>
 {% endblock scripts %}

@@ -32,18 +32,12 @@ def article_list(request):
     return render(request, 'blog/articles-list.html', content)
 
 
-# def post(request, slug):
-#     context = {}
-#     single_post = Post.objects.get(slug=slug)
-#     context['post'] = single_post
-#     return render(request, 'blog/post.html', context)
-
 
 @register_view(namespace="blog", url_name="post", app_name="blog", model=Article)
-class PostDetailView(DetailView):
+class ArticleDetailView(DetailView):
     model = Article
-    template_name = 'blog/post.html'
-    context_object_name = 'post'
+    template_name = 'blog/article.html'
+    context_object_name = 'article'
     slug_url_kwarg = 'slug'
 
     # if you need to perform additional operations, you can override the get_context_data method
@@ -207,7 +201,8 @@ def edit_article(request, uuid):
 
         form = ArticleForm(request.POST, instance=article)
 
-        print(request.POST)
+
+        # print(request.POST)
 
         # form = ArticleForm(request.POST)
         if form.is_valid():
@@ -215,11 +210,11 @@ def edit_article(request, uuid):
             form.save()
 
             send_notification(request, tag='success', title='Blog post saved',
-                              message='Your post has been successfully saved')
+                              message='Your article has been successfully saved')
         else:
             logging.debug('[EDIT_POST] Form is not valid')
 
-            error_message = 'An unexpected error occurred while saving your post. Please try again later.'
+            error_message = 'An unexpected error occurred while saving your article. Please try again later.'
 
             # Include form errors in the message
             form_errors = form.errors.as_text()
@@ -232,6 +227,7 @@ def edit_article(request, uuid):
     context['form'] = ArticleForm(instance=article)
     context['article'] = article
     return render(request, 'blog/edit/edit-article.html', context)
+
 
 
 @csrf_exempt

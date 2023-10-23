@@ -286,13 +286,12 @@ TINYMCE_DEFAULT_CONFIG = {
 TINYMCE_BLOG_ARTICLE_CONFIG = {
     "theme": "silver",
     "height": 512,
-    "menubar": True,
+    "menubar": False,
     "plugins": "advlist,autolink,lists,link,image,charmap,print,preview,anchor,"
                "searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,paste,"
-               "code,help,wordcount,image",
+               "code,help,wordcount,image,autoresize",
     "toolbar": "undo redo | formatselect | "
-               "bold italic backcolor | alignleft aligncenter "
-               "alignright alignjustify | bullist numlist outdent indent | "
-               "removeformat | image | help ",
+               "bold italic | alignleft aligncenter "
+               "alignright alignjustify | bullist numlist outdent indent | table image code | removeformat ",
     "images_upload_url": "upload-article-image",
 }
