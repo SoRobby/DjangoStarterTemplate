@@ -4,5 +4,8 @@
     <option name="pathToExecutable" value="C:\ProgramData\Anaconda3\Scripts\black.exe" />
     <option name="sdkName" value="djangotemplate" />
   </component>
+  <component name="ExtraIconsSettingsProject">
+    <option name="ignoredPattern" value="" />
+  </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="djangotemplate" project-jdk-type="Python SDK" />
 </project>

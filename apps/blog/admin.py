@@ -9,7 +9,7 @@ from apps.blog.models import Article, Comment
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'slug', 'release_status', 'date_created', 'date_modified', 'date_published')
 
-    list_filter = ('release_status', 'is_deleted')
+    list_filter = ('release_status', 'visibility', 'is_deleted')
 
     filter_horizontal = ()
 
@@ -20,7 +20,7 @@ class ArticleAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Post', {
             'fields': (
-                'title', 'slug', 'lead_author', 'release_status', 'content', 'featured_image',
+                'title', 'slug', 'lead_author', 'release_status', 'visibility', 'content', 'featured_image',
                 'featured_image_thumbnail', 'featured_image_raw', 'date_published'),
             'description': 'Primary post fields and content'}
          ),

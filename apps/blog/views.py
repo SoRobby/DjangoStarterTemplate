@@ -168,7 +168,7 @@ def edit_article(request, uuid):
                 # featured_image_raw_file)
 
                 # Featured image logic
-                featured_image_file = process_image(
+                process_image(
                     image=featured_image_raw,
                     crop_dimensions=crop_dimensions,
                     resize_dimensions=article.FEATURED_IMAGE_SIZE,
@@ -207,10 +207,11 @@ def edit_article(request, uuid):
 
         form = ArticleForm(request.POST, instance=article)
 
+        print(request.POST)
+
         # form = ArticleForm(request.POST)
         if form.is_valid():
             logging.debug('[EDIT_POST] Form is valid')
-
             form.save()
 
             send_notification(request, tag='success', title='Blog post saved',

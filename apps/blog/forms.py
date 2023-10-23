@@ -7,12 +7,12 @@ from .models import Article
 
 
 class ArticleForm(forms.ModelForm):
-    # content = forms.CharField(required=False, widget=forms.Textarea())
     lead_author_email = forms.EmailField(label="Lead Author's Email", required=True)
+    save_type = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
         model = Article
-        fields = ['title', 'release_status', 'allow_comments', 'content', 'allow_sharing',
+        fields = ['title', 'release_status', 'visibility', 'allow_comments', 'content', 'allow_sharing',
                   'meta_title', 'meta_description', 'meta_keywords']
         widgets = {
             'content': TinyMCE(mce_attrs=settings.TINYMCE_BLOG_ARTICLE_CONFIG),
@@ -26,11 +26,13 @@ class ArticleForm(forms.ModelForm):
         lead_author_email = self.cleaned_data['lead_author_email']
         instance.lead_author = Account.objects.get(email=lead_author_email)
 
-        # try:
-        #     user = Account.objects.get(email=lead_author_email)
-        #     instance.lead_author = user
-        # except Account.DoesNotExist:
-        #     print('User does not exist')
+        # Handle logic for save_type
+        save_type = self.cleaned_data['save_type']
+        if save_type == 'publish':
+            instance.status = 'published'
+        elif save_type == 'draft':
+            instance.status = 'draft'
+
 
         # Save the instance if commit is True
         if commit:

@@ -67,10 +67,10 @@
                                         class="btn-secondary-lg">
                                     Publish
                                 </button>
-                                <div class="flex items-center" x-show="isSaving" x-cloak>
+                                <div class="flex items-center py-1.5" x-show="isSaving" x-cloak>
                                     {% include 'components/processing/processing-xs.html' with include_padding=False text="Saving..." %}
                                 </div>
-                                <div class="flex items-center" x-show="isPublishing" x-cloak>
+                                <div class="flex items-center py-1.5" x-show="isPublishing" x-cloak>
                                     {% include 'components/processing/processing-xs.html' with include_padding=False text="Publishing..." %}
                                 </div>
                             </div>
@@ -95,7 +95,7 @@
                                 </div>
                             </div>
 
-                            <div class="sm:col-span-6 mt-2">
+                            <div class="sm:col-span-6 mt-2" style="height: 512px">
                                 <label for="{{ form.content.id_for_label }}"
                                        class="sr-only">
                                     Editor
@@ -455,7 +455,7 @@
                                                     </div>
                                                     <div class="col-span-6 flex items-center">
                                                         <div class="w-full">
-                                                            <p class="text-gray-900">TBD</p>
+                                                            <p class="text-gray-900">{{ article.number_of_revisions }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -555,7 +555,7 @@
 
                                 <div class="grid grid-cols-2 items-center">
                                     <p class="text-sm text-gray-700">Visibility</p>
-                                    {% include 'components/forms/select/custom-select.html' with id="visibility" name="visibility" selected_option_key='public' selected_option_name="Public" options="[{'key': 'public', 'name': 'Public'}, {'key': 'private', 'name': 'Private'}]" %}
+                                    {% include 'components/forms/select/custom-select.html' with id="visibility" name="visibility" selected_option_key=article.visibility selected_option_name=article.get_visibility_display options="[{'key': 'public', 'name': 'Public'}, {'key': 'private', 'name': 'Private'}]" %}
                                     <div class="col-span-2 text-xs text-gray-600 mt-2">
                                         Non-published articles are only visible to you and other admins.
                                     </div>

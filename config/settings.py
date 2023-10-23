@@ -72,6 +72,7 @@ PROJECT_APPS = [
     'apps.core',
     'apps.feedback',
     'apps.profiles',
+    'apps.roadmap',
 ]
 
 # Installed apps

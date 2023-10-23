@@ -49,9 +49,13 @@ class Article(DateCreatedAndModified, DateDeleted):
         PUBLISHED = 'published', 'Published'
         ARCHIVED = 'archived', 'Archived'
 
+    class VISIBILITY(models.TextChoices):
+        PUBLIC = 'public', 'Public'
+        PRIVATE = 'private', 'Private'
+
     title = models.CharField(max_length=200, help_text='The title of the article')
 
-    slug = models.SlugField(max_length=200, unique=True, blank=True, null=True, verbose_name='Lead author',
+    slug = models.SlugField(max_length=200, unique=True, blank=True, null=True, verbose_name='Slug',
                             help_text='The URL slug based on the article title, slug fields should be 50 characters or\
                             less')
 
@@ -64,6 +68,9 @@ class Article(DateCreatedAndModified, DateDeleted):
     release_status = models.CharField(max_length=55, default=ReleaseStatus.DRAFT, choices=ReleaseStatus.choices,
                                       verbose_name='Release status',
                                       help_text='Current status of the article')
+
+    visibility = models.CharField(max_length=55, default=VISIBILITY.PUBLIC, choices=VISIBILITY.choices,
+                                  verbose_name='Visibility', help_text='Visibility of the article')
 
     content = HTMLField(blank=True, null=True, verbose_name='Content',
                         help_text='Primary content of the article using rich text editor')
@@ -78,6 +85,10 @@ class Article(DateCreatedAndModified, DateDeleted):
     featured_image_thumbnail = models.ImageField(upload_to=upload_to_featured_images, blank=True, null=True,
                                                  verbose_name='Featured thumbnail',
                                                  help_text='Featured image thumbnail of the article')
+
+    number_of_revisions = models.PositiveIntegerField(default=0, verbose_name='Number of revisions',
+                                                      help_text='Number of revisions that have been made to the\
+                                                      article')
 
     meta_title = models.CharField(max_length=200, null=True, blank=True, verbose_name='Meta title',
                                   help_text='Title that will appear in search engines and browser tab. Recommended\
@@ -133,10 +144,17 @@ class Article(DateCreatedAndModified, DateDeleted):
         # Set the date_published
         if self.release_status == self.ReleaseStatus.PUBLISHED and self.date_published is None:
             self.date_published = timezone.now()
+        else:
+            self.date_published = None
 
         # Set the date_deleted if the article is deleted
         if self.is_deleted and self.date_deleted is None:
             self.date_deleted = timezone.now()
+        else:
+            self.date_deleted = None
+            self.is_deleted = False
+
+        self.number_of_revisions += 1
 
         # Call the original save method of models.model
         super().save(*args, **kwargs)
