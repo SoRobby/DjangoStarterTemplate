@@ -39,7 +39,7 @@ class UserSessionAdmin(admin.ModelAdmin):
 
 @admin.register(ObjectViewed)
 class ObjectViewedAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'content_type', 'date_viewed')
+    list_display = ('__str__', 'content_type', 'user_session', 'date_viewed')
 
     list_filter = ()
 

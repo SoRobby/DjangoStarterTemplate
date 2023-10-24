@@ -79,19 +79,36 @@
                             <div class="text-gray-800 p-2">
                                 <h3 class="text-gray-800 font-medium text-lg border-b pb-2">Article information</h3>
                                 <div class="space-y-2 divide-y divide-gray-100 mt-2 text-xs">
+
                                     {% include 'adminpanel/feedback/components/attribute-display.html' with instance=object field_name="title" %}
                                     {% include 'adminpanel/feedback/components/attribute-display.html' with instance=object field_name="release_status" %}
-{#                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=object field_name="user" %}#}
+
+
+                                    <dl class="pt-2 first:pt-0 grid grid-cols-3">
+                                        <dt class="font-medium text-muted">Times viewed</dt>
+                                            <dd class="col-span-2 text-normal">
+                                                    {{ object_views.count }}
+                                            </dd>
+                                    </dl>
+
+                                    <dl class="pt-2 first:pt-0 grid grid-cols-3">
+                                        <dt class="font-medium text-muted">Unique viewed</dt>
+                                            <dd class="col-span-2 text-normal">
+                                                    {{ unique_views }}
+                                            </dd>
+                                    </dl>
+
+
                                 </div>
                             </div>
 
                             <div class="text-gray-800 p-2">
                                 <h3 class="text-gray-800 font-medium text-lg border-b pb-2">Object properties</h3>
                                 <div class="space-y-2 divide-y divide-gray-100 mt-2 text-xs">
-{#                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=article field_name="page_url" %}#}
-{#                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=article field_name="category" %}#}
-{#                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=article field_name="content" %}#}
-{#                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=article field_name="is_processed" %}#}
+                                    {#                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=article field_name="page_url" %}#}
+                                    {#                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=article field_name="category" %}#}
+                                    {#                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=article field_name="content" %}#}
+                                    {#                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=article field_name="is_processed" %}#}
                                 </div>
                             </div>
 

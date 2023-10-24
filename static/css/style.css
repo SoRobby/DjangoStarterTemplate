@@ -2167,6 +2167,10 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
   place-items: center;
 }
 
+.content-end {
+  align-content: flex-end;
+}
+
 .items-start {
   align-items: flex-start;
 }

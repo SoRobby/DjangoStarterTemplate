@@ -19,7 +19,7 @@ class UserSession(models.Model):
     user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL,
                              help_text='User that the session is associated with')
 
-    session_key = models.CharField(max_length=40, blank=True, null=True, help_text='Session key')
+    session_key = models.CharField(max_length=40, help_text='Session key')
 
     is_session_active = models.BooleanField(default=True, help_text='Is the session active?')
 

@@ -31,8 +31,7 @@ class Feedback(DateCreatedAndModified):
     category = models.CharField(max_length=55, default=CATEGORY.GENERAL, choices=CATEGORY.choices,
                                 verbose_name='Category', help_text='Category of the feedback')
 
-    content = models.TextField(max_length=3000, blank=True, null=True, verbose_name='Content',
-                               help_text='Content of the feedback')
+    content = models.TextField(max_length=3000, verbose_name='Content', help_text='Content of the feedback')
 
     is_processed = models.BooleanField(default=False, verbose_name='Is processed',
                                        help_text='Whether the feedback has been processed or not')

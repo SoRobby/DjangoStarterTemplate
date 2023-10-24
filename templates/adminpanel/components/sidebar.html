@@ -46,13 +46,13 @@
 
 
             <li>
-                {% if request.resolver_match.url_name == 'blog-list' %}
-                    <a href="{% url 'adminpanel:blog-list' %}"
+                {% if request.resolver_match.url_name == 'blog-article-list' %}
+                    <a href="{% url 'adminpanel:blog-article-list' %}"
                        class="bg-gray-100 text-indigo-600 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">
                         Blog
                     </a>
                 {% else %}
-                    <a href="{% url 'adminpanel:blog-list' %}"
+                    <a href="{% url 'adminpanel:blog-article-list' %}"
                        class="text-gray-700 hover:text-gray-800 hover:bg-gray-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">
                         Blog
                     </a>

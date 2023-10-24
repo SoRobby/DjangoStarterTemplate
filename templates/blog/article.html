@@ -2,11 +2,28 @@
 {% load static %}
 
 {# Title #}
-{% block title %}<title>Untitled</title>{% endblock title %}
+{% block title %}
+    {% if article.meta_title %}
+        <title>{{ article.meta_title }}</title>
+    {% else %}
+        <title>{{ article.title }}</title>
+    {% endif %}
+{% endblock title %}
 
 
 {# General meta information (i.e. Description, tags, etc...) #}
 {% block meta %}
+    {% if article.meta_description %}
+        <meta name="description" content="{{ article.meta_description }}">
+    {% else %}
+        <meta name="description" content="{{ article.description }}">
+    {% endif %}
+
+    {% if article.meta_keywords %}
+    <meta name="keywords" content="{{ article.meta_keywords }}">
+    {% endif %}
+
+    <meta name="author" content="{{ article.lead_author }}">
 {% endblock meta %}
 
 

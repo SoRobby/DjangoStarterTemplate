@@ -2,7 +2,6 @@
 
 <dl class="pt-2 first:pt-0 grid grid-cols-3">
     <dt class="font-medium text-muted">{{ instance|verbose_name:field_name }}</dt>
-
     {% with value=instance|field_value:field_name %}
         <dd class="col-span-2 text-normal">
             {% if value %}
@@ -16,5 +15,4 @@
             {% endif %}
         </dd>
     {% endwith %}
-
 </dl>

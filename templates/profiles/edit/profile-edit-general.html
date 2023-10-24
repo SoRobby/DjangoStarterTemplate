@@ -199,52 +199,12 @@
                                                     Country
                                                 </label>
                                                 <div class="text-xs text-gray-600 font-normal">
-                                                    Set the website theme
+                                                    What country are you from?
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-span-12 md:col-span-6 flex items-center">
 {#                                            {% include 'components/forms/select/custom-select-filter.html' with id="country" name="country" selected_option=user.theme options=countries %}#}
-                                        </div>
-                                    </div>
-
-
-                                    {# Theme selection with text filter (centered vertically) #}
-                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
-                                         x-data="{ showError: false }">
-                                        <div class="col-span-12 md:col-span-6 flex items-center">
-                                            <div class="w-full">
-                                                <label for="theme"
-                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                    Theme Filter
-                                                </label>
-                                                <div class="text-xs text-gray-600 font-normal">
-                                                    Set the website theme
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-span-12 md:col-span-6 flex items-center">
-                                            {% include 'components/forms/select/custom-select-filter.html' with id="theme" name="theme" selected_option_key=user.theme selected_option_name=user.get_theme_display options=user.get_theme_choices_as_list %}
-                                        </div>
-                                    </div>
-
-
-                                    {# Theme selection (centered vertically) #}
-                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
-                                         x-data="{ showError: false }">
-                                        <div class="col-span-12 md:col-span-6 flex items-center">
-                                            <div class="w-full">
-                                                <label for="theme"
-                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                    Theme Filter
-                                                </label>
-                                                <div class="text-xs text-gray-600 font-normal">
-                                                    Set the website theme
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-span-12 md:col-span-6 flex items-center">
-                                            {% include 'components/forms/select/custom-select.html' with id="theme" name="theme" selected_option_key=user.theme selected_option_name=user.get_theme_display options=user.get_theme_choices_as_list %}
                                         </div>
                                     </div>
 
@@ -266,58 +226,7 @@
                                             {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=user.is_profile_public id='is_profile_public' name='is_profile_public' %}
                                         </div>
                                     </div>
-                                </div>
 
-
-                            </div>
-
-
-                            {# Language and dates #}
-                            <div>
-                                <h2 class="text-base font-semibold leading-7 text-gray-900">Language and Timezone</h2>
-                                <p class="mt-1 text-sm leading-6 text-gray-500">Choose what language and date format to
-                                    use throughout your account.</p>
-
-                                <div class="mt-4 space-y-4 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
-
-                                    {# Language type (centered vertically) #}
-                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
-                                         x-data="{ showError: false }">
-                                        <div class="col-span-12 md:col-span-6 flex items-center">
-                                            <div class="w-full">
-                                                <label for="language"
-                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                    Language
-                                                </label>
-                                                <div class="text-xs text-gray-600 font-normal">
-                                                    Set the website theme
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-span-12 md:col-span-6 flex items-center">
-                                            {% include 'components/forms/select/custom-select-filter.html' with id="language" name="language" selected_option_key="english" selected_option_name="English" options="[{'key': 'english', 'name': 'English'}, {'key': 'spanish', 'name': 'Spanish'}, {'key': 'chinese', 'name': 'Chinese'}]" %}
-                                        </div>
-                                    </div>
-
-
-                                    {# Date format (centered vertically) #}
-                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
-                                         x-data="{ showError: false }">
-                                        <div class="col-span-12 md:col-span-6 flex items-center">
-                                            <div class="w-full">
-                                                <label for="date-format"
-                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                    Date format
-                                                </label>
-                                                <div class="text-xs text-gray-600 font-normal">
-                                                    Change how date is displayed
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-span-12 md:col-span-6 flex items-center">
-                                            {% include 'components/forms/select/custom-select-filter.html' with id="date-format" name="date-format" selected_option_key="MM/DD/YYYY" selected_option_name="MM/DD/YYYY" options="[{'key': 'MM/DD/YYYY', 'name': 'MM/DD/YYYY'}, {'key': 'DD/MM/YYYY', 'name': 'DD/MM/YYYY'}, {'key': 'YYYY/MM/DD', 'name': 'YYYY/MM/DD'}]" %}
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
 

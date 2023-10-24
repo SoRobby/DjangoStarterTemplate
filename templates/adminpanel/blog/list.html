@@ -57,14 +57,13 @@
                                            hx-target="#table-container"
                                            hx-trigger="keyup changed delay:500ms"
                                            hx-swap="outerHTML"
-                                           class="pl-10 input-text-sm
-"
+                                           class="pl-10 input-text-sm"
                                            placeholder="Search feedback...">
                                 </div>
                             </div>
 
                             <div class="flex gap-4 items-center">
-                                <a href="{% url 'adminpanel:blog-export-to-csv' %}"
+                                <a href="{% url 'adminpanel:blog-article-export-to-csv' %}"
                                    class="gap-x-1.5 btn-secondary-lg">
                                     <svg class="-ml-0.5 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
                                          viewBox="0 0 24 24"
