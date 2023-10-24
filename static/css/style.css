@@ -3954,4 +3954,9 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
     padding-left: 0px;
     padding-right: 0px;
   }
+
+  .xl\:px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
 }

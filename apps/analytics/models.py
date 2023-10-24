@@ -3,6 +3,8 @@ from uuid import uuid4
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.utils import timezone
+from django.contrib.sessions.models import Session
 
 from config import settings
 from .signals import object_viewed_signal
@@ -21,10 +23,9 @@ class UserSession(models.Model):
 
     is_session_active = models.BooleanField(default=True, help_text='Is the session active?')
 
-    # session_duration = models.IntegerField(help_text='Session duration in seconds')
+    session_data_onload = models.JSONField(blank=True, null=True, help_text='Session data onload')
 
-    # session_data onload
-    # session data beforeunload
+    session_data_beforeunload = models.JSONField(blank=True, null=True, help_text='Session data beforeunload')
 
     uuid = models.UUIDField(default=uuid4, editable=False, unique=True, verbose_name='UUID',
                             help_text='Unique identifier for the session')
@@ -34,6 +35,41 @@ class UserSession(models.Model):
 
     date_modified = models.DateTimeField(auto_now=True, verbose_name='Date modified',
                                          help_text='Server date and time when the item was last modified')
+
+    date_session_ended = models.DateTimeField(auto_now=True, verbose_name='Date session ended',
+                                              help_text='Server date and time when the session ended')
+
+    expire_date = models.DateTimeField(blank=True, null=True, help_text='Date and time when the session expires')
+
+    class Meta:
+        ordering = ['-date_created']
+        verbose_name = 'User session'
+        verbose_name_plural = 'User sessions'
+
+    def __str__(self) -> str:
+        return str(f'{self.pk} ({self.session_key})')
+
+    def save(self, *args, **kwargs):
+        # Set the date_session_ended field
+        if not self.is_session_active and self.date_session_ended is None:
+            self.date_session_ended = timezone.now()
+        elif self.is_session_active and self.date_session_ended is not None:
+            self.date_session_ended = None
+
+        # Call the original save method of models.model
+        super().save(*args, **kwargs)
+
+
+    def end_session(self):
+        session_key = self.session_key
+        try:
+            Session.objects.get(pk=session_key).delete()
+            self.is_session_active = False
+            self.save()
+        except Session.DoesNotExist:
+            pass
+
+        return self
 
 
 class PageViewed(models.Model):
@@ -68,11 +104,18 @@ class ObjectViewed(models.Model):
 
     ip_address = models.CharField(max_length=120, blank=True, null=True, help_text='IP address of the user')
 
-    timestamp = models.DateTimeField(auto_now_add=True, help_text='Date and time when the object was viewed')
+    date_viewed = models.DateTimeField(auto_now_add=True, help_text='Date and time when the object was viewed')
 
+    uuid = models.UUIDField(default=uuid4, editable=False, unique=True, verbose_name='UUID',
+                            help_text='Unique identifier for the object_viewed')
 
-    def __str__(self, ):
-        return str(f'{self.content_object} ({self.timestamp})')
+    class Meta:
+        ordering = ['-date_viewed']
+        verbose_name = 'Object viewed'
+        verbose_name_plural = 'Objects viewed'
+
+    def __str__(self) -> str:
+        return str(f'{self.content_object} ({self.date_viewed})')
 
     @property
     def name_of_user(self):
@@ -82,11 +125,6 @@ class ObjectViewed(models.Model):
 
     def get_content_object_url(self):
         return self.content_object.get_absolute_url()
-
-    class Meta:
-        verbose_name = 'Object viewed'
-        verbose_name_plural = 'Objects viewed'
-        ordering = ['-timestamp']
 
 
 # analytics/models.py

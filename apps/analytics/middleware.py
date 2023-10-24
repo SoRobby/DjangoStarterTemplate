@@ -3,10 +3,109 @@ import logging
 
 from django.contrib.contenttypes.models import ContentType
 from django.urls import resolve
+from django.utils import timezone
 
-from .models import ObjectViewed
-from .utils import get_client_ip_address
+from .models import UserSession, ObjectViewed
 from .registered_views import views_registry
+from .utils import get_client_ip_address
+
+
+def session_handler(request, user):
+    """
+    Handles user session creation and updates.
+
+    Args:
+        request (HttpRequest): The request object.
+        user (User): The user object, or None if the user is unauthenticated.
+
+    Returns:
+        UserSession: The updated or newly created UserSession object.
+    """
+    # See if a session currently exists
+    session_key_obj = request.session.session_key or request.session.create()
+
+    # Get the current date and time
+    now = timezone.now()
+
+    # Get or create the UserSession object
+    user_session, created = UserSession.objects.get_or_create(
+        session_key=session_key_obj,
+        user=user,
+        expire_date__gte=now,
+        defaults={
+            'is_session_active': True,
+            'expire_date': request.session.get_expiry_date()
+        }
+    )
+
+    print(f'User session: {user_session}')
+
+    if user_session:
+        logging.debug(f'[SESSION_HANDLER] Updating existing session, session_key={user_session.session_key}')
+        # if user_session.is_session_active is False:
+        if user_session.is_session_active is False:
+            user_session.is_session_active = True
+            user_session.save(update_fields=['is_session_active', 'date_modified'])
+    else:
+        logging.debug('[SESSION_HANDLER] Creating new session')
+        user_session = UserSession.objects.create(
+            session_key=request.session.session_key,
+            user=user,
+            is_session_active=True,
+            expire_date=request.session.get_expiry_date()
+        )
+
+    return user_session
+
+
+# class ObjectViewedMiddleware:
+#     def __init__(self, get_response):
+#         self.get_response = get_response
+#
+#     def __call__(self, request):
+#         response = self.get_response(request)
+#         self.process_viewed_object(request)
+#         return response
+#
+#     def process_viewed_object(self, request):
+#         # Determine the current URL's name and namespace
+#         match = resolve(request.path_info)
+#         current_url_name = match.url_name
+#         current_namespace = match.namespace
+#
+#
+#
+#         # Find if this URL name and namespace exist in our registered views
+#         target_view = next(
+#             (view for view in views_registry.registered_views if
+#              view['url_name'] == current_url_name and view['namespace'] == current_namespace),
+#             None
+#         )
+#
+#         # If the current URL isn't in the registered views, exit
+#         if not target_view:
+#             return
+#
+#         # Fetch the content type and model instance based on the registered view details
+#         try:
+#             # Handle the session
+#             user_session = session_handler(request, request.user if request.user.is_authenticated else None)
+#
+#             content_type = ContentType.objects.get(app_label=target_view['app_name'], model=target_view['model_name'])
+#
+#             # Assuming the identifier is a 'slug', adjust if using 'pk' or another identifier
+#             object_identifier = match.kwargs.get('slug')
+#             model_instance = content_type.model_class().objects.get(slug=object_identifier)
+#
+#             ObjectViewed.objects.create(
+#                 user=request.user if request.user.is_authenticated else None,
+#                 user_session=user_session,
+#                 content_type=content_type,
+#                 object_id=model_instance.id,
+#                 ip_address=get_client_ip_address(request),
+#             )
+#         except (ContentType.DoesNotExist, content_type.model_class().DoesNotExist):
+#             pass
 
 
 class ObjectViewedMiddleware:
@@ -19,6 +118,8 @@ class ObjectViewedMiddleware:
         return response
 
     def process_viewed_object(self, request):
+        content_type = None
+
         # Determine the current URL's name and namespace
         match = resolve(request.path_info)
         current_url_name = match.url_name
@@ -39,6 +140,11 @@ class ObjectViewedMiddleware:
         try:
             content_type = ContentType.objects.get(app_label=target_view['app_name'], model=target_view['model_name'])
 
+            if request.user.is_authenticated:
+                user_session = session_handler(request=request, user=request.user)
+            else:
+                user_session = session_handler(request=request, user=None)
+
             # Assuming the identifier is a 'slug', adjust if using 'pk' or another identifier
             object_identifier = match.kwargs.get('slug')
             model_instance = content_type.model_class().objects.get(slug=object_identifier)
@@ -47,11 +153,20 @@ class ObjectViewedMiddleware:
                 user=request.user if request.user.is_authenticated else None,
                 content_type=content_type,
                 object_id=model_instance.id,
+                user_session=user_session,
                 ip_address=get_client_ip_address(request),
-                # ... other fields ...
             )
-        except (ContentType.DoesNotExist, content_type.model_class().DoesNotExist):
-            pass
+
+        except ContentType.DoesNotExist:
+            logging.debug(
+                f'ContentType does not exist for app_label={target_view["app_name"]},\
+                model={target_view["model_name"]}')
+
+        except Exception as e:
+            if content_type and isinstance(e, content_type.model_class().DoesNotExist):
+                logging.debug(f'Model instance does not exist for content_type={content_type}')
+            else:
+                logging.debug(f'Unexpected error: {str(e)}')
 
 
 class AnalyticsMiddleware:

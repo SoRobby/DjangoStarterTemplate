@@ -9,9 +9,11 @@
         {% endif %}
 
         <a href="{% url 'blog:article' slug=article.slug %}" class="">
-            <img src="{{ article.featured_image.url }}?last_modified={{ article.last_modified|date:"U" }}"
-                 alt=""
-                 class="aspect-[16/9] w-full rounded-md bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]">
+            {% if article.featured_image %}
+                <img src="{{ article.featured_image.url }}?last_modified={{ article.last_modified|date:"U" }}"
+                     alt=""
+                     class="aspect-[16/9] w-full rounded-md bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]">
+            {% endif %}
         </a>
 
     </div>

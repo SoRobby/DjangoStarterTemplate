@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, ListView, DetailView
+from django.contrib.sessions.models import Session
 
 from apps.feedback.models import Feedback
 from libs.utils import ExportToCSVView
@@ -116,3 +117,9 @@ class FeedbackDetailView(DetailView):
 class ExportFeedbacksToCSV(ExportToCSVView):
     model = Feedback
     filename = "feedbacks.csv"
+
+
+
+# def delete_django_sessions(request):
+#     Session.objects.all().delete()
+#     return render(request, 'adminpanel/home.html')

@@ -135,7 +135,7 @@ class Article(DateCreatedAndModified, DateDeleted):
         verbose_name_plural = 'Articles'
 
     def __str__(self) -> str:
-        return f'{self.title} - {self.pk}'
+        return f'{self.pk} - {self.title}'
 
     def save(self, *args, **kwargs):
         if self.title_has_changed and self.slug is None:
@@ -250,7 +250,7 @@ class Comment(DateCreatedAndModified, DateDeleted):
         verbose_name_plural = 'Comments'
 
     def __str__(self) -> str:
-        return f'{self.article.title} - Comment {self.pk}'
+        return f'Comment {self.pk}'
 
     def save(self, *args, **kwargs):
         # Set the date_deleted if the comment is deleted
