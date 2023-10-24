@@ -1,21 +1,14 @@
 import logging
 
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
-from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.shortcuts import render
-from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView, ListView, DetailView
-from django.contrib.sessions.models import Session
+from django.views.generic import TemplateView, DetailView
+from django.utils import timezone, dateformat
 
-from apps.feedback.models import Feedback
 from apps.blog.models import Article
-
+from apps.feedback.models import Feedback
 from libs.utils import ExportToCSVView
-
-from .base_views import BaseAdminPanelTemplateView, BaseAdminPanelListView, BaseAdminPanelSearchView, \
-    BaseAdminPanelSearchListView
+from .base_views import BaseAdminPanelTemplateView, BaseAdminPanelListView, BaseAdminPanelSearchListView
 
 User = get_user_model()
 
@@ -44,29 +37,24 @@ class AdminPanelHomeView(BaseAdminPanelTemplateView):
         return context
 
 
-# Feedback views
-class FeedbackListView(BaseAdminPanelListView):
+# Feedback view
+class FeedbackListView(BaseAdminPanelSearchListView):
     model = Feedback
     template_name = 'adminpanel/feedback/list.html'
-
-
-# class FeedbackSearchView(BaseAdminPanelSearchView):
-#     model = Feedback
-#     template_name = 'adminpanel/feedback/partials/tbody.html'
-#     search_fields = ['content']
-#     search_key = 'feedback_search'
+    search_fields = ['content']
+    search_key = 'table_search'
 
 
 class FeedbackSearchView(BaseAdminPanelSearchListView):
     model = Feedback
-    template_name = 'adminpanel/feedback/partials/tbody.html'
+    template_name = 'adminpanel/feedback/partials/table-container.html'
     search_fields = ['content']
-    search_key = 'feedback_search'
+    search_key = 'table_search'
 
 
 class FeedbacksExportToCSV(ExportToCSVView):
     model = Feedback
-    filename = "feedbacks.csv"
+    filename = f'feedbacks {timezone.now().strftime("(%Y-%m-%d %H-%M-%S)")}.csv'
 
 
 class FeedbackDetailView(UserPassesTestMixin, DetailView):
@@ -81,12 +69,27 @@ class FeedbackDetailView(UserPassesTestMixin, DetailView):
 
 
 
-
-
 # Blog views
-class AdminPanelBlogListView(BaseAdminPanelListView):
+class BlogListView(BaseAdminPanelListView):
     model = Article
     template_name = 'adminpanel/blog/list.html'
+
+
+class BlogDetailView(UserPassesTestMixin, DetailView):
+    model = Article
+    template_name = 'adminpanel/blog/detail.html'
+    context_object_name = 'object'
+    slug_field = 'uuid'
+    slug_url_kwarg = 'uuid'
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+
+class BlogExportToCSV(ExportToCSVView):
+    model = Article
+    filename = f'article {timezone.now().strftime("(%Y-%m-%d %H-%M-%S)")}.csv'
+
 
 
 # Component views

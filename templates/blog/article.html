@@ -177,12 +177,17 @@
                                 {% endif %}
                             </div>
 
+
                             <div>
                                 <div class="flex sm:space-x-4">
                                     <div class="hidden sm:block flex-shrink-0">
                                         {% include 'components/avatar/avatar-10x10.html' with user=user %}
                                     </div>
-                                    <form class="min-w-0 flex-1">
+                                    <form action="{% url 'blog:add-comment' article_uuid=article.uuid %}" method="POST"
+                                          class="min-w-0 flex-1" x-data="{
+
+                                          }">
+                                        {% csrf_token %}
                                         <label for="comment" class="sr-only">Add your comment</label>
                                         <textarea name="comment" id="comment" rows="2"
                                                   class="input-text auto-expand"></textarea>
@@ -196,6 +201,8 @@
                                     </form>
                                 </div>
                             </div>
+
+                            {{ article.comment.all }}
 
                         </section>
                     {% endif %}

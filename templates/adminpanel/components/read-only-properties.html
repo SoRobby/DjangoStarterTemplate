@@ -1,0 +1,70 @@
+<div class="text-gray-800 bg-gray-50 p-2 border border-gray-200 rounded">
+    <h3 class="text-gray-800 font-medium text-lg border-b pb-2">Read only properties</h3>
+    <div class="space-y-2 divide-y divide-transparent mt-2 text-xs">
+
+        {% if object.id %}
+            <dl class="grid grid-cols-1 sm:grid-cols-3">
+                <dt class="font-medium text-muted">ID</dt>
+                <dd class="sm:col-span-2 text-normal">{{ object.id }}</dd>
+            </dl>
+        {% endif %}
+
+        {% if object.uuid %}
+            <dl class="grid grid-cols-1 sm:grid-cols-3">
+                <dt class="font-medium text-muted">UUID</dt>
+                <dd class="sm:col-span-2 text-normal">{{ object.uuid }}</dd>
+            </dl>
+        {% endif %}
+
+        {% if object.date_created %}
+            <dl class="grid grid-cols-1 sm:grid-cols-3">
+                <dt class="font-medium text-muted">Date created</dt>
+                <dd class="sm:col-span-2 text-normal">
+                    <div class="flex">
+                        <div class="w-12 text-muted">
+                            Server
+                        </div>
+                        <div>
+                            {{ object.date_created|date:"m/d/Y, h:i:s A" }}
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="w-12 text-muted">
+                            Local
+                        </div>
+                        <div data-utc-time="{{ object.date_created.isoformat }}"
+                             class="convert-time">
+                            {{ object.date_created|date:"m/d/Y, h:i:s A" }}
+                        </div>
+                    </div>
+                </dd>
+            </dl>
+        {% endif %}
+
+        {% if object.date_modified %}
+            <dl class="grid grid-cols-1 sm:grid-cols-3">
+                <dt class="font-medium text-muted">Date modified</dt>
+                <dd class="sm:col-span-2 text-normal">
+                    <div class="flex">
+                        <div class="w-12 text-muted">
+                            Server
+                        </div>
+                        <div>
+                            {{ object.date_modified|date:"m/d/Y, h:i:s A" }}
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="w-12 text-muted">
+                            Local
+                        </div>
+                        <div data-utc-time="{{ object.date_modified.isoformat }}"
+                             class="convert-time">
+                            {{ object.date_modified|date:"m/d/Y, h:i:s A" }}
+                        </div>
+                    </div>
+                </dd>
+            </dl>
+        {% endif %}
+
+    </div>
+</div>

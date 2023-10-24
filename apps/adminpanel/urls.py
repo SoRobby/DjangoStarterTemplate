@@ -16,7 +16,9 @@ urlpatterns = [
     path('feedback/search/', views.FeedbackSearchView.as_view(), name='feedback-search'),
 
     # Blog
-    path('blog/list/', views.AdminPanelBlogListView.as_view(), name='blog-list'),
+    path('blog/', views.BlogListView.as_view(), name='blog-list'),
+    path('blog/<uuid:uuid>/', views.BlogDetailView.as_view(), name='blog-detail'),
+    path('blog/export/csv/', views.BlogExportToCSV.as_view(), name='blog-export-to-csv'),
 
     # Component URLs
     path('components/', views.AdminPanelComponentsView.as_view(), name='components'),

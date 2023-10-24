@@ -226,12 +226,12 @@ class Comment(DateCreatedAndModified, DateDeleted):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comment',
                                 verbose_name='Article', help_text='The article that the comment is related to')
 
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='user_comment',
+                             verbose_name='User', help_text='User that made the comment')
+
     parent_comment = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True,
                                        related_name='child_comments', verbose_name='Parent comment',
                                        help_text='The parent comment that this comment replied to')
-
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='user_comment',
-                             verbose_name='User', help_text='User that made the comment')
 
     content = models.TextField(max_length=6000, blank=True, verbose_name='Content', help_text='Comment content')
 

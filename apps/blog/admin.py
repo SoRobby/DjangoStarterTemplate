@@ -83,7 +83,7 @@ class CommentAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Comment', {
             'fields': (
-                'article', 'parent_comment', 'user', 'content'),
+                'article', 'user', 'parent_comment', 'content'),
             'description': 'Primary comment fields and content'}
          ),
 

@@ -59,7 +59,6 @@ class UserSession(models.Model):
         # Call the original save method of models.model
         super().save(*args, **kwargs)
 
-
     def end_session(self):
         session_key = self.session_key
         try:
@@ -93,10 +92,12 @@ class ObjectViewed(models.Model):
     user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL,
                              help_text='User that viewed the object')
 
-    user_session = models.ForeignKey(UserSession, blank=True, null=True, on_delete=models.SET_NULL,
+    user_session = models.ForeignKey(UserSession, blank=True, null=True, related_name='object_viewed',
+                                     on_delete=models.SET_NULL, verbose_name='User session',
                                      help_text='User session that the object was viewed in')
 
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, help_text='Content type')
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True,
+                                     verbose_name='Content type', help_text='Content type')
 
     object_id = models.PositiveIntegerField(help_text='Content type object id')
 

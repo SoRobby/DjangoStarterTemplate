@@ -20,6 +20,8 @@ class BaseAdminPanelListView(UserPassesTestMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        logging.debug('LIST VIEW CALLED')
+
         page_obj = context['page_obj']
         paginator = context['paginator']
         current_page = page_obj.number
@@ -30,7 +32,7 @@ class BaseAdminPanelListView(UserPassesTestMixin, ListView):
 
         context['start_page'] = start_page_num
         context['end_page'] = end_page_num
-        context['list_items'] = page_obj
+        context['objects'] = page_obj
         context['page_range'] = range(
             max(1, current_page - self.PAGINATION_PAGES_BEFORE_AND_AFTER),
             min(total_pages, current_page + self.PAGINATION_PAGES_BEFORE_AND_AFTER) + 1
@@ -77,10 +79,9 @@ class BaseAdminPanelSearchView(UserPassesTestMixin, TemplateView):
         return self.request.user.is_staff
 
 
-# TODO - need to fix this view. Page pagination does not work well with search query
 class BaseAdminPanelSearchListView(UserPassesTestMixin, ListView):
     model = None  # Should be overridden by subclass
-    search_fields = None  # Default search fields, can be overridden. Should be a list
+    search_fields = []  # Default search fields, can be overridden. Should be a list
     search_key = 'list_search'
     paginate_by = 2
     PAGINATION_PAGES_BEFORE_AND_AFTER = 1
@@ -90,6 +91,7 @@ class BaseAdminPanelSearchListView(UserPassesTestMixin, ListView):
 
     def get_queryset(self):
         search_text = self.get_search_text()
+        logging.debug(f'search_text = {search_text}')
 
         if search_text:
             # Construct the Q objects for each search field
@@ -100,7 +102,6 @@ class BaseAdminPanelSearchListView(UserPassesTestMixin, ListView):
             return self.model.objects.filter(query)
         else:
             return super().get_queryset()  # Call the parent class's get_queryset if no search_text
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -120,6 +121,8 @@ class BaseAdminPanelSearchListView(UserPassesTestMixin, ListView):
             max(1, current_page - self.PAGINATION_PAGES_BEFORE_AND_AFTER),
             min(total_pages, current_page + self.PAGINATION_PAGES_BEFORE_AND_AFTER) + 1
         )
+        context[self.search_key] = self.get_search_text()  # Add the current search text to the context
+        context['table_search'] = self.get_search_text()
 
         return context
 

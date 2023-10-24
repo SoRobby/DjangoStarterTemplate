@@ -7,15 +7,17 @@ from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView
+from django.shortcuts import render, redirect, get_object_or_404
 
 from apps.accounts.models import Account
 from apps.analytics.views_registry import register_view
 from libs.utils.utils import process_image, send_notification, save_file_to_field
 from .forms import ArticleForm
-from .models import Article, upload_to_featured_images
+from .models import Article, upload_to_featured_images, Comment
 
 
 # Create your views here.
@@ -285,6 +287,31 @@ def upload_article_image(request, uuid):
         "location": os.path.join(settings.MEDIA_URL, 'blog', str(article.uuid), 'content', file_obj.name)
     })
 
+
+def add_comment(request, article_uuid):
+    # Get the article by it's uuid
+    article = get_object_or_404(Article, uuid=article_uuid)
+    print(f'article.slug = {article.slug}')
+
+    if request.method == 'POST':
+        # Get the comment content
+        if request.user.is_authenticated:
+            comment_content = request.POST.get('comment')
+            print(comment_content)
+
+            comment = Comment.objects.create(
+                article=article,
+                user=request.user,
+                content=comment_content
+            )
+
+    # redirect_url = reverse('article', kwargs={'slug': article.slug})
+    # return redirect(redirect_url)
+    # return redirect(ArticleDetailView.as_view(), slug=article.slug)
+    return redirect(reverse('blog:article', kwargs={'slug': article.slug}))
+
+
+# def like_comment(request, comment_uuid):
 
 def delete_article(request, uuid):
     """
