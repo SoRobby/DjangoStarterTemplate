@@ -134,16 +134,17 @@
                                                 to
                                                 <span class="font-medium">{{ end_page }}</span>
                                                 of
-                                                <span class="font-medium">{{ feedbacks_total }}</span>
+                                                <span class="font-medium">{{ paginator.count }}</span>
                                                 results
                                             </p>
+
                                         </div>
                                         <div>
                                             <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm"
                                                  aria-label="Pagination">
 
-                                                {% if feedbacks.has_previous %}
-                                                    <a href="?page={{ feedbacks.previous_page_number }}"
+                                                {% if list_items.has_previous %}
+                                                    <a href="?page={{ list_items.previous_page_number }}"
                                                        class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
                                                         <span class="sr-only">Previous</span>
                                                         <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
@@ -179,7 +180,7 @@
                                                 {#                                                {% endif %}#}
 
 
-                                                {% if feedbacks.number > 2 %}
+                                                {% if list_items.number > 2 %}
                                                     <a href="?page=1"
                                                        class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">1</a>
                                                     <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span>
@@ -187,7 +188,7 @@
 
                                                 <!-- 3 pages before the current page -->
                                                 {% for page_num in page_range %}
-                                                    {% if page_num == feedbacks.number %}
+                                                    {% if page_num == list_items.number %}
                                                         <!-- Current Page -->
                                                         <a href="#" aria-current="page"
                                                            class="relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{{ page_num }}</a>
@@ -205,7 +206,7 @@
                                                 {#                                                <a href="#"#}
                                                 {#                                                   class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">3</a>#}
 
-                                                {% if feedbacks.number < feedbacks.paginator.num_pages|add:-1 %}
+                                                {% if list_items.number < list_items.paginator.num_pages|add:-1 %}
                                                     <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span>
                                                 {% endif %}
 
@@ -216,8 +217,8 @@
                                                 {#                                                <a href="#"#}
                                                 {#                                                   class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">10</a>#}
 
-                                                {% if feedbacks.has_next %}
-                                                    <a href="?page={{ feedbacks.next_page_number }}"
+                                                {% if list_items.has_next %}
+                                                    <a href="?page={{ list_items.next_page_number }}"
                                                        class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
                                                         <span class="sr-only">Next</span>
                                                         <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"

@@ -55,30 +55,28 @@ class AdminPanelHomeView(TemplateView):
 
 class AdminPanelFeedbackListView(UserPassesTestMixin, ListView):
     model = Feedback
-    template_name = 'adminpanel/blog/list.html'
+    template_name = 'adminpanel/feedback/list.html'
     paginate_by = 2
     PAGINATION_PAGES_BEFORE_AND_AFTER = 1
 
     def get_context_data(self, **kwargs):
-
         context = super().get_context_data(**kwargs)
 
         current_page = context['page_obj'].number
         total_pages = context['paginator'].num_pages
+        start_page_num = (current_page - 1) * self.paginate_by + 1
+        end_page_num = start_page_num + len(context['page_obj'].object_list) - 1
 
-        # Calculate the start and end for the current page
-        start_page = (context['page_obj'].number - 1) * self.paginate_by + 1
-        end_page = start_page + len(context['page_obj'].object_list) - 1
+        context.update({
+            'start_page': start_page_num,
+            'end_page': end_page_num,
+            'list_items': context['page_obj'],
+            'page_range': range(
+                max(1, current_page - self.PAGINATION_PAGES_BEFORE_AND_AFTER),
+                min(total_pages, current_page + self.PAGINATION_PAGES_BEFORE_AND_AFTER) + 1
+            ),
+        })
 
-        context['start_page'] = start_page
-        context['end_page'] = end_page
-        context['feedbacks_total'] = self.model.objects.all().count()
-        context['feedbacks'] = context['page_obj']
-
-        # Display up to 2 pages before and after the current page.
-        start_page = max(1, current_page - self.PAGINATION_PAGES_BEFORE_AND_AFTER)
-        end_page = min(total_pages, current_page + self.PAGINATION_PAGES_BEFORE_AND_AFTER)
-        context['page_range'] = range(start_page, end_page + 1)
         return context
 
     def test_func(self):
