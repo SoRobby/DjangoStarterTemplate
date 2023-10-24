@@ -49,7 +49,7 @@ class Article(DateCreatedAndModified, DateDeleted):
         PUBLISHED = 'published', 'Published'
         ARCHIVED = 'archived', 'Archived'
 
-    class VISIBILITY(models.TextChoices):
+    class Visibility(models.TextChoices):
         PUBLIC = 'public', 'Public'
         PRIVATE = 'private', 'Private'
 
@@ -69,7 +69,7 @@ class Article(DateCreatedAndModified, DateDeleted):
                                       verbose_name='Release status',
                                       help_text='Current status of the article')
 
-    visibility = models.CharField(max_length=55, default=VISIBILITY.PUBLIC, choices=VISIBILITY.choices,
+    visibility = models.CharField(max_length=55, default=Visibility.PUBLIC, choices=Visibility.choices,
                                   verbose_name='Visibility', help_text='Visibility of the article')
 
     content = HTMLField(blank=True, null=True, verbose_name='Content',
@@ -142,9 +142,6 @@ class Article(DateCreatedAndModified, DateDeleted):
             self.slug = self.generate_slug()
 
         # Set the date_published
-        print(f'self.release_status: {self.release_status}')
-        print(f'self.date_published: {self.date_published}')
-
         if self.release_status == self.ReleaseStatus.PUBLISHED and self.date_published is None:
             print('SETTING DATE PUBLISHED')
             self.date_published = timezone.now()
@@ -208,6 +205,18 @@ class Article(DateCreatedAndModified, DateDeleted):
         :return: list of dictionaries
         """
         return [{'key': key, 'name': name} for key, name in Article.ReleaseStatus.choices]
+
+    @staticmethod
+    def get_visibility_choices_as_dict():
+        return dict(Article.Visibility.choices)
+
+    @staticmethod
+    def get_visibility_choices_as_list():
+        """
+        Returns the release status choices as a list of dictionaries with keys 'key' and 'name' for each choice.
+        :return: list of dictionaries
+        """
+        return [{'key': key, 'name': name} for key, name in Article.Visibility.choices]
 
 
 class Comment(DateCreatedAndModified, DateDeleted):

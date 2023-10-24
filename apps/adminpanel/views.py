@@ -10,6 +10,8 @@ from django.views.generic import TemplateView, ListView, DetailView
 from django.contrib.sessions.models import Session
 
 from apps.feedback.models import Feedback
+from apps.blog.models import Article
+
 from libs.utils import ExportToCSVView
 
 User = get_user_model()
@@ -53,11 +55,11 @@ class AdminPanelHomeView(TemplateView):
 
 class AdminPanelFeedbackListView(UserPassesTestMixin, ListView):
     model = Feedback
-    template_name = 'adminpanel/feedback/list.html'
+    template_name = 'adminpanel/blog/list.html'
     paginate_by = 2
+    PAGINATION_PAGES_BEFORE_AND_AFTER = 1
 
     def get_context_data(self, **kwargs):
-        PAGES_BEFORE_AND_AFTER = 1
 
         context = super().get_context_data(**kwargs)
 
@@ -74,8 +76,8 @@ class AdminPanelFeedbackListView(UserPassesTestMixin, ListView):
         context['feedbacks'] = context['page_obj']
 
         # Display up to 2 pages before and after the current page.
-        start_page = max(1, current_page - PAGES_BEFORE_AND_AFTER)
-        end_page = min(total_pages, current_page + PAGES_BEFORE_AND_AFTER)
+        start_page = max(1, current_page - self.PAGINATION_PAGES_BEFORE_AND_AFTER)
+        end_page = min(total_pages, current_page + self.PAGINATION_PAGES_BEFORE_AND_AFTER)
         context['page_range'] = range(start_page, end_page + 1)
         return context
 
@@ -119,7 +121,34 @@ class ExportFeedbacksToCSV(ExportToCSVView):
     filename = "feedbacks.csv"
 
 
+class AdminPanelBlogListView(UserPassesTestMixin, ListView):
+    model = Article
+    template_name = 'adminpanel/blog/list.html'
+    paginate_by = 2
 
-# def delete_django_sessions(request):
-#     Session.objects.all().delete()
-#     return render(request, 'adminpanel/home.html')
+    def get_context_data(self, **kwargs):
+        PAGES_BEFORE_AND_AFTER = 1
+
+        context = super().get_context_data(**kwargs)
+
+        current_page = context['page_obj'].number
+        total_pages = context['paginator'].num_pages
+
+        # Calculate the start and end for the current page
+        start_page = (context['page_obj'].number - 1) * self.paginate_by + 1
+        end_page = start_page + len(context['page_obj'].object_list) - 1
+
+        context['start_page'] = start_page
+        context['end_page'] = end_page
+        context['list_items'] = self.model.objects.all().count()
+        context['list_items'] = context['page_obj']
+
+        # Display up to 2 pages before and after the current page.
+        start_page = max(1, current_page - PAGES_BEFORE_AND_AFTER)
+        end_page = min(total_pages, current_page + PAGES_BEFORE_AND_AFTER)
+        context['page_range'] = range(start_page, end_page + 1)
+        return context
+
+    def test_func(self):
+        return self.request.user.is_staff
+

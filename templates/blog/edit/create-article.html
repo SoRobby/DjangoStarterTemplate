@@ -1,10 +1,9 @@
 {% extends 'base-ultrawide.html' %}
 {% load static %}
+{% load custom_tags %}
 
 {# Title #}
-{% block title %}
-    <title>Create an article</title>
-{% endblock title %}
+{% block title %}<title>Untitled</title>{% endblock title %}
 
 
 {# General meta information (i.e. Description, tags, etc...) #}
@@ -16,8 +15,9 @@
 {% block style %}
     <link rel="stylesheet" type="text/css" href="{% static 'cropper.min.css' %}">
     <style>
-
-
+        .tox .tox-toolbar--scrolling {
+            flex-wrap: wrap !important;
+        }
     </style>
 {% endblock style %}
 
@@ -43,513 +43,669 @@
 
         {% block content %}
 
-            <form action="#" method="POST">
+            <form action="." method="POST" enctype="multipart/form-data"
+                  x-data="{ showSidebar: true }"
+                  x-init="showSidebar = (localStorage.getItem('showSidebar') !== null) ? (localStorage.getItem('showSidebar') === 'true') : true">
                 {% csrf_token %}
                 {{ form.media }}
 
-                {% include 'blog/edit/components/save-publish-buttons.html' %}
+                <div class="sticky top-0 mx-auto bg-white border-b border-gray-300 z-20">
+                    <div class="px-4 mx-auto sm:px-6 lg:px-8 py-4">
+                        <div class="flex items-center justify-between">
 
-
-                <div class="mx-auto">
-                    <div class="flex w-full items-stretch gap-x-8">
-                        <div class="flex-1 px-4 mx-auto max-w-7xl py-4 sm:py-6 sm:px-6 lg:px-8 space-y-4">
-
-                            <div class="sm:col-span-6">
-                                {% include 'blog/edit/components/title-input.html' %}
+                            <div>
+                                <h2 class="hidden sm:block text-lg md:text-2xl text-gray-800">
+                                    {% if article %}
+                                        Edit article
+                                    {% else %}
+                                        Create an article
+                                    {% endif %}
+                                </h2>
                             </div>
 
-                            <div class="sm:col-span-6 mt-2">
-                                {% include 'blog/edit/components/rich-text-editor.html' %}
-                            </div>
+                            <div class="flex gap-4 items-center" x-data="{ isSaving: false, isPublishing: false }">
 
-
-                            <div class="pt-8">
-                                <div class="flex w-full items-start gap-x-8" x-data="{ selectedNav: 'main' }">
-                                    <nav class="w-64 flex flex-col border-r border-gray-200" aria-label="Sidebar">
-                                        <ul role="list" class="space-y-1 pr-2">
-                                            <li>
-                                                <button @click="selectedNav='main'" type="button"
-                                                        class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
-                                                        :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='main' }">
-                                                    Main
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button @click="selectedNav='authors'" type="button"
-                                                        class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
-                                                        :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='authors' }">
-                                                    Authors
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button @click="selectedNav='attach-documents'" type="button"
-                                                        class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
-                                                        :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='attach-documents' }">
-                                                    Attach
-                                                    Documents
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button @click="selectedNav='seo-properties'" type="button"
-                                                        class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
-                                                        :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='seo-properties' }">
-                                                    SEO
-                                                    Properties
-                                                </button>
-                                            </li>
-                                            {% if article %}
-                                                <li>
-                                                    <button @click="selectedNav='metrics'" type="button"
-                                                            class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
-                                                            :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='metrics' }">
-                                                        Metrics
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button @click="selectedNav='danger-zone'" type="button"
-                                                            class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
-                                                            :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='danger-zone' }">
-                                                        Danger Zone
-                                                    </button>
-                                                </li>
-                                            {% endif %}
-                                        </ul>
-                                    </nav>
-
-                                    <div class="flex-1">
-
-                                        <div x-show="selectedNav === 'main'" x-transition:enter
-                                             class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
-
-                                            {# Main > allow comments #}
-                                            <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12">
-                                                <div class="col-span-12 md:col-span-6 flex items-center">
-                                                    <div class="w-full">
-                                                        <label for="allow_comments"
-                                                               class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                            Allow comments
-                                                        </label>
-                                                        <div class="text-xs text-gray-600 font-normal">
-                                                            Allow users to comment on the article
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-span-12 md:col-span-6 flex justify-end">
-                                                    {% if article %}
-                                                        {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=article.allow_comments id='allow_comments' name='allow_comments' %}
-                                                    {% else %}
-                                                        {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=True id='allow_comments' name='allow_comments' %}
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-
-                                            {# Main > allow social media sharing #}
-                                            <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12">
-                                                <div class="col-span-12 md:col-span-6 flex items-center">
-                                                    <div class="w-full">
-                                                        <label for="allow_sharing"
-                                                               class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                            Enable social media sharing
-                                                        </label>
-                                                        <div class="text-xs text-gray-600 font-normal">
-                                                            Allowing the article to be easily shared on social media
-                                                            platforms
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-span-12 md:col-span-6 flex justify-end">
-                                                    {% if article %}
-                                                        {% include 'components/forms/toggles/toggle.html' with state=article.allow_sharing id='allow_sharing' name='allow_sharing' %}
-                                                    {% else %}
-                                                        {% include 'components/forms/toggles/toggle.html' with state="true" id='allow_sharing' name='allow_sharing' %}
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div x-show="selectedNav === 'authors'" x-transition:enter x-cloak
-                                             class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
-                                            {# Authors > Lead author #}
-                                            <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
-                                                 x-data="{ showError: false }">
-                                                <div class="col-span-12 md:col-span-6 flex items-center">
-                                                    <div class="w-full">
-                                                        <label for="lead_author"
-                                                               class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                            Lead author email
-                                                        </label>
-                                                        <div class="text-xs text-gray-600 font-normal">
-                                                            The lead author will be listed first
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-span-12 md:col-span-6 flex items-center">
-                                                    <div class="w-full">
-                                                        <input type="text" id="lead_author" name="lead_author"
-                                                               maxlength="{{ form.name.field.max_length }}"
-                                                               value="{{ user.email }}"
-                                                               class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                                        <div class="mt-2 text-xs text-gray-600 font-normal">
-                                                            Enter the lead authors email address
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-
-                                            {# Authors > All authors #}
-                                            <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
-                                                 x-data="{ showError: false }">
-                                                <div class="col-span-12 md:col-span-6 flex">
-                                                    <div class="w-full">
-                                                        <label for="authors"
-                                                               class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                            Other author emails
-                                                        </label>
-                                                        <div class="text-xs text-gray-600 font-normal">Add additional
-                                                            authors
-                                                            to the article
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-span-12 md:col-span-6 flex items-center">
-                                                    <div class="w-full" x-data="{ authors: [] }">
-                                                        <div class="grid gap-2">
-                                                            <template x-for="(author, index) in authors" :key="index">
-                                                                <div class="flex items-center">
-                                                                    <input type="text" x-model="authors[index]"
-                                                                           name="meta-title"
-                                                                           maxlength="{{ form.name.field.max_length }}"
-                                                                           value="{{ user.email }}"
-                                                                           class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                                                    <button type="button"
-                                                                            class="px-2 text-gray-600 text-sm hover:text-gray-800"
-                                                                            x-on:click="authors.splice(index, 1)">Remove
-                                                                    </button>
-                                                                </div>
-                                                            </template>
-                                                        </div>
-                                                        <button type="button" class="mt-2 text-gray-800"
-                                                                x-on:click="authors.push('')">+ Add
-                                                            author
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div x-show="selectedNav === 'attach-documents'" x-transition:enter x-cloak>
-                                            <span class="font-semibold text-gray-600 text-sm">
-                                                Coming soon...
-                                            </span>
-                                        </div>
-
-                                        <div x-show="selectedNav === 'seo-properties'" x-transition:enter x-cloak
-                                             class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
-
-                                            {# Meta > title #}
-                                            <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
-                                                 x-data="{ showError: false }">
-                                                <div class="col-span-12 md:col-span-6 flex items-center">
-                                                    <div class="w-full">
-                                                        <label for="meta_title"
-                                                               class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                            Meta title
-                                                        </label>
-                                                        <div class="text-xs text-gray-600 font-normal">
-                                                            Title that will appear in search engines and browser tab.
-                                                            Recommended length is 50-60 characters.
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-span-12 md:col-span-6 flex items-center">
-                                                    <div class="w-full">
-                                                        <input type="text" id="meta_title" name="meta_title"
-                                                               maxlength="{{ form.name.field.max_length }}"
-                                                               value="{{ article.title }}"
-                                                               class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                                        <div x-show="showError"
-                                                             class="mt-2 text-xs text-red-600 font-normal">
-                                                            Invalid input
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {# Meta > description #}
-                                            <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
-                                                 x-data="{ showError: false }">
-                                                <div class="col-span-12 md:col-span-6 flex">
-                                                    <div class="w-full">
-                                                        <label for="meta_description"
-                                                               class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                            Meta description
-                                                        </label>
-                                                        <div class="text-xs text-gray-600 font-normal">High level
-                                                            summary that describes the article. Recommended length is
-                                                            50-160 characters.
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-span-12 md:col-span-6 flex items-center">
-                                                    <div class="w-full">
-                                                        <textarea type="text" name="meta_description"
-                                                                  id="meta_description"
-                                                                  rows="4"
-                                                                  maxlength="{{ form.description.field.max_length }}"
-                                                                  class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{{ user.description }}</textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-
-                                            {# Meta > keywords #}
-                                            <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
-                                                 x-data="{ showError: false }">
-                                                <div class="col-span-12 md:col-span-6 flex items-center">
-                                                    <div class="w-full">
-                                                        <label for="meta_keywords"
-                                                               class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                            Meta keywords
-                                                        </label>
-                                                        <div class="text-xs text-gray-600 font-normal">
-                                                            Comma separated keywords that describe the article.
-                                                            Recommended number of keywords is 3-8.
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-span-12 md:col-span-6 flex items-center">
-                                                    <div class="w-full">
-                                                        <input type="text" id="meta_keywords" name="meta_keywords"
-                                                               maxlength="{{ form.name.field.max_length }}"
-                                                               value="{{ article.title }}"
-                                                               class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                                        <div x-show="showError"
-                                                             class="mt-2 text-xs text-red-600 font-normal">
-                                                            Invalid input
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {% if article %}
-                                            <div x-show="selectedNav === 'metrics'" x-transition:enter x-cloak
-                                                 class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
-                                                {# Name (centered) #}
-                                                <div class="grid grid-cols-12 pt-4 gap-12"
-                                                     x-data="{ showError: false }">
-                                                    <div class="col-span-6 flex items-center">
-                                                        <div class="w-full">
-                                                            <div class="font-medium text-gray-900">
-                                                                Date created
-                                                            </div>
-                                                            <div class="text-xs text-gray-600 font-normal sr-only">A
-                                                                unique
-                                                                name
-                                                                to
-                                                                identify
-                                                                you
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-span-6 flex items-center">
-                                                        <div class="w-full">
-                                                            <p class="text-gray-900">{{ article.date_created }}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                {# Date updated (centered) #}
-                                                <div class="grid grid-cols-12 pt-4 gap-12"
-                                                     x-data="{ showError: false }">
-                                                    <div class="col-span-6 flex items-center">
-                                                        <div class="w-full">
-                                                            <div class="font-medium text-gray-900">
-                                                                Date last updated
-                                                            </div>
-                                                            <div class="text-xs text-gray-600 font-normal sr-only">A
-                                                                unique name to identify you
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-span-6 flex items-center">
-                                                        <div class="w-full">
-                                                            <p class="text-gray-900">{{ article.date_modified }}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                {# Date updated (centered) #}
-                                                <div class="grid grid-cols-12 pt-4 gap-12"
-                                                     x-data="{ showError: false }">
-                                                    <div class="col-span-6 flex items-center">
-                                                        <div class="w-full">
-                                                            <div class="font-medium text-gray-900">
-                                                                Revisions
-                                                            </div>
-                                                            <div class="text-xs text-gray-600 font-normal sr-only">A
-                                                                unique
-                                                                name
-                                                                to
-                                                                identify
-                                                                you
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-span-6 flex items-center">
-                                                        <div class="w-full">
-                                                            <p class="text-gray-900">admin</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                {# Date updated (centered) #}
-                                                <div class="grid grid-cols-12 pt-4 gap-12"
-                                                     x-data="{ showError: false }">
-                                                    <div class="col-span-6 flex items-center">
-                                                        <div class="w-full">
-                                                            <div class="font-medium text-gray-900">
-                                                                Created by
-                                                            </div>
-                                                            <div class="text-xs text-gray-600 font-normal sr-only">A
-                                                                The user who created the article
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-span-6 flex items-center">
-                                                        <div class="w-full">
-                                                            <p class="text-gray-900">{{ article.created_by }}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="grid grid-cols-12 pt-4 gap-12"
-                                                     x-data="{ showError: false }">
-                                                    <div class="col-span-6 flex items-center">
-                                                        <div class="w-full">
-                                                            <div class="font-medium text-gray-900">
-                                                                Last changed by
-                                                            </div>
-                                                            <div class="text-xs text-gray-600 font-normal sr-only">A
-                                                                The user who last changed the article
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-span-6 flex items-center">
-                                                        <div class="w-full">
-                                                            <p class="text-gray-900">{{ article.modified_by }}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        {% endif %}
-
-                                        <div x-show="selectedNav === 'danger-zone'" x-transition:enter x-cloak
-                                             class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
-
-                                            {# Meta > title #}
-                                            <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
-                                                 x-data="{ showError: false }">
-                                                <div class="col-span-12 md:col-span-6 flex items-center">
-                                                    <div class="w-full">
-                                                        <label for="meta_title"
-                                                               class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                            Delete article
-                                                        </label>
-                                                        <div class="text-xs text-gray-600 font-normal">
-                                                            Deleting a article is permanent and cannot be undone.
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-span-12 md:col-span-6 flex items-center md:justify-end">
-                                                    <button type="button" @click="isDeleteModalOpen=true"
-                                                            class="font-semibold text-gray-600 hover:text-red-500 focus:outline-none">
-                                                        Delete article
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
+                                {% if article and user.is_superuser %}
+                                    <div>
+                                        <a href="{% url 'admin:blog_article_change' article.pk %}"
+                                           class="text-gray-500 hover:underline hover:text-gray-800">
+                                            Advanced edit
+                                        </a>
                                     </div>
+                                {% endif %}
+
+
+
+                                {% if article.release_status == 'published' %}
+                                    <a href="{% url 'blog:article' slug=article.slug %}"
+                                       x-show="!isSaving && !isPublishing" @click="isPublishing=true"
+                                       class="btn-secondary-lg">
+                                        View
+                                    </a>
+                                    <button type="submit" name="save_type" value="update"
+                                            x-show="!isSaving && !isPublishing" @click="isPublishing=true"
+                                            class="btn-secondary-lg">
+                                        Update
+                                    </button>
+                                    <div class="flex items-center py-1.5" x-show="isPublishing" x-cloak>
+                                        {% include 'components/processing/processing-xs.html' with include_padding=False text="Updating..." %}
+                                    </div>
+                                {% else %}
+                                    <button type="submit" name="save_type" value="draft"
+                                            x-show="!isSaving && !isPublishing"
+                                            @click="isSaving=true"
+                                            class="btn-secondary-lg">
+                                        Save draft
+                                    </button>
+                                    <button type="submit" name="save_type" value="publish"
+                                            x-show="!isSaving && !isPublishing" @click="isPublishing=true"
+                                            class="btn-secondary-lg">
+                                        Publish
+                                    </button>
+                                    <div class="flex items-center py-1.5" x-show="isSaving" x-cloak>
+                                        {% include 'components/processing/processing-xs.html' with include_padding=False text="Saving..." %}
+                                    </div>
+                                    <div class="flex items-center py-1.5" x-show="isPublishing" x-cloak>
+                                        {% include 'components/processing/processing-xs.html' with include_padding=False text="Publishing..." %}
+                                    </div>
+                                {% endif %}
+
+                                <button @click="showSidebar = !showSidebar; localStorage.setItem('showSidebar', showSidebar);"
+                                        type="button"
+                                        class="btn-text-lg text-gray-300 hover:text-gray-800"
+                                        :class="{ 'text-gray-600': showSidebar==true }">
+                                    <svg class="w-6 h-6" fill="currentColor" stroke="none" stroke-width="1.5"
+                                         xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                                        <path d="M288 80V432H64c-8.8 0-16-7.2-16-16V96c0-8.8 7.2-16 16-16H288zM512 96c0-35.3-28.7-64-64-64H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96zm-64 24c0 13.3-10.7 24-24 24H376c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24zm-24 72c13.3 0 24 10.7 24 24s-10.7 24-24 24H376c-13.3 0-24-10.7-24-24s10.7-24 24-24h48zm24 120c0 13.3-10.7 24-24 24H376c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24z"/>
+                                    </svg>
+                                </button>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="relative flex">
+
+                    <div class="flex-1 p-4 space-y-8" :class="{ 'hidden md:block': showSidebar==true }">
+
+                        <div class="space-y-4">
+                            <div>
+                                <label for="title"
+                                       class="block text-sm font-medium leading-6 text-gray-900 sr-only">
+                                    Title
+                                </label>
+                                <div class="mt-2">
+                                    <input type="text" name="title" id="title" placeholder="Add title..."
+                                           value="{{ article.title }}"
+                                           class="iblock w-full rounded-md border-0 py-3 font-bold text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 input-focus sm:text-2xl sm:leading-6">
+                                </div>
+                            </div>
+
+
+                            <div class="mt-2">
+                                <label for="{{ form.content.id_for_label }}"
+                                       class="sr-only">
+                                    Editor
+                                </label>
+                                <div class="mt-2">
+                                    {{ form.content }}
                                 </div>
                             </div>
                         </div>
 
 
-                        <aside class="border-l border-gray-200 bg-gray-50 w-80 space-y-4 divide-y divide-gray-200">
-                            <div class="space-y-4 pt-4 px-4 sm:px-6">
-                                <h3 class="text-base font-medium leading-6 text-gray-800">Status & visibility</h3>
-                                <div class="grid grid-cols-2 items-center">
-                                    <p class="text-sm text-gray-700">Status</p>
-                                    {% include 'components/forms/select/custom-select.html' with id="release_status" name="release_status" selected_option_key="draft" selected_option_name="Draft" options=release_status_choices_as_list %}
-                                    <div class="col-span-2 text-xs text-gray-600 mt-2">
-                                        Non-published articles are only visible to you and other admins.
-                                    </div>
+                        <div class="flex flex-col md:flex-row w-full gap-8" x-data="{ selectedNav: 'main' }">
+
+                            <div class="w-full md:w-64 flex flex-col border-r border-gray-200" aria-label="Sidebar">
+                                <div class="md:hidden">
+                                    {% include 'components/forms/select/custom-select.html' with id="options-menu" name="options-menu" selected_option_key='main' selected_option_name='Main' options="[{'key': 'main', 'name': 'Main'}, {'key': 'authors', 'name': 'Authors'}, {'key': 'seo-properties', 'name': 'SEO properties'}, {'key': 'metrics', 'name': 'Metrics'}, {'key': 'danger-zone', 'name': 'Danger zone'}]" %}
                                 </div>
 
-                                <div class="grid grid-cols-2 items-center">
-                                    <p class="text-sm text-gray-700">Visibility</p>
-                                    {% include 'components/forms/select/custom-select.html' with id="visibility" name="visibility" selected_option_key='public' selected_option_name="Public" options="[{'key': 'public', 'name': 'Public'}, {'key': 'private', 'name': 'Private'}]" %}
-                                    <div class="col-span-2 text-xs text-gray-600 mt-2">
-                                        Non-published articles are only visible to you and other admins.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="space-y-4 pt-4 px-4 sm:px-6" id="cropper-featured-image-container">
-                                <h3 class="text-base font-medium leading-6 text-gray-800">Featured image</h3>
-
-                                <label for="featured_image"
-                                       class="block text-sm font-medium leading-6 text-gray-900 sr-only">
-                                    Cover photo
-                                </label>
-
-                                <div class="aspect-video rounded text-gray-300 border border-gray-200 bg-white overflow-hidden">
-                                    <img src="" alt="" class="cropper-cropped-preview">
-                                    <svg class="aspect-video text-gray-300 bg-white cropper-cropped-preview"
-                                         xmlns="http://www.w3.org/2000/svg"
-                                         fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                         stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                              d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
-                                    </svg>
-                                </div>
-
-                                <label for="profile-image" class="cursor-pointer">
-                                    <ul class="mt-2 border border-gray-200 border-dashed divide-y divide-gray-200 rounded-md hover:bg-gray-100 overflow-hidden cropper-input-container bg-white">
-                                        <li class="flex items-center py-2 px-4 text-sm">
-                                            <svg class="flex-shrink-0 w-6 h-6 text-gray-400"
-                                                 xmlns="http://www.w3.org/2000/svg"
-                                                 viewBox="0 0 20 20"
-                                                 fill="currentColor" aria-hidden="true">
-                                                <path fill-rule="evenodd"
-                                                      d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                                                      clip-rule="evenodd"></path>
-                                            </svg>
-                                            <input id="profile-image" name="profile_image"
-                                                   type="file"
-                                                   accept="image/*" class="sr-only cropper-input">
-                                            <div class="flex flex-shrink-0 ml-2 space-x-4 text-left">
-                                                <p class="text-gray-900 rounded-md font-small cropper-input-text">
-                                                    Upload featured image
-                                                </p>
-                                            </div>
+                                <ul role="list" class="hidden md:block space-y-1 pr-2">
+                                    <li>
+                                        <button @click="selectedNav='main'" type="button"
+                                                class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                                :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='main' }">
+                                            Main
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button @click="selectedNav='authors'" type="button"
+                                                class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                                :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='authors' }">
+                                            Authors
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button @click="selectedNav='seo-properties'" type="button"
+                                                class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                                :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='seo-properties' }">
+                                            SEO
+                                            Properties
+                                        </button>
+                                    </li>
+                                    {% if article %}
+                                        <li>
+                                            <button @click="selectedNav='metrics'" type="button"
+                                                    class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                                    :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='metrics' }">
+                                                Metrics
+                                            </button>
                                         </li>
-                                    </ul>
-                                    <button type="button"
-                                            class="mt-1 font-semibold text-indigo-600 hover:text-indigo-500 hidden">
-                                        Remove image
-                                    </button>
-                                </label>
-                                <div class="mt-1 text-xs text-red-600 font-normal cropper-error-message"></div>
-                                {% include 'components/cropperjs/crop-image-modal.html' %}
+                                        <li>
+                                            <button @click="selectedNav='danger-zone'" type="button"
+                                                    class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                                                    :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='danger-zone' }">
+                                                Danger Zone
+                                            </button>
+                                        </li>
+                                    {% endif %}
+                                </ul>
                             </div>
 
-                        </aside>
+                            <div class="flex-1">
+                                <div x-show="selectedNav === 'main'" x-transition:enter
+                                     class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
+
+                                    {# Main > allow comments #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <label for="allow_comments"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Allow comments
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">
+                                                    Allow users to comment on the article. Disabling comments on an
+                                                    existing article will not delete existing comments.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex justify-end">
+                                            {% if article %}
+                                                {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=article.allow_comments id='allow_comments' name='allow_comments' %}
+                                            {% else %}
+                                                {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=True id='allow_comments' name='allow_comments' %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    {# Main > allow social media sharing #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <label for="allow_sharing"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Enable social media sharing
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">
+                                                    Allowing the article to be easily shared on social media
+                                                    platforms
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex justify-end">
+                                            {% if article %}
+                                                {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=article.allow_sharing id='allow_sharing' name='allow_sharing' %}
+                                            {% else %}
+                                                {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=True id='allow_sharing' name='allow_sharing' %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div x-show="selectedNav === 'authors'" x-transition:enter x-cloak
+                                     class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
+                                    {# Authors > Lead author #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                         x-data="{ showError: false }">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <label for="lead_author_email"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Lead author email
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">
+                                                    The lead author will be listed first
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <input type="text" id="lead_author_email"
+                                                       name="lead_author_email"
+                                                       maxlength="{{ form.name.field.max_length }}"
+                                                        {% if article.lead_author %}
+                                                       value="{{ article.lead_author.email }}"
+                                                        {% else %}
+                                                       value="{{ user.email }}"
+                                                        {% endif %}
+                                                       class="input-text">
+                                                <div class="mt-2 text-xs text-gray-600 font-normal">
+                                                    Enter the lead authors email address
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    {# Authors > All authors #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                         x-data="{ showError: false }">
+                                        <div class="col-span-12 md:col-span-6 flex">
+                                            <div class="w-full">
+                                                <label for="authors"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Other author emails
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">Add additional
+                                                    authors
+                                                    to the article
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full" x-data="{ authors: [] }">
+                                                <div class="grid gap-2">
+                                                    <template x-for="(author, index) in authors" :key="index">
+                                                        <div class="flex items-center">
+                                                            <input type="text" x-model="authors[index]"
+                                                                   name="meta-title"
+                                                                   maxlength="{{ form.name.field.max_length }}"
+                                                                   value="{{ user.email }}"
+                                                                   class="input-text">
+                                                            <button type="button"
+                                                                    class="px-2 text-gray-600 text-sm hover:text-gray-800"
+                                                                    x-on:click="authors.splice(index, 1)">Remove
+                                                            </button>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                                <button type="button" class="mt-2 text-gray-800"
+                                                        x-on:click="authors.push('')">+ Add
+                                                    author
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div x-show="selectedNav === 'seo-properties'" x-transition:enter x-cloak
+                                     class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
+
+                                    {# Meta > title #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                         x-data="{ showError: false }">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <label for="meta_title"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Meta title
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">
+                                                    Title that will appear in search engines and browser tab.
+                                                    Recommended length is 50-60 characters.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <input type="text" id="meta_title" name="meta_title"
+                                                       maxlength="{{ form.meta_title.field.max_length }}"
+                                                        {% if article.meta_title %}
+                                                       value="{{ article.meta_title }}"
+                                                        {% endif %}
+                                                       placeholder="{{ article.title }}"
+                                                       class="input-text">
+                                                <div x-show="showError"
+                                                     class="mt-2 text-xs text-red-600 font-normal">
+                                                    Invalid input
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {# Meta > description #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                         x-data="{ showError: false }">
+                                        <div class="col-span-12 md:col-span-6 flex">
+                                            <div class="w-full">
+                                                <label for="meta_description"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Meta description
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">High level
+                                                    summary that describes the article. Recommended length is
+                                                    50-160 characters.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                        <textarea type="text" name="meta_description"
+                                                                  id="meta_description"
+                                                                  rows="4"
+                                                                  maxlength="{{ form.meta_description.field.max_length }}"
+                                                                  class="input-text">{% if article.meta_description %}
+                                                            {{ article.meta_description }}{% endif %}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    {# Meta > keywords #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                         x-data="{ showError: false }">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <label for="meta_keywords"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Meta keywords
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">
+                                                    Comma separated keywords that describe the article.
+                                                    Recommended number of keywords is 3-8.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <input type="text" id="meta_keywords" name="meta_keywords"
+                                                       maxlength="255"
+                                                        {% if article.meta_keywords %}
+                                                       value="{{ article.meta_keywords }}"
+                                                        {% endif %}
+                                                       class="input-text">
+                                                <div x-show="showError"
+                                                     class="mt-2 text-xs text-red-600 font-normal">
+                                                    Invalid input
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {% if article %}
+                                    <div x-show="selectedNav === 'metrics'" x-transition:enter x-cloak
+                                         class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
+
+                                        {# Date created (centered) #}
+                                        <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 md:gap-12"
+                                             x-data="{ showError: false }">
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <div class="font-medium text-gray-900">
+                                                        Date created
+                                                    </div>
+                                                    <div class="text-xs text-gray-600 font-normal sr-only">A unique name
+                                                        to identify you
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <p data-utc-time="{{ article.date_created.isoformat }}"
+                                                       class="text-gray-900 convert-time"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {# Date modified (centered) #}
+                                        <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 md:gap-12"
+                                             x-data="{ showError: false }">
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <div class="font-medium text-gray-900">
+                                                        Date last updated
+                                                    </div>
+                                                    <div class="text-xs text-gray-600 font-normal sr-only">A unique name
+                                                        to identify you
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <p data-utc-time="{{ article.date_modified.isoformat }}"
+                                                       class="text-gray-900 convert-time"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        {# Number of revisions / saves (centered) #}
+                                        <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 md:gap-12"
+                                             x-data="{ showError: false }">
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <div class="font-medium text-gray-900">
+                                                        Revisions
+                                                    </div>
+                                                    <div class="text-xs text-gray-600 font-normal sr-only">A unique name
+                                                        to identify you
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <p class="text-gray-900">{{ article.number_of_revisions }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {# Number of comments (centered) #}
+                                        <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 md:gap-12"
+                                             x-data="{ showError: false }">
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <div class="font-medium text-gray-900">
+                                                        Number of comments
+                                                    </div>
+                                                    <div class="text-xs text-gray-600 font-normal sr-only">Number of
+                                                        comments on the article
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <p class="text-gray-900">
+                                                        {% if article.allow_comments %}
+                                                            TBD
+                                                        {% else %}
+                                                            Comments disabled
+                                                        {% endif %}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        {# Created by (centered) #}
+                                        <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 md:gap-12"
+                                             x-data="{ showError: false }">
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <div class="font-medium text-gray-900">
+                                                        Created by
+                                                    </div>
+                                                    <div class="text-xs text-gray-600 font-normal sr-only">A unique name
+                                                        to identify you
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <p class="text-gray-900">{{ article.created_by.username }}
+                                                        ({{ article.created_by.email }})</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        {# Modified by (centered) #}
+                                        <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 md:gap-12"
+                                             x-data="{ showError: false }">
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <div class="font-medium text-gray-900">
+                                                        Last changed by
+                                                    </div>
+                                                    <div class="text-xs text-gray-600 font-normal sr-only">A unique name
+                                                        to identify you
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-6 flex items-center">
+                                                <div class="w-full">
+                                                    <p class="text-gray-900">{{ article.modified_by.username }}
+                                                        ({{ article.modified_by.email }})</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                {% endif %}
+
+                                <div x-show="selectedNav === 'danger-zone'" x-transition:enter x-cloak
+                                     class="space-y-4 divide-y divide-gray-200 text-sm leading-6">
+
+                                    {# Meta > title #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                         x-data="{ showError: false }">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <label for="meta_title"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Delete article
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">
+                                                    Deleting an article is permanent and cannot be undone.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex items-center md:justify-end">
+                                            <button type="button" @click="isDeleteModalOpen=true"
+                                                    class="font-semibold text-gray-600 hover:text-red-500 focus:outline-none">
+                                                Delete article
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
                     </div>
+
+
+                    <aside x-show="showSidebar"
+                           class="absolute md:static md:w-80 border-l border-gray-200 bg-gray-50 space-y-4 divide-y divide-gray-200 w-full z-10">
+
+                        <div class="space-y-4 pt-4 px-4 sm:px-6">
+                            <h3 class="text-base font-medium leading-6 text-gray-800">Status & visibility</h3>
+
+                            <div class="grid grid-cols-2 items-center">
+                                <p class="text-sm text-gray-700">Status</p>
+                                {% if article %}
+                                    {% include 'components/forms/select/custom-select.html' with id="release_status" name="release_status" selected_option_key=article.release_status selected_option_name=article.get_release_status_display options=article.get_release_status_choices_as_list %}
+                                {% else %}
+                                    {% include 'components/forms/select/custom-select.html' with id="release_status" name="release_status" selected_option_key="draft" selected_option_name="Draft" options=release_status_choices_as_list %}
+                                {% endif %}
+                                <div class="col-span-2 text-xs text-gray-600 mt-2">
+                                    Non-published articles are only visible to you and other admins.
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 items-center">
+                                <p class="text-sm text-gray-700">Visibility</p>
+                                {% if article %}
+                                    {% include 'components/forms/select/custom-select.html' with id="visibility" name="visibility" selected_option_key=article.visibility selected_option_name=article.get_visibility_display options=article.get_visibility_choices_as_list %}
+                                {% else %}
+                                    {% include 'components/forms/select/custom-select.html' with id="visibility" name="visibility" selected_option_key='public' selected_option_name="Public" options=get_visibility_choices_as_list %}
+                                {% endif %}
+                                <div class="col-span-2 text-xs text-gray-600 mt-2">
+                                    Non-published articles are only visible to you and other admins.
+                                </div>
+                            </div>
+
+                            {#                            <div class="grid grid-cols-1 items-center relative">#}
+                            {#                                <p class="text-sm text-gray-700">URL</p>#}
+                            {#                                <a href="{% url 'blog:article' slug=article.slug %}"#}
+                            {#                                   class="flex items-center whitespace-nowrap gap-x-1.5 py-2 text-blue-500 sm:text-sm sm:leading-6 hover:underline">#}
+                            {#                                    <span>{{ request.META.HTTP_HOST }}</span><span#}
+                            {#                                        class="font-medium">{% url 'blog:article' slug=article.slug %}</span>#}
+                            {#                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"#}
+                            {#                                         stroke-width="1.5" stroke="currentColor" class="w-4 h-4">#}
+                            {#                                        <path stroke-linecap="round" stroke-linejoin="round"#}
+                            {#                                              d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"></path>#}
+                            {#                                    </svg>#}
+                            {#                                </a>#}
+                            {#                            </div>#}
+
+                        </div>
+
+                        <div class="space-y-4 pt-4 px-4 sm:px-6" id="cropper-featured-image-container">
+                            <h3 class="text-base font-medium leading-6 text-gray-800">Featured image</h3>
+
+                            <label for="featured_image"
+                                   class="block text-sm font-medium leading-6 text-gray-900 sr-only">
+                                Cover photo
+                            </label>
+
+                            <div class="aspect-video rounded text-gray-300 border border-gray-200 bg-white overflow-hidden">
+                                {% if article.featured_image %}
+                                    <img src="{{ article.featured_image.url }}?lastmod={{ article.get_date_modified_utc_standard }}"
+                                         alt="" class="cropper-cropped-preview">
+                                {% else %}
+                                    <img src="" alt="" class="cropper-cropped-preview">
+                                {% endif %}
+                                <svg class="aspect-video text-gray-300 bg-white cropper-cropped-preview"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                     stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
+                                </svg>
+                            </div>
+
+                            <label for="featured-image" class="cursor-pointer">
+                                <ul class="mt-2 border border-gray-200 border-dashed divide-y divide-gray-200 rounded-md hover:bg-gray-100 overflow-hidden cropper-input-container bg-white">
+                                    <li class="flex items-center py-2 px-4 text-sm">
+                                        <svg class="flex-shrink-0 w-6 h-6 text-gray-400"
+                                             xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 0 20 20"
+                                             fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd"
+                                                  d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                                                  clip-rule="evenodd"></path>
+                                        </svg>
+                                        <input id="featured-image" name="featured_image"
+                                               type="file"
+                                               accept="image/*" class="sr-only cropper-input">
+                                        <div class="flex flex-shrink-0 ml-2 space-x-4 text-left">
+                                            <p class="text-gray-900 rounded-md font-small cropper-input-text">
+                                                Upload featured image
+                                            </p>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <button type="button"
+                                        class="mt-1 font-semibold text-indigo-600 hover:text-indigo-500 hidden">
+                                    Remove image
+                                </button>
+                            </label>
+                            <div class="mt-1 text-xs text-red-600 font-normal cropper-error-message"></div>
+                            {% include 'components/cropperjs/crop-image-modal.html' %}
+                        </div>
+                    </aside>
                 </div>
             </form>
+
         {% endblock content %}
     </main>
 {% endblock main %}
@@ -563,8 +719,7 @@
 
 {# Scripts #}
 {% block scripts %}
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
-            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{% static 'jquery.min.js' %}"></script>
     <script src="{% static 'cropper.js' %}"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function (event) {

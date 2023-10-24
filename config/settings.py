@@ -285,7 +285,6 @@ TINYMCE_DEFAULT_CONFIG = {
 
 TINYMCE_BLOG_ARTICLE_CONFIG = {
     "theme": "silver",
-    "height": 512,
     "menubar": False,
     "plugins": "advlist,autolink,lists,link,image,charmap,print,preview,anchor,"
                "searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,paste,"

@@ -58,56 +58,6 @@ def session_handler(request, user):
     return user_session
 
 
-# class ObjectViewedMiddleware:
-#     def __init__(self, get_response):
-#         self.get_response = get_response
-#
-#     def __call__(self, request):
-#         response = self.get_response(request)
-#         self.process_viewed_object(request)
-#         return response
-#
-#     def process_viewed_object(self, request):
-#         # Determine the current URL's name and namespace
-#         match = resolve(request.path_info)
-#         current_url_name = match.url_name
-#         current_namespace = match.namespace
-#
-#
-#
-#         # Find if this URL name and namespace exist in our registered views
-#         target_view = next(
-#             (view for view in views_registry.registered_views if
-#              view['url_name'] == current_url_name and view['namespace'] == current_namespace),
-#             None
-#         )
-#
-#         # If the current URL isn't in the registered views, exit
-#         if not target_view:
-#             return
-#
-#         # Fetch the content type and model instance based on the registered view details
-#         try:
-#             # Handle the session
-#             user_session = session_handler(request, request.user if request.user.is_authenticated else None)
-#
-#             content_type = ContentType.objects.get(app_label=target_view['app_name'], model=target_view['model_name'])
-#
-#             # Assuming the identifier is a 'slug', adjust if using 'pk' or another identifier
-#             object_identifier = match.kwargs.get('slug')
-#             model_instance = content_type.model_class().objects.get(slug=object_identifier)
-#
-#             ObjectViewed.objects.create(
-#                 user=request.user if request.user.is_authenticated else None,
-#                 user_session=user_session,
-#                 content_type=content_type,
-#                 object_id=model_instance.id,
-#                 ip_address=get_client_ip_address(request),
-#             )
-#         except (ContentType.DoesNotExist, content_type.model_class().DoesNotExist):
-#             pass
-
-
 class ObjectViewedMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response

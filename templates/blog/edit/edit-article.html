@@ -161,7 +161,7 @@
 
                             <div class="w-full md:w-64 flex flex-col border-r border-gray-200" aria-label="Sidebar">
                                 <div class="md:hidden">
-                                    {% include 'components/forms/select/custom-select.html' with id="options-menu" name="options-menu" selected_option_key='main' selected_option_name='Main' options="[{'key': 'main', 'name': 'Main'}, {'key': 'authors', 'name': 'Authors'}, {'key': 'attached-documents', 'name': 'Attached documents'}, {'key': 'seo-properties', 'name': 'SEO properties'}, {'key': 'metrics', 'name': 'Metrics'}, {'key': 'danger-zone', 'name': 'Danger zone'}]" %}
+                                    {% include 'components/forms/select/custom-select.html' with id="options-menu" name="options-menu" selected_option_key='main' selected_option_name='Main' options="[{'key': 'main', 'name': 'Main'}, {'key': 'authors', 'name': 'Authors'}, {'key': 'seo-properties', 'name': 'SEO properties'}, {'key': 'metrics', 'name': 'Metrics'}, {'key': 'danger-zone', 'name': 'Danger zone'}]" %}
                                 </div>
 
                                 <ul role="list" class="hidden md:block space-y-1 pr-2">
@@ -177,14 +177,6 @@
                                                 class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
                                                 :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='authors' }">
                                             Authors
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button @click="selectedNav='attach-documents'" type="button"
-                                                class="w-full text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
-                                                :class="{ 'bg-gray-50 text-indigo-600': selectedNav==='attach-documents' }">
-                                            Attach
-                                            Documents
                                         </button>
                                     </li>
                                     <li>
@@ -338,12 +330,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div x-show="selectedNav === 'attach-documents'" x-transition:enter x-cloak>
-                                            <span class="font-semibold text-gray-600 text-sm">
-                                                Coming soon...
-                                            </span>
                                 </div>
 
                                 <div x-show="selectedNav === 'seo-properties'" x-transition:enter x-cloak

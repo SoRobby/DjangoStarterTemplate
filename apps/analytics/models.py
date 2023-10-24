@@ -96,7 +96,7 @@ class ObjectViewed(models.Model):
     user_session = models.ForeignKey(UserSession, blank=True, null=True, on_delete=models.SET_NULL,
                                      help_text='User session that the object was viewed in')
 
-    content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, help_text='Content type')
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, help_text='Content type')
 
     object_id = models.PositiveIntegerField(help_text='Content type object id')
 

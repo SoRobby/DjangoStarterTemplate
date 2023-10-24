@@ -1,5 +1,6 @@
 from django import forms
 from django.conf import settings
+from django.utils import timezone
 from tinymce.widgets import TinyMCE
 
 from apps.accounts.models import Account
@@ -22,22 +23,21 @@ class ArticleForm(forms.ModelForm):
         # Call the parent class's save method and get the Post object
         instance = super().save(commit=False)
 
+        if len(self.cleaned_data['title']) == 0:
+            print('SETTING TITLE')
+            instance.title = f'Untitled {timezone.now()}'
+        else:
+            print('Title is not empty')
+
         print(self.cleaned_data)
 
         # Try to get the lead author by email
-        lead_author_email = self.cleaned_data['lead_author_email']
-        instance.lead_author = Account.objects.get(email=lead_author_email)
+        instance.lead_author = Account.objects.get(email=self.cleaned_data['lead_author_email'])
 
         # Handle logic for save_type
         save_type = self.cleaned_data['save_type']
         if save_type == 'publish':
             instance.release_status = 'published'
-
-        elif save_type == 'draft':
-            instance.release_status = 'draft'
-
-
-
 
         # Save the instance if commit is True
         if commit:

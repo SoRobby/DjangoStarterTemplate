@@ -7,6 +7,7 @@ from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView
 
@@ -32,7 +33,6 @@ def article_list(request):
     return render(request, 'blog/articles-list.html', content)
 
 
-
 @register_view(namespace="blog", url_name="post", app_name="blog", model=Article)
 class ArticleDetailView(DetailView):
     model = Article
@@ -49,18 +49,23 @@ class ArticleDetailView(DetailView):
 
 def create_article(request):
     context = {}
+
     if request.method == 'POST':
 
         # Check if form is valid
-        form = ArticleForm(request.POST)
-        if form.is_valid():
-            print('FORM IS VALID')
-        else:
-            print('FORM IS NOT VALID')
+        # form = ArticleForm(request.POST)
+        # if form.is_valid():
+        #     print('FORM IS VALID')
+        # else:
+        #     print('FORM IS NOT VALID')
 
         # Get post data
         save_type = request.POST.get('save_type')
         title = request.POST.get('title')
+
+        if len(title) == 0:
+            title = f'Untitled {timezone.now().strftime("%Y-%m-%d %H%M%S")}'
+
         content = request.POST.get('content')
         release_status = request.POST.get('release_status')
 
@@ -71,7 +76,7 @@ def create_article(request):
         meta_description = request.POST.get('meta_description')
         meta_keywords = request.POST.get('meta_keywords')
 
-        lead_author = request.POST.get('lead_author')
+        lead_author = request.POST.get('lead_author_email')
 
         # Get lead author by email
         lead_author = Account.objects.get(email=lead_author)
@@ -97,11 +102,13 @@ def create_article(request):
         # Redirect user to edit_post
         send_notification(request, tag='success', title='Blog post created',
                           message='Your post has been successfully created')
-        return redirect('blog:edit-post', uuid=mew_post.uuid)
+
+        return redirect('blog:edit-article', uuid=mew_post.uuid)
 
     form = ArticleForm()
     context['form'] = form
     context['release_status_choices_as_list'] = Article.get_release_status_choices_as_list()
+    context['get_visibility_choices_as_list'] = Article.get_visibility_choices_as_list()
 
     return render(request, 'blog/edit/create-article.html', context)
 
@@ -201,7 +208,6 @@ def edit_article(request, uuid):
 
         form = ArticleForm(request.POST, instance=article)
 
-
         # print(request.POST)
 
         # form = ArticleForm(request.POST)
@@ -227,7 +233,6 @@ def edit_article(request, uuid):
     context['form'] = ArticleForm(instance=article)
     context['article'] = article
     return render(request, 'blog/edit/edit-article.html', context)
-
 
 
 @csrf_exempt
