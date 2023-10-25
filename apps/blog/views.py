@@ -32,7 +32,16 @@ def article_list(request):
         unpublished_articles = Article.objects.not_published()
         content['unpublished_articles'] = unpublished_articles
 
-    return render(request, 'blog/articles-list.html', content)
+
+
+    if request.META.get('HTTP_HX_REQUEST'):
+        logging.debug('Request is HTMX')
+        return render(request, 'blog/partials/articles-list.html', content)
+    else:
+        logging.debug('Request is not HTMX')
+        return render(request, 'blog/articles-list.html', content)
+
+
 
 
 def does_user_have_access(article: Article, user) -> bool:

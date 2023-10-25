@@ -16,7 +16,13 @@ def home(request: HttpResponse) -> HttpResponse:
     """
     logging.debug('[MAIN.HOME] Called')
     context = {}
-    return render(request, 'core/home.html', context)
+
+    if request.META.get('HTTP_HX_REQUEST'):
+        logging.debug('Request is HTMX')
+        return render(request, 'core/partials/home.html', context)
+    else:
+        logging.debug('Request is not HTMX')
+        return render(request, 'core/home.html', context)
 
 
 def test(request: HttpResponse) -> HttpResponse:
