@@ -213,6 +213,11 @@ EMAIL_USE_TLS = False
 
 EMAIL_USE_SSL = False
 
+EMAIL_ADDRESSES = {
+    'NO_REPLY': 'noreply@your-domain.com',
+    'SUPPORT': 'support@your-domain.com',
+}
+
 # Google analytics ID
 # https://support.google.com/analytics/answer/9304153
 GOOGLE_ANALYTICS_ID = env('GOOGLE_ANALYTICS_ID', default='')

@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
+from django.conf import settings
 
 
 def send_verification_email(user: get_user_model(), domain: str):
@@ -37,4 +38,4 @@ def send_verification_email(user: get_user_model(), domain: str):
     })
 
     # Send email to user's email
-    send_mail(mail_subject, message, 'noreply@your-domain.com', [user.email])
+    send_mail(mail_subject, message, settings.EMAIL_ADDRESSES['NO_REPLY'], [user.email])

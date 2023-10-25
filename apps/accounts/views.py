@@ -15,6 +15,9 @@ from apps.accounts.utils import get_redirect_if_exists
 from libs.utils.utils import send_notification
 
 
+# Set the user model
+User = get_user_model()
+
 # Function based views:
 def login_view(request, *args, **kwargs):
     """
@@ -23,7 +26,6 @@ def login_view(request, *args, **kwargs):
     logging.debug('[LOGIN_VIEW] called')
     context = {}
     default_redirect = 'home'
-    account = get_user_model()
     user = request.user
 
     # If the user is already authenticated/logged they are redirected to homepage
@@ -104,6 +106,12 @@ def register_view(request, *args, **kwargs):
 
                 # Check to see if user is logged in:
                 if user.is_authenticated:
+                    # Get the current domain
+                    domain = get_current_site(request).domain
+
+                    # Send verification email to user
+                    send_verification_email(user, domain)
+
                     destination = get_redirect_if_exists(request)
                     if destination:
                         return redirect(destination)
@@ -122,8 +130,8 @@ def register_view(request, *args, **kwargs):
 def send_verification_email_view(request, username: str):
     logging.debug('[SEND_VERIFICATION_EMAIL] Called')
     if request.user.username == username or request.user.is_superuser:
-        Account = get_user_model()
-        user = Account.objects.get(username=username)
+
+        user = User.objects.get(username=username)
         user.generate_new_email_verification_token()
 
         try:
@@ -154,12 +162,11 @@ def send_verification_email_view(request, username: str):
 
 def verify_email(request, token):
     logging.debug('[VERIFY_EMAIL] Called')
-    Account = get_user_model()
 
     try:
         # Decode the token
         decoded_token = force_str(urlsafe_base64_decode(token))
-        user = Account.objects.get(email_verification_token=uuid.UUID(decoded_token))
+        user = User.objects.get(email_verification_token=uuid.UUID(decoded_token))
 
         # Verify user's email
         if not user.email_verified:
@@ -174,7 +181,7 @@ def verify_email(request, token):
                               message=f'Your email has already been verified')
             return redirect('home')
 
-    except (TypeError, ValueError, OverflowError, Account.DoesNotExist) as e:
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist) as e:
         if request.user.is_staff:
             send_notification(request, tag='error', title='Invalid verification token',
                               message=f'The token is has expired and is no longer valid, resend the verification email\nError: {e}')
@@ -188,18 +195,16 @@ def verify_email(request, token):
 def soft_delete_account_view(request):
     if request.user.is_authenticated and request.method == 'POST':
 
-        Account = get_user_model()
-
         # Try to delete the user
         try:
-            current_user = Account.objects.get(username=request.user.username)
+            current_user = User.objects.get(username=request.user.username)
             current_user.is_marked_for_deletion = True
             current_user.save()
             logout(request)
             send_notification(request, tag='success', title='Account deleted',
                               message='Your account is set to be deleted 14 days from now')
 
-        except Account.DoesNotExist:
+        except User.DoesNotExist:
             send_notification(request, tag='error', title='Error when deleting account',
                               message='There was an error when attempting to delete your account')
             return JsonResponse({"error": "User does not exist."}, status=400)
@@ -210,16 +215,14 @@ def soft_delete_account_view(request):
 def hard_delete_account_view(request):
     if request.user.is_authenticated and request.method == 'POST':
 
-        Account = get_user_model()
-
         # Try to delete the user
         try:
-            current_user = Account.objects.get(username=request.user.username)
+            current_user = User.objects.get(username=request.user.username)
             current_user.delete()
             send_notification(request, tag='success', title='Account deleted',
                               message='Your account has been deleted')
 
-        except Account.DoesNotExist:
+        except User.DoesNotExist:
             send_notification(request, tag='error', title='Error when deleting account',
                               message='There was an error when attempting to delete your account')
             return JsonResponse({"error": "User does not exist."}, status=400)
