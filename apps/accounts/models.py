@@ -34,7 +34,7 @@ class Account(AbstractBaseUser):
 
     name = models.CharField(max_length=120, blank=True, verbose_name='Name', help_text='Name of the user')
 
-    description = models.TextField(max_length=500, blank=True, verbose_name='Description',
+    description = models.TextField(max_length=300, blank=True, verbose_name='Description',
                                    help_text='User bio or description')
 
     is_active = models.BooleanField(default=True, verbose_name='Active',

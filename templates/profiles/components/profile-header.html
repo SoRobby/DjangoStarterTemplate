@@ -2,28 +2,35 @@
 
 <div class="py-6 md:flex md:items-center md:justify-between md:space-x-4">
     <div class="flex items-center space-x-4">
-        {% include 'components/avatar/avatar-12x12.html' %}
+        {% include 'components/avatar/avatar-12x12.html' with user_instance=user_instance %}
         <div class="-mt-1">
             <div class="flex">
-                {% if user.name %}
-                    <h1 class="text-2xl font-semibold text-gray-800">{{ user.name }}</h1>
-                    <h3 class="pl-2 text-2xl font-semibold text-gray-500">({{ user.username }})</h3>
+                {% if user_instance.name and user_instance.is_profile_public %}
+                    <h1 class="text-2xl font-semibold text-gray-800">{{ user_instance.name }}</h1>
+                    <h3 class="pl-2 text-2xl font-semibold text-gray-500">({{ user_instance.username }})</h3>
                 {% else %}
-                    <h1 class="text-2xl font-semibold text-gray-800">{{ user.username }}</h1>
+                    <h1 class="text-2xl font-semibold text-gray-800">{{ user_instance.username }}</h1>
                 {% endif %}
             </div>
-            <p class="-mt-1 text-sm font-medium text-gray-500">@{{ user.username }}</p>
+            <p class="-mt-1 text-sm font-medium text-gray-500">@{{ user_instance.username }}</p>
         </div>
     </div>
     {% if mode == 'view' %}
         <div class="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-3 sm:space-y-0 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
-            <a href="{% url 'profiles:settings-general' %}"
-               class="btn-primary-lg">Edit</a>
+            {% if user_instance == user %}
+                <a href="{% url 'profiles:settings-general' %}"
+                   class="btn-primary-lg">Edit</a>
+            {% endif %}
+            {% if user_instance != user and user_instance.is_profile_public %}
+                <a href="#"
+                   class="btn-secondary-lg">+ Follow</a>
+            {% endif %}
+
         </div>
     {% elif mode == 'edit' %}
         <div x-data="{ isSaving: false }"
              class="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-3 sm:space-y-0 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
-            <a x-show="!isSaving" href="{% url 'profiles:profile' username=user.username %}"
+            <a x-show="!isSaving" href="{% url 'profiles:profile' username=user_instance.username %}"
                class="btn-secondary-lg">Cancel</a>
             <button type="submit" @click="isSaving=true" x-show="!isSaving"
                     class="btn-primary-lg">

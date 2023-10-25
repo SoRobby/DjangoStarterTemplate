@@ -21,7 +21,7 @@
     <div>
         <form action="" method="POST">
             {% csrf_token %}
-            {% include 'profiles/components/profile-header.html' with mode="edit" %}
+            {% include 'profiles/components/profile-header.html' with mode='edit' user_instance=user %}
 
             <div class="lg:flex lg:gap-x-16">
                 {% include 'profiles/edit/components/sidebar.html' %}

@@ -18,7 +18,105 @@
 
 
 {% block content %}
-    {% include 'profiles/components/profile-header.html' with mode="view" %}
+
+    {% include 'profiles/components/profile-header.html' with mode='view' user_instance=account %}
+
+    {% if account == user or account.is_profile_public %}
+        <div class="py-16">
+            <div class="mx-auto grid max-w-2xl grid-cols-1 grid-rows-1 items-start gap-x-8 gap-y-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+                <!-- Invoice summary -->
+                <div class="lg:col-start-3 lg:row-end-1">
+                    <h2 class="sr-only">Summary</h2>
+                    <div class="rounded-lg bg-gray-50 shadow-sm ring-1 ring-gray-900/5">
+                        <dl class="flex flex-wrap">
+                            <div class="flex-auto pl-6 pt-6">
+                                <dt class="text-sm font-semibold leading-6 text-gray-900">Amount</dt>
+                                <dd class="mt-1 text-base font-semibold leading-6 text-gray-900">{{ account.username }}</dd>
+                            </div>
+                            {% if account.email_verified %}
+                                <div class="flex-none self-end px-6 pt-4">
+                                    <dt class="sr-only">Status</dt>
+                                    <dd class="rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-600 ring-1 ring-inset ring-green-600/20">
+                                        Verified
+                                    </dd>
+                                </div>
+                            {% endif %}
+                            <div class="mt-6 flex w-full flex-none gap-x-4 border-t border-gray-900/5 px-6 pt-6">
+                                <dt class="flex-none">
+                                    <span class="sr-only">Client</span>
+                                    <svg class="h-6 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor"
+                                         aria-hidden="true">
+                                        <path fill-rule="evenodd"
+                                              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-5.5-2.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zM10 12a5.99 5.99 0 00-4.793 2.39A6.483 6.483 0 0010 16.5a6.483 6.483 0 004.793-2.11A5.99 5.99 0 0010 12z"
+                                              clip-rule="evenodd"></path>
+                                    </svg>
+                                </dt>
+                                <dd class="text-sm font-medium leading-6 text-gray-900">{{ account.name }}</dd>
+                            </div>
+                            <div class="mt-4 flex w-full flex-none gap-x-4 px-6">
+                                <dt class="flex-none">
+                                    <span class="sr-only">Date joined</span>
+                                    <svg class="h-6 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor"
+                                         aria-hidden="true">
+                                        <path d="M5.25 12a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H6a.75.75 0 01-.75-.75V12zM6 13.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V14a.75.75 0 00-.75-.75H6zM7.25 12a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H8a.75.75 0 01-.75-.75V12zM8 13.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V14a.75.75 0 00-.75-.75H8zM9.25 10a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H10a.75.75 0 01-.75-.75V10zM10 11.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V12a.75.75 0 00-.75-.75H10zM9.25 14a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H10a.75.75 0 01-.75-.75V14zM12 9.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V10a.75.75 0 00-.75-.75H12zM11.25 12a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H12a.75.75 0 01-.75-.75V12zM12 13.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V14a.75.75 0 00-.75-.75H12zM13.25 10a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H14a.75.75 0 01-.75-.75V10zM14 11.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V12a.75.75 0 00-.75-.75H14z"></path>
+                                        <path fill-rule="evenodd"
+                                              d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.75 2.75 0 0118 6.75v8.5A2.75 2.75 0 0115.25 18H4.75A2.75 2.75 0 012 15.25v-8.5A2.75 2.75 0 014.75 4H5V2.75A.75.75 0 015.75 2zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75z"
+                                              clip-rule="evenodd"></path>
+                                    </svg>
+                                </dt>
+                                <dd class="text-sm leading-6 text-gray-500">
+                                    <time datetime="{{ account.date_joined|date:'Y-m-d' }}">{{ account.date_joined|date:'M d, Y' }}</time>
+                                </dd>
+                            </div>
+                            <div class="mt-4 flex w-full flex-none gap-x-4 px-6">
+                                <dt class="flex-none">
+                                    <span class="sr-only">Status</span>
+                                    <svg class="h-6 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                         stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/>
+                                    </svg>
+
+                                </dt>
+                                <dd class="text-sm leading-6 text-gray-500"># of followers...</dd>
+                            </div>
+                        </dl>
+                        <div class="mt-6 border-t border-gray-900/5 px-6 py-6">
+                            <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Message <span
+                                    aria-hidden="true">→</span></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Invoice -->
+                <div class="-mx-4 px-4 py-8 shadow-sm ring-1 ring-gray-900/5 sm:mx-0 sm:rounded-lg sm:px-8 sm:pb-14 lg:col-span-2 lg:row-span-2 lg:row-end-2 xl:px-16 xl:pb-20 xl:pt-16">
+                    <dl class="text-sm leading-6">
+                        <div class="sm:pr-4">
+                            <dt class="font-semibold text-gray-900">About</dt>
+                            <dd class="mt-2 text-gray-500">
+                                {{ account.description }}
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="py-16">
+            <div class="mx-auto grid max-w-2xl grid-cols-1 items-start gap-x-8 gap-y-8 lg:mx-0 lg:max-w-none">
+                <div>
+                    <h2 class="sr-only">Summary</h2>
+                    <div class="rounded-lg bg-gray-50 shadow-sm ring-1 ring-gray-900/5">
+                        <div class="p-6 font-base text-gray-800 leading-6 font-medium">
+                            The user's profile is set to private
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
 {% endblock content %}
 
 

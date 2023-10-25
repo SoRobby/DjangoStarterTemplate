@@ -5,7 +5,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views.decorators.http import require_http_methods
-from django.views.generic import TemplateView, UpdateView
+from django.views.generic import TemplateView, UpdateView, DetailView
 
 from apps.accounts.models import Account, AccountSettings
 from apps.accounts.services import send_verification_email
@@ -20,8 +20,13 @@ from apps.accounts.forms import AccountSettingsForm
 # Create your views here.
 # def profile(request, *args, **kwargs):
 #     return render(request, 'accounts/profile/profile.html')
-class ProfileView(TemplateView):
+class ProfileView(DetailView):
+    model = Account
     template_name = 'profiles/profile.html'
+    slug_field = 'username'
+    slug_url_kwarg = 'username'
+
+
 
 
 # class ProfileEditGeneralView(TemplateView):

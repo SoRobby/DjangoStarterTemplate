@@ -10,7 +10,7 @@ from apps.accounts.models import Account
 class ProfileEditGeneralForm(forms.ModelForm):
     class Meta:
         model = Account
-        fields = ('name', 'description', 'theme', 'is_profile_public', 'profile_image')
+        fields = ('name', 'description', 'is_profile_public', 'profile_image')
 
 
 class ChangeEmailForm(forms.Form):

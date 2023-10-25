@@ -72,7 +72,6 @@ def logout_view(request):
     Logs the user out and redirects the user to the homepage.
     """
     logging.debug('[LOGOUT_VIEW] called')
-    send_notification(request, tag='success', title='Logged out', message='You have been logged out')
     logout(request)
     return redirect('home')
 
