@@ -182,6 +182,11 @@ class AccountSettings(models.Model):
         return f"{self.account.username} settings"
 
 
+# class AccountInteraction(models.Model):
+#     account = models.OneToOneField(Account, on_delete=models.CASCADE, verbose_name='Account',
+#                                    related_name='interactions', help_text='Account that is connected to the settings')
+
+
 # Model signals
 @receiver(pre_save, sender=Account)
 def pre_save_account_receiver(sender, instance, *args, **kwargs):
