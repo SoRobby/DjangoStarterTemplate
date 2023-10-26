@@ -236,16 +236,9 @@
                 {# Desktop menu #}
                 <div class="hidden md:flex gap-x-12"
                      x-data="{ isMegaMenuTypeOpen1: false, isMegaMenuTypeOpen2: false, isMegaMenuTypeOpen3: false }">
-
                     <a href="{% url 'home' %}" class="text-sm font-semibold leading-6 text-gray-800">Home</a>
-
                     <a href="{% url 'blog:article-list' %}"
-                       class="text-sm font-semibold leading-6 text-gray-800 cursor-pointer">Blog</a>
-
-                    <a hx-get="{% url 'home' %}" hx-target="main" hx-swap="outerHTML" hx-replace-url="true" class="text-sm font-semibold leading-6 text-gray-800 cursor-pointer">HxHome</a>
-
-                    <a hx-get="{% url 'blog:article-list' %}" hx-target="main" hx-swap="outerHTML" hx-replace-url="true"
-                       class="text-sm font-semibold leading-6 text-gray-800 cursor-pointer">HxBlog</a>
+                       class="text-sm font-semibold leading-6 text-gray-800">Blog</a>
 
                     <button @click="isMegaMenuTypeOpen1=!isMegaMenuTypeOpen1" type="button"
                             class="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900"
@@ -650,10 +643,8 @@
                         </div>
                     </div>
 
-{#                    <a href="#" class="text-sm font-semibold leading-6 text-gray-800">Page 2</a>#}
-
-{#                    <a href="#" class="text-sm font-semibold leading-6 text-gray-800">Page 3</a>#}
-
+                    <a href="#" class="text-sm font-semibold leading-6 text-gray-800">Page 2</a>
+                    <a href="#" class="text-sm font-semibold leading-6 text-gray-800">Page 3</a>
                 </div>
             </div>
 
@@ -875,5 +866,4 @@
 
     </nav>
 </header>
-
 

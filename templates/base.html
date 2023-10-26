@@ -110,17 +110,6 @@
     document.body.addEventListener('htmx:configRequest', (event) => {
         event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
     })
-
-    var auxBack = performance.getEntriesByType("navigation");
-
-    if (auxBack[0].type === "back_forward") {
-        location.reload(true);
-    }
-
-    if (auxBack[0].type === "back_forward") {
-        location.reload(true);
-    }
-
 </script>
 </body>
 </html>

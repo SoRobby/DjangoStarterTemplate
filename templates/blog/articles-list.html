@@ -28,8 +28,6 @@
 
 {# Page content #}
 {% block main %}
-<main>
-
 
     {# Blog header start #}
     <div class="bg-gray-50">
@@ -105,7 +103,8 @@
     </div>
     {# Blog header end #}
 
-    <div class="px-4 mx-auto max-w-6xl sm:px-6 lg:px-8 py-4 sm:py-6">
+
+    <main class="px-4 mx-auto max-w-6xl sm:px-6 lg:px-8 py-4 sm:py-6">
 
 
         {% block content %}
@@ -183,8 +182,7 @@
 
 
         {% endblock content %}
-    </div>
-</main>
+    </main>
 {% endblock main %}
 
 
