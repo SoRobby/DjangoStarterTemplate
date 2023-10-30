@@ -10,13 +10,11 @@ from config import settings
 from .signals import object_viewed_signal
 from .utils import get_client_ip_address
 
-User = settings.AUTH_USER_MODEL
 
-
-# Create your models here.
+# Models
 
 class UserSession(models.Model):
-    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL,
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.SET_NULL,
                              help_text='User that the session is associated with')
 
     session_key = models.CharField(max_length=40, help_text='Session key')
@@ -72,7 +70,7 @@ class UserSession(models.Model):
 
 
 class PageViewed(models.Model):
-    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL,
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.SET_NULL,
                              help_text='The user that viewed the page')
 
     user_session = models.ForeignKey(UserSession, blank=True, null=True, on_delete=models.SET_NULL,
@@ -89,7 +87,7 @@ class PageViewed(models.Model):
 
 
 class ObjectViewed(models.Model):
-    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL,
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.SET_NULL,
                              help_text='User that viewed the object')
 
     user_session = models.ForeignKey(UserSession, blank=True, null=True, related_name='object_viewed',

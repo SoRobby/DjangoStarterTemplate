@@ -16,8 +16,6 @@ from db.abstract_models import DateCreatedAndModified, DateDeleted
 from libs.utils.utils import generate_unique_slug
 from .managers import ArticleManager
 
-User = settings.AUTH_USER_MODEL
-
 
 def upload_to_featured_images(instance, filename):
     if filename:
@@ -59,11 +57,12 @@ class Article(DateCreatedAndModified, DateDeleted):
                             help_text='The URL slug based on the article title, slug fields should be 50 characters or\
                             less')
 
-    lead_author = models.ForeignKey(User, on_delete=models.CASCADE,
+    lead_author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                     related_name='authored_articles_as_lead', verbose_name='Lead author',
                                     help_text='Lead author of the article')
 
-    authors = models.ManyToManyField(User, related_name='authored_articles', help_text='Article authors')
+    authors = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='authored_articles',
+                                     help_text='Article authors')
 
     release_status = models.CharField(max_length=55, default=ReleaseStatus.DRAFT, choices=ReleaseStatus.choices,
                                       verbose_name='Release status',
@@ -110,16 +109,17 @@ class Article(DateCreatedAndModified, DateDeleted):
     uuid = models.UUIDField(default=uuid4, editable=False, unique=True, verbose_name='UUID',
                             help_text='Unique identifier for the article')
 
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_articles',
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created_articles',
                                    verbose_name='Created by', help_text='User who created the article')
 
-    modified_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='modified_articles',
+    modified_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                                    related_name='modified_articles',
                                     verbose_name='Modified by', help_text='User who last modified the article')
 
     is_deleted = models.BooleanField(default=False, verbose_name='Is deleted',
                                      help_text='If checked, the article is deleted')
 
-    deleted_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE,
+    deleted_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE,
                                    related_name='deleted_articles', verbose_name='Deleted by',
                                    help_text='User who deleted the article')
 
@@ -226,8 +226,8 @@ class Comment(DateCreatedAndModified, DateDeleted):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comment',
                                 verbose_name='Article', help_text='The article that the comment is related to')
 
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='user_comment',
-                             verbose_name='User', help_text='User that made the comment')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,
+                             related_name='user_comment', verbose_name='User', help_text='User that made the comment')
 
     parent_comment = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True,
                                        related_name='child_comments', verbose_name='Parent comment',
@@ -235,11 +235,11 @@ class Comment(DateCreatedAndModified, DateDeleted):
 
     content = models.TextField(max_length=6000, blank=True, verbose_name='Content', help_text='Comment content')
 
-    likes = models.ManyToManyField(User, related_name='comment_likes', blank=True, verbose_name='Likes',
-                                   help_text='Users who have liked this comment')
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='comment_likes', blank=True,
+                                   verbose_name='Likes', help_text='Users who have liked this comment')
 
-    dislikes = models.ManyToManyField(User, related_name='comment_dislikes', blank=True, verbose_name='Dislikes',
-                                      help_text='Users who have disliked this comment')
+    dislikes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='comment_dislikes', blank=True,
+                                      verbose_name='Dislikes', help_text='Users who have disliked this comment')
 
     is_flagged = models.BooleanField(default=False, verbose_name='Is flagged',
                                      help_text='Has the comment been flagged as a potential problem?')

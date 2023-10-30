@@ -1,3 +1,4 @@
+{% load django_browser_reload %}
 {% load static %}
 
 <!DOCTYPE html>
@@ -63,9 +64,7 @@
     {# Header #}
     {% block header %}
         {% include 'components/header.html' %}
-        <div>{{ GOOGLE_ANALYTICS_ID }}</div>
     {% endblock header %}
-
 
     {# Page content #}
     {% block main %}

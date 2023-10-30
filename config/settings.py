@@ -34,12 +34,18 @@ DEBUG = env.bool('DEBUG', default=True)
 # SECURITY WARNING: don't run with debug turned on in production!
 ENABLE_DEBUG_TOOLBAR = env.bool('ENABLE_DEBUG_TOOLBAR', default=True)
 
+# USE IN DEVELOPMENT ONLY: Allows the browser to automatically reload when a file is changed
+ENABLE_DJANGO_BROWSER_RELOAD = env.bool('ENABLE_DJANGO_BROWSER_RELOAD', default=True)
+
 # Set this value to True to have URLs generated with https instead of http
 # SECURITY WARNING: set to True in production
 USE_HTTPS_IN_ABSOLUTE_URLS = env.bool("USE_HTTPS_IN_ABSOLUTE_URLS", default=False)
 
 # The fully qualified domain name associated with the website
 SITE_ID = 1
+
+# Site name (used in templates)
+SITE_NAME = 'Django Boilerplate'
 
 # The site domain
 SITE_DOMAIN = '127.0.0.1:8000'
@@ -98,6 +104,10 @@ if ENABLE_DEBUG_TOOLBAR:
     MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
     INTERNAL_IPS = ['127.0.0.1']
 
+if ENABLE_DJANGO_BROWSER_RELOAD:
+    INSTALLED_APPS.append('django_browser_reload')
+    MIDDLEWARE.append('django_browser_reload.middleware.BrowserReloadMiddleware')
+
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
@@ -113,7 +123,9 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 
                 # Project / app context_processors
-                'apps.core.context_processors.google_analytics_id',
+                'config.context_processors.google_analytics_id',
+                'config.context_processors.site_name',
+
             ],
         },
     },
@@ -220,7 +232,8 @@ EMAIL_ADDRESSES = {
 
 # Google analytics ID
 # https://support.google.com/analytics/answer/9304153
-GOOGLE_ANALYTICS_ID = env('GOOGLE_ANALYTICS_ID', default='')
+# The variable can be accessed in templates using {{ GOOGLE_ANALYTICS_ID }}
+GOOGLE_ANALYTICS_ID = env('GOOGLE_ANALYTICS_ID', default='MY-GOOGLE_ANALYTICS_ID')
 
 # Google reCAPTCHA secret key
 RECAPTCHA_SECRET_KEY = env('RECAPTCHA_SECRET_KEY', default='')

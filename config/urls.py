@@ -49,6 +49,10 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.ENABLE_DEBUG_TOOLBAR:
     urlpatterns.append(path('__debug__/', include('debug_toolbar.urls')))
 
+# Enable Django Browser Reload if configured
+if settings.ENABLE_DJANGO_BROWSER_RELOAD:
+    urlpatterns.append(path("__reload__/", include("django_browser_reload.urls")))
+
 # Page error handlers
 handler400 = 'apps.core.views.handle400'
 handler403 = 'apps.core.views.handle403'

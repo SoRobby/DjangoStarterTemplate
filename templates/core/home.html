@@ -59,6 +59,16 @@
                                 <li><a href="{% url 'test' %}" class="hover:text-blue-800 hover:underline">Test page</a>
                                 </li>
                             </ul>
+
+                            <div class="mt-4 text-sm font-medium text-gray-800">Template context processor data</div>
+                            <ul class="list-disc list-inside pl-2">
+                                <li class="text-gray-600 font-normal">
+                                    SITE_NAME = <code class="bg-gray-50 px-2 rounded border border-gray-200">{{ SITE_NAME }}</code>
+                                </li>
+                                <li class="text-gray-600 font-normal">
+                                    GOOGLE_ANALYTICS_ID = <code class="bg-gray-50 px-2 rounded border border-gray-200">{{ GOOGLE_ANALYTICS_ID }}</code>
+                                </li>
+                            </ul>
                         </div>
 
                         <div>
