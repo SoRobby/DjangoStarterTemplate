@@ -44,6 +44,7 @@
         {% block content %}
 
             <form action="." method="POST" enctype="multipart/form-data"
+                  id="cropper-featured-image-container"
                   x-data="{ showSidebar: true }"
                   x-init="showSidebar = (localStorage.getItem('showSidebar') !== null) ? (localStorage.getItem('showSidebar') === 'true') : true">
                 {% csrf_token %}
@@ -66,7 +67,7 @@
                             <div class="flex gap-4 items-center" x-data="{ isSaving: false, isPublishing: false }">
 
                                 {% if user.is_superuser %}
-                                    <div>
+                                    <div x-show="!isSaving && !isPublishing">
                                         <a href="{% url 'admin:blog_article_change' article.pk %}"
                                            class="text-gray-500 hover:underline hover:text-gray-800">
                                             Advanced edit
@@ -78,7 +79,7 @@
 
                                 {% if article.release_status == 'published' %}
                                     <a href="{% url 'blog:article' slug=article.slug %}"
-                                       x-show="!isSaving && !isPublishing" @click="isPublishing=true"
+                                       x-show="!isSaving && !isPublishing"
                                        class="btn-secondary-lg">
                                         View
                                     </a>
@@ -125,7 +126,6 @@
                         </div>
                     </div>
                 </div>
-
 
                 <div class="relative flex">
 
@@ -639,7 +639,7 @@
 
                         </div>
 
-                        <div class="space-y-4 pt-4 px-4 sm:px-6" id="cropper-featured-image-container">
+                        <div class="space-y-4 pt-4 px-4 sm:px-6">
                             <h3 class="text-base font-medium leading-6 text-gray-800">Featured image</h3>
 
                             <label for="featured_image"
@@ -690,10 +690,13 @@
                                 </button>
                             </label>
                             <div class="mt-1 text-xs text-red-600 font-normal cropper-error-message"></div>
-                            {% include 'components/cropperjs/crop-image-modal.html' %}
+{#                            {% include 'components/cropperjs/crop-image-modal.html' %}#}
                         </div>
                     </aside>
                 </div>
+
+                {% include 'components/cropperjs/crop-image-modal.html' %}
+
             </form>
 
         {% endblock content %}

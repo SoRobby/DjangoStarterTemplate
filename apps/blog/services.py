@@ -1,47 +1,50 @@
-import os
-
-from django.conf import settings
-
-
 class ArticleService:
     def __init__(self, article):
         self.article = article
 
 
-
-
-
-
 class CommentService:
-
     def __init__(self, comment):
         self.comment = comment
 
-    def toggle_vote(self, user, vote_type: None):
+    def like_toggle(self, user):
         """
-        Toggles user's vote on a comment.
-        :param user: The user toggling the vote.
-        :param vote_type: Should be 'upvote' or 'downvote'
-        :return: None
+        Adds a like to a comment.
         """
-        if vote_type == 'upvote':
-            if user in self.comment.downvotes.all():
-                self.comment.downvotes.remove(user)
-            self.comment.upvotes.add(user)
-        elif vote_type == 'downvote':
-            if user in self.comment.upvotes.all():
-                self.comment.upvotes.remove(user)
-            self.comment.downvotes.add(user)
-        else:
-            raise ValueError('vote_type must be either "upvote" or "downvote".')
 
-    def remove_vote(self, user):
-        """
-        Removes user's vote on a comment.
-        """
-        if user in self.comment.upvotes.all():
-            self.comment.upvotes.remove(user)
-        elif user in self.comment.downvotes.all():
-            self.comment.downvotes.remove(user)
+        # Do a check to see if the user has already disliked the comment
+        if user in self.comment.dislikes.all():
+            self.comment.dislikes.remove(user)
+
+        # Do a check to see if the user has already liked the comment
+        if user in self.comment.likes.all():
+            self.comment.likes.remove(user)
         else:
-            raise ValueError('User has not voted on this comment.')
+            self.comment.likes.add(user)
+
+        self.comment.save()
+
+    def dislike_toggle(self, user):
+        """
+        Adds a dislike to a comment.
+        """
+
+        # Do a check to see if the user has already liked the comment
+        if user in self.comment.likes.all():
+            self.comment.likes.remove(user)
+
+        # Do a check to see if the user has already disliked the comment
+        if user in self.comment.dislikes.all():
+            self.comment.dislikes.remove(user)
+        else:
+            self.comment.dislikes.add(user)
+
+        self.comment.save()
+
+    def report_comment(self):
+        """
+        Report a comment.
+        """
+        if not self.comment.is_flagged:
+            self.comment.is_flagged = True
+            self.comment.save()

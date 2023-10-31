@@ -5,19 +5,19 @@ from uuid import uuid4
 from PIL import Image
 from django.conf import settings
 from django.http import JsonResponse
-from django.shortcuts import redirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView
-from django.shortcuts import render, redirect, get_object_or_404
 
 from apps.accounts.models import Account
 from apps.analytics.views_registry import register_view
 from libs.utils.utils import process_image, send_notification, save_file_to_field
 from .forms import ArticleForm
 from .models import Article, upload_to_featured_images, Comment
+from .services import CommentService
 
 
 # Create your views here.
@@ -33,8 +33,6 @@ def article_list(request):
         content['unpublished_articles'] = unpublished_articles
 
     return render(request, 'blog/articles-list.html', content)
-
-
 
 
 def does_user_have_access(article: Article, user) -> bool:
@@ -341,7 +339,43 @@ def add_comment(request, article_uuid):
     return redirect(reverse('blog:article', kwargs={'slug': article.slug}))
 
 
-# def like_comment(request, comment_uuid):
+def toggle_comment_like(request, article_uuid, comment_uuid):
+    # Get the comment by UUID
+    comment = get_object_or_404(Comment, uuid=comment_uuid)
+
+    comment_service = CommentService(comment)
+    comment_service.like_toggle(request.user)
+
+    # Return redirect to the article
+    return redirect(reverse('blog:article', kwargs={'slug': comment.article.slug}))
+
+
+def toggle_comment_dislike(request, article_uuid, comment_uuid):
+    # Get the comment by UUID
+    comment = get_object_or_404(Comment, uuid=comment_uuid)
+
+    comment_service = CommentService(comment)
+    comment_service.dislike_toggle(request.user)
+
+    # Return redirect to the article
+    return redirect(reverse('blog:article', kwargs={'slug': comment.article.slug}))
+
+
+class ReportComment(View):
+    def post(self, request, article_uuid, comment_uuid):
+        # Get the comment by UUID
+        comment = get_object_or_404(Comment, uuid=comment_uuid)
+
+        comment_service = CommentService(comment)
+        comment_service.report_comment()
+
+        # Send notification to the user
+        send_notification(request, tag='info', title='Comment reported',
+                          message='Comment has been reported and will be reviewed by a moderator')
+
+        # Return redirect to the article
+        return redirect(reverse('blog:article', kwargs={'slug': comment.article.slug}))
+
 
 def delete_article(request, uuid):
     """

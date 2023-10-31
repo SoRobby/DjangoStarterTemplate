@@ -72,7 +72,7 @@ class ArticleAdmin(admin.ModelAdmin):
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'user', 'is_flagged', 'is_deleted', 'date_created', 'date_modified')
 
-    list_filter = ('is_deleted',)
+    list_filter = ('is_flagged', 'is_deleted')
 
     filter_horizontal = ('likes', 'dislikes')
 
