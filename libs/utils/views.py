@@ -6,7 +6,7 @@ from django.views import View
 
 class ExportToCSVView(View):
     model = None
-    filename = "export.csv"
+    filename = 'export.csv'
 
     def get_fields(self):
         # Return a list of field names (as strings) from the model

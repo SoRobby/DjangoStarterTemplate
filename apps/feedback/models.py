@@ -1,13 +1,11 @@
-from uuid import uuid4
-
 from django.conf import settings
 from django.db import models
 
-from db.abstract_models import DateCreatedAndModified
+from apps.core.models import BaseModel
 
 
 # Models
-class Feedback(DateCreatedAndModified):
+class Feedback(BaseModel):
     class CATEGORY(models.TextChoices):
         BUG = 'bug', 'Bug Report'
         FEATURE = 'feature', 'Feature Request'
@@ -33,9 +31,6 @@ class Feedback(DateCreatedAndModified):
 
     is_processed = models.BooleanField(default=False, verbose_name='Is processed',
                                        help_text='Whether the feedback has been processed or not')
-
-    uuid = models.UUIDField(default=uuid4, editable=False, unique=True, verbose_name='UUID',
-                            help_text='Unique identifier for the feedback')
 
     class Meta:
         ordering = ('-date_created',)

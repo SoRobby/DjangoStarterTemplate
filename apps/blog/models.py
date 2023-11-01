@@ -1,7 +1,6 @@
 import os
 import shutil
 from math import ceil
-from uuid import uuid4
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -12,6 +11,7 @@ from django.utils import timezone
 from django.utils.text import slugify
 from tinymce.models import HTMLField
 
+from apps.core.models import BaseModel, SoftDeletionModel
 from db.abstract_models import DateCreatedAndModified, DateDeleted
 from libs.utils.utils import generate_unique_slug
 from .managers import ArticleManager
@@ -36,7 +36,7 @@ def upload_to_featured_images(instance, filename):
 #                             help_text='Unique identifier for the category')
 
 
-class Article(DateCreatedAndModified, DateDeleted):
+class Article(BaseModel, SoftDeletionModel):
     FEATURED_IMAGE_ASPECT_RATIO = 16 / 9
     FEATURED_IMAGE_SIZE = (730, 428)
     FEATURED_IMAGE_THUMBNAIL_SIZE = (300, 300)
@@ -106,18 +106,12 @@ class Article(DateCreatedAndModified, DateDeleted):
     allow_sharing = models.BooleanField(default=True, verbose_name='Allow social media sharing',
                                         help_text='If checked, social media sharing is allowed for this article')
 
-    uuid = models.UUIDField(default=uuid4, editable=False, unique=True, verbose_name='UUID',
-                            help_text='Unique identifier for the article')
-
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created_articles',
                                    verbose_name='Created by', help_text='User who created the article')
 
     modified_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                     related_name='modified_articles',
                                     verbose_name='Modified by', help_text='User who last modified the article')
-
-    is_deleted = models.BooleanField(default=False, verbose_name='Is deleted',
-                                     help_text='If checked, the article is deleted')
 
     deleted_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE,
                                    related_name='deleted_articles', verbose_name='Deleted by',
@@ -219,7 +213,7 @@ class Article(DateCreatedAndModified, DateDeleted):
         return [{'key': key, 'name': name} for key, name in Article.Visibility.choices]
 
 
-class Comment(DateCreatedAndModified, DateDeleted):
+class Comment(BaseModel, DateDeleted):
     # TODO - might want to rename this to ArticleComment to add clarity in the event other apps will also include
     # a model called Comment.
 
@@ -249,9 +243,6 @@ class Comment(DateCreatedAndModified, DateDeleted):
 
     is_deleted = models.BooleanField(default=False, verbose_name='Is deleted',
                                      help_text='Has the comment been deleted by the user?')
-
-    uuid = models.UUIDField(default=uuid4, editable=False, unique=True, verbose_name='UUID',
-                            help_text='Unique identifier for the item')
 
     class Meta:
         ordering = ['-date_created']
