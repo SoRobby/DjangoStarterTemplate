@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 
 from apps.core.models import BaseModel
+from .managers import FeatureManager
 
 
 # Models
@@ -42,7 +43,8 @@ class Feature(BaseModel):
     release_status = models.CharField(max_length=255, choices=ReleaseStatus.choices, default=ReleaseStatus.PLANNED,
                                       verbose_name='Release status', help_text='Release status of the feature')
 
-    up_votes = models.IntegerField(default=0, verbose_name='Up votes', help_text='Number of up votes for the feature')
+    up_votes = models.PositiveIntegerField(default=0, verbose_name='Up votes',
+                                           help_text='Number of up votes for the feature')
 
     date_released = models.DateTimeField(auto_now_add=False, auto_now=False, blank=True, null=True,
                                          verbose_name='Date released',
@@ -51,6 +53,8 @@ class Feature(BaseModel):
     date_archived = models.DateTimeField(auto_now_add=False, auto_now=False, blank=True, null=True,
                                          verbose_name='Date archived',
                                          help_text='Server date and time when the feature was archived')
+
+    objects = FeatureManager()
 
     class Meta:
         ordering = ['-name', '-date_created']

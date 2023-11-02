@@ -6,5 +6,5 @@ app_name = 'roadmap'
 
 # Root url of "roadmap" is 'roadmap/', defined in config.urls.py
 urlpatterns = [
-    path('', views.roadmap, name='roadmap')
+    path('', views.RoadmapView.as_view(), name='roadmap')
 ]

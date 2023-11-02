@@ -1,39 +1,29 @@
 from collections import OrderedDict
 
-from django.db.models import Count
-from django.db.models.functions import TruncMonth
-from django.shortcuts import render
+from django.views.generic import ListView
 
 from .models import Feature
 
 
-# Create your views here.
-def roadmap(request):
-    context = {}
+# Views
+class RoadmapView(ListView):
+    model = Feature
+    template_name = 'roadmap/roadmap.html'
 
-    context['active_features'] = Feature.objects.filter(release_status='in_progress')
-    context['planned_features'] = Feature.objects.filter(release_status='planned')
-    context['archived_features'] = Feature.objects.filter(release_status='archived')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-    # Query for released features grouped by month
-    released_features_by_month = (
-        Feature.objects
-        .filter(release_status=Feature.ReleaseStatus.RELEASED)
-        .annotate(month=TruncMonth('date_released'))
-        .values('month')
-        .annotate(feature_count=Count('id'))
-        .filter(feature_count__gt=0)
-        .order_by('-month')
-    )
+        released_features_by_month = self.object_list.released_by_month()
+        released_grouped_features = OrderedDict()
 
-    # Convert to dictionary with month as key and list of features as value
+        for item in released_features_by_month:
+            month = item['month']
+            features = Feature.objects.filter(date_released__month=month.month, date_released__year=month.year)
+            released_grouped_features[month.strftime('%B %Y')] = features
 
-    released_grouped_features = OrderedDict()
-    for item in released_features_by_month:
-        month = item['month']
-        features = Feature.objects.filter(date_released__month=month.month, date_released__year=month.year)
-        released_grouped_features[month.strftime('%B %Y')] = features
+        context['active_features'] = Feature.objects.in_progress()
+        context['planned_features'] = Feature.objects.planned()
+        context['archived_features'] = Feature.objects.archived()
+        context['released_grouped_features'] = released_grouped_features
 
-    context['released_grouped_features'] = released_grouped_features
-
-    return render(request, 'roadmap/roadmap.html', context)
+        return context
