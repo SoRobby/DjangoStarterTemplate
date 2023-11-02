@@ -1,18 +1,15 @@
-import logging
-
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.views.generic import TemplateView, DetailView
-from django.utils import timezone, dateformat
-
-from apps.blog.models import Article
-from .base_views import BaseAdminPanelTemplateView, BaseAdminPanelListView, BaseAdminPanelSearchListView
-from apps.analytics.models import ObjectViewed
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count
 from django.db.models.functions import TruncDay, TruncWeek, TruncMonth, TruncQuarter, TruncYear
+from django.utils import timezone
+from django.views.generic import TemplateView, DetailView
 
+from apps.analytics.models import ObjectViewed
+from apps.blog.models import Article
 from apps.core.utils import ExportToCSVView, ExportToTextView, ExportToJSONView
+from .base_views import BaseAdminPanelListView
 
 User = get_user_model()
 
@@ -91,6 +88,11 @@ class BlogArticleDetailView(UserPassesTestMixin, DetailView):
 class BlogArticleExportToCSV(ExportToCSVView):
     model = Article
     filename = f'article {timezone.now().strftime("(%Y-%m-%d %H-%M-%S)")}.csv'
+
+
+class BlogArticleExportToJSON(ExportToJSONView):
+    model = Article
+    filename = f'article {timezone.now().strftime("(%Y-%m-%d %H-%M-%S)")}.json'
 
 
 # Component views

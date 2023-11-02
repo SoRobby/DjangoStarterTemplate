@@ -12,7 +12,7 @@ from django.utils.text import slugify
 from tinymce.models import HTMLField
 
 from apps.core.models import BaseModel, SoftDeletionModel
-from libs.utils.utils import generate_unique_slug
+from apps.core.utils import generate_unique_slug
 from .managers import ArticleManager
 
 

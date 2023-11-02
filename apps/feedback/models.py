@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 
 from apps.core.models import BaseModel
+from .managers import FeedbackManager
 
 
 # Models
@@ -31,6 +32,8 @@ class Feedback(BaseModel):
 
     is_processed = models.BooleanField(default=False, verbose_name='Is processed',
                                        help_text='Whether the feedback has been processed or not')
+
+    objects = FeedbackManager()
 
     class Meta:
         ordering = ('-date_created',)

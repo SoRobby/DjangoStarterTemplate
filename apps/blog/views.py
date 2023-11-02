@@ -14,14 +14,11 @@ from django.views.generic import DetailView
 
 from apps.accounts.models import Account
 from apps.analytics.views_registry import register_view
-from libs.utils.utils import save_file_to_field
+from apps.core.utils import send_info_notification, send_success_notification, send_error_notification, process_image, \
+    save_file_to_field
 from .forms import ArticleForm
 from .models import Article, upload_to_featured_images, Comment
 from .services import CommentService
-
-from apps.core.utils import send_info_notification, send_success_notification, send_warning_notification, \
-    send_error_notification, process_image
-
 
 
 # Create your views here.
