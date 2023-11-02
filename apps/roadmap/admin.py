@@ -2,8 +2,8 @@ from django.contrib import admin
 
 from .models import Category, Feature
 
-# Register your models here.
 
+# Registered models
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'name')
@@ -38,7 +38,6 @@ class CategoryAdmin(admin.ModelAdmin):
                           f'Field name = "<code><small>{db_field.name}</small></code>"<br>' \
                           f'Field type = "<code><small>{field_type}</small></code>"'
         return field
-
 
 
 @admin.register(Feature)
@@ -80,7 +79,7 @@ class FeatureAdmin(admin.ModelAdmin):
                     - not_published: Returns all article's that have not been published<br>
                     <b>Deleting logic:</b><br>
                     - On deletion: When an instance is deleted, all of the instance data (featured images and images in the rich text editor will be deleted)<br>
-                ''',}
+                ''', }
          ),
     )
 
