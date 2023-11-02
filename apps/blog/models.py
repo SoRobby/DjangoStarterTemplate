@@ -12,7 +12,6 @@ from django.utils.text import slugify
 from tinymce.models import HTMLField
 
 from apps.core.models import BaseModel, SoftDeletionModel
-from db.abstract_models import DateCreatedAndModified, DateDeleted
 from libs.utils.utils import generate_unique_slug
 from .managers import ArticleManager
 
@@ -213,7 +212,7 @@ class Article(BaseModel, SoftDeletionModel):
         return [{'key': key, 'name': name} for key, name in Article.Visibility.choices]
 
 
-class Comment(BaseModel, DateDeleted):
+class Comment(BaseModel, SoftDeletionModel):
     # TODO - might want to rename this to ArticleComment to add clarity in the event other apps will also include
     # a model called Comment.
 
@@ -240,9 +239,6 @@ class Comment(BaseModel, DateDeleted):
 
     is_edited = models.BooleanField(default=False, verbose_name='Is edited',
                                     help_text='Has the comment been edited by the user?')
-
-    is_deleted = models.BooleanField(default=False, verbose_name='Is deleted',
-                                     help_text='Has the comment been deleted by the user?')
 
     class Meta:
         ordering = ['-date_created']

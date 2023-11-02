@@ -14,10 +14,14 @@ from django.views.generic import DetailView
 
 from apps.accounts.models import Account
 from apps.analytics.views_registry import register_view
-from libs.utils.utils import process_image, send_notification, save_file_to_field
+from libs.utils.utils import save_file_to_field
 from .forms import ArticleForm
 from .models import Article, upload_to_featured_images, Comment
 from .services import CommentService
+
+from apps.core.utils import send_info_notification, send_success_notification, send_warning_notification, \
+    send_error_notification, process_image
+
 
 
 # Create your views here.
@@ -107,25 +111,25 @@ def create_article(request):
             print(request.POST)
 
             # Create blog post
-            mew_post = Article.objects.create(title=title,
-                                              content=content,
-                                              release_status=release_status,
-                                              created_by=request.user,
-                                              modified_by=request.user,
-                                              lead_author=lead_author,
-                                              meta_title=meta_title,
-                                              meta_description=meta_description,
-                                              meta_keywords=meta_keywords,
-                                              allow_comments=allow_comments,
-                                              allow_sharing=allow_sharing)
+            new_article = Article.objects.create(title=title,
+                                                 content=content,
+                                                 release_status=release_status,
+                                                 created_by=request.user,
+                                                 modified_by=request.user,
+                                                 lead_author=lead_author,
+                                                 meta_title=meta_title,
+                                                 meta_description=meta_description,
+                                                 meta_keywords=meta_keywords,
+                                                 allow_comments=allow_comments,
+                                                 allow_sharing=allow_sharing)
 
-            mew_post.authors.add(request.user)
+            new_article.authors.add(request.user)
 
             # Redirect user to edit_post
-            send_notification(request, tag='success', title='Blog post created',
-                              message='Your post has been successfully created')
+            send_success_notification(request, title='Blog article created',
+                                      message='Your article has been successfully created')
 
-            return redirect('blog:edit-article', uuid=mew_post.uuid)
+            return redirect('blog:edit-article', uuid=new_article.uuid)
 
         form = ArticleForm()
         context['form'] = form
@@ -243,8 +247,9 @@ def edit_article(request, uuid):
                 logging.debug('[EDIT_POST] Form is valid')
                 form.save()
 
-                send_notification(request, tag='success', title='Blog post saved',
-                                  message='Your article has been successfully saved')
+                send_success_notification(request, title='Blog article saved',
+                                          message='Your article has been successfully saved')
+
             else:
                 logging.debug('[EDIT_POST] Form is not valid')
 
@@ -255,8 +260,7 @@ def edit_article(request, uuid):
                 if form_errors:
                     error_message += f" Errors: {form_errors}"
 
-                send_notification(request, tag='error', title='Unable to save post',
-                                  message=error_message)
+                send_error_notification(request, title='Unable to save blog article', message=error_message)
 
         context['form'] = ArticleForm(instance=article)
         context['article'] = article
@@ -370,8 +374,8 @@ class ReportComment(View):
         comment_service.report_comment()
 
         # Send notification to the user
-        send_notification(request, tag='info', title='Comment reported',
-                          message='Comment has been reported and will be reviewed by a moderator')
+        send_info_notification(request, title='Comment reported',
+                               message='Comment has been reported and will be reviewed by a moderator')
 
         # Return redirect to the article
         return redirect(reverse('blog:article', kwargs={'slug': comment.article.slug}))
@@ -397,7 +401,7 @@ def delete_article(request, uuid):
         post_to_delete.is_deleted = True
         post_to_delete.save()
 
-    send_notification(request, tag='success', title='Blog post deleted',
-                      message='Your post has been successfully deleted')
+    send_success_notification(request, title='Blog article deleted',
+                              message='Your blog article has been successfully deleted')
 
     return redirect('blog:article-list')

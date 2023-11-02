@@ -66,6 +66,18 @@ class SoftDeletionWithUserModel(SoftDeletionModel):
         abstract = True
 
 
+
+
+
+'''
+import logging
+from datetime import timedelta
+
+from django.db import models
+from django.utils import timezone
+from django.utils.timezone import is_aware, make_naive, utc
+
+
 class DateCreatedAndModified(models.Model):
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='Date created',
                                         help_text='Server date and time when the item was created modified')
@@ -153,3 +165,4 @@ class DateCreatedAndModified(models.Model):
     def percent_change_last_year(cls):
         # Get the percent change for the last year
         return cls.percent_change(delta_days=365)
+'''

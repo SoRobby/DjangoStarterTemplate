@@ -1,118 +1,14 @@
 import inspect
 import logging
-from io import BytesIO
 from uuid import uuid4
 
-from PIL import Image
-from django.contrib import messages
-from django.core.files import File
 from django.core.files.storage import default_storage
 from django.db.models import Model
 from django.utils.encoding import force_str
 from django.utils.text import slugify
 
 
-def send_notification(request, tag: str, title: str = '', message: str = '') -> None:
-    """
-    Adds a formatted message to the Django messages framework based on the provided tag.
 
-    Args:
-        request (HttpRequest): The HTTP request object to which the message will be added.
-        tag (str): The tag that determines the message level. Valid options are 'info', 'success', 'warning', 'error'.
-        title (str, optional): The title of the message. Defaults to an empty string.
-        message (str, optional): The content of the message. Defaults to an empty string.
-
-    Returns:
-        None
-
-    Raises:
-        None
-    """
-
-    message_levels = {
-        'info': messages.INFO,
-        'success': messages.SUCCESS,
-        'warning': messages.WARNING,
-        'error': messages.ERROR,
-    }
-    level = message_levels.get(tag, None)
-    messages.add_message(request, level=level, message=message, extra_tags=title)
-
-
-def send_info_notification(request, title: str = '', message: str = '') -> None:
-    """
-    Adds an info message to the Django messages framework.
-
-    Args:
-        request (HttpRequest): The HTTP request object to which the message will be added.
-        title (str, optional): The title of the message. Defaults to an empty string.
-        message (str, optional): The content of the message. Defaults to an empty string.
-
-    Returns:
-        None
-
-    Raises:
-        None
-    """
-
-    send_notification(request, tag='info', title=title, message=message)
-
-
-def send_success_notification(request, title: str = '', message: str = '') -> None:
-    """
-    Adds a success message to the Django messages framework.
-
-    Args:
-        request (HttpRequest): The HTTP request object to which the message will be added.
-        title (str, optional): The title of the message. Defaults to an empty string.
-        message (str, optional): The content of the message. Defaults to an empty string.
-
-    Returns:
-        None
-
-    Raises:
-        None
-    """
-
-    send_notification(request, tag='success', title=title, message=message)
-
-
-def send_warning_notification(request, title: str = '', message: str = '') -> None:
-    """
-    Adds a warning message to the Django messages framework.
-
-    Args:
-        request (HttpRequest): The HTTP request object to which the message will be added.
-        title (str, optional): The title of the message. Defaults to an empty string.
-        message (str, optional): The content of the message. Defaults to an empty string.
-
-    Returns:
-        None
-
-    Raises:
-        None
-    """
-
-    send_notification(request, tag='warning', title=title, message=message)
-
-
-def send_error_notification(request, title: str = '', message: str = '') -> None:
-    """
-    Adds an error message to the Django messages framework.
-
-    Args:
-        request (HttpRequest): The HTTP request object to which the message will be added.
-        title (str, optional): The title of the message. Defaults to an empty string.
-        message (str, optional): The content of the message. Defaults to an empty string.
-
-    Returns:
-        None
-
-    Raises:
-        None
-    """
-
-    send_notification(request, tag='error', title=title, message=message)
 
 
 def generate_unique_slug(instance: Model, slug_target_field: str, slug_source_field: str,
@@ -170,43 +66,6 @@ def get_model_lengths(model_class):
     return field_lengths
 
 
-def process_image(image, crop_dimensions=None, resize_dimensions=None, file_format=None):
-    """
-    Process an image by cropping and resizing it. Optionally set the file format.
-
-    Parameters:
-    - image (PIL.Image): The original image.
-    - crop_dimensions (tuple, optional): The x, y, width, and height to crop the image. Default is None.
-    - resize_dimensions (tuple, optional): The new width and height to resize the image. Default is None.
-    - file_format (str, optional): The desired file format ('png', 'jpeg', etc.). Default is None.
-
-    Returns:
-    - django.core.files.File: Processed image file.
-    """
-
-    # If resize_dimensions is provided, perform cropping and resizing
-    if resize_dimensions:
-        # Extract x, y, width, and height from crop_dimensions
-        x, y, width, height = crop_dimensions
-
-        # Crop the image based on provided dimensions
-        image = image.crop((x, y, x + width, y + height))
-
-        # Resize the image based on provided dimensions
-        image = image.resize(resize_dimensions, Image.LANCZOS)
-
-    # If no file_format is provided, use the format of the original image
-    if file_format is None:
-        file_format = image.format
-
-    # Convert PIL image to BytesIO
-    image_io = BytesIO()
-
-    # Save the PIL image in BytesIO object, using the provided or original format
-    image.save(image_io, format=file_format)
-
-    # Return the BytesIO object as a Django File object
-    return File(image_io)
 
 
 def save_file_to_field(model_instance, field_name, file, directory_path, file_name=None):

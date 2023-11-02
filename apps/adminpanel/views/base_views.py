@@ -128,3 +128,6 @@ class BaseAdminPanelSearchListView(UserPassesTestMixin, ListView):
 
     def test_func(self):
         return self.request.user.is_staff
+
+
+

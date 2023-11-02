@@ -10,6 +10,8 @@ from config import settings
 from .signals import object_viewed_signal
 from .utils import get_client_ip_address
 
+from apps.core.models import BaseModel
+
 
 # Models
 

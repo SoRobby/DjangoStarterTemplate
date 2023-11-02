@@ -1,7 +1,9 @@
 from django.urls import path
 
 # from . import views
-from .views import views
+from . import views
+# from .views import views
+# from .views import *
 
 app_name = 'adminpanel'
 
@@ -16,10 +18,10 @@ urlpatterns = [
     path('feedback/search/', views.FeedbackSearchView.as_view(), name='feedback-search'),
 
     # Blog
-    path('blog/', views.BlogArticleListView.as_view(), name='blog-article-list'),
-    path('blog/<uuid:uuid>/', views.BlogArticleDetailView.as_view(), name='blog-article-detail'),
-    path('blog/export/csv/', views.BlogArticleExportToCSV.as_view(), name='blog-article-export-to-csv'),
+    # path('blog/', views.BlogArticleListView.as_view(), name='blog-article-list'),
+    # path('blog/<uuid:uuid>/', views.BlogArticleDetailView.as_view(), name='blog-article-detail'),
+    # path('blog/export/csv/', views.BlogArticleExportToCSV.as_view(), name='blog-article-export-to-csv'),
 
     # Component URLs
-    path('components/', views.AdminPanelComponentsView.as_view(), name='components'),
+    # path('components/', views.AdminPanelComponentsView.as_view(), name='components'),
 ]

@@ -12,11 +12,11 @@ from django.utils.safestring import mark_safe
 from apps.accounts.forms import AccountAuthenticationForm, RegistrationForm
 from apps.accounts.services import send_verification_email
 from apps.accounts.utils import get_redirect_if_exists
-from libs.utils.utils import send_notification
-
+from apps.core.utils import send_error_notification, send_success_notification
 
 # Set the user model
 User = get_user_model()
+
 
 # Function based views:
 def login_view(request, *args, **kwargs):
@@ -141,17 +141,20 @@ def send_verification_email_view(request, username: str):
             send_verification_email(user, domain)
 
             # Send notification to user
-            send_notification(request, tag='success', title='Verification email sent',
-                              message=f'Verification email has been sent to "{user.email}"')
+            send_success_notification(request, title='Verification email sent',
+                                      message=f'Verification email has been sent to "{user.email}"')
+
         except Exception as e:
             # Send error notification to user. If user is staff, show error message in notification
             if request.user.is_staff:
-                send_notification(request, tag='error', title='Unable to send verification email',
-                                  message=f'We were unable to send the verification email due to an unexpected\
-                                  error\nError: {e}')
+                send_error_notification(request, title='Unable to send verification email',
+                                        message=f'We were unable to send the verification email due to an unexpected\
+                                        error\nError: {e}')
+
             else:
-                send_notification(request, tag='error', title='Unable to send verification email',
-                                  message='We were unable to send the verification email due to an unexpected error')
+                send_error_notification(request, title='Unable to send verification email',
+                                        message='We were unable to send the verification email due to an unexpected\
+                                        error')
 
         # Redirect to the same page
         return redirect(request.META.get('HTTP_REFERER', 'default-page-if-no-referer'))
