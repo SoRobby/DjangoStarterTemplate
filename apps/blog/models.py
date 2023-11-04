@@ -259,13 +259,14 @@ class Comment(BaseModel, SoftDeletionModel):
         # Call the original save method of models.model
         super().save(*args, **kwargs)
 
-    @property
-    def number_of_likes(self):
-        return self.likes.count()
+    # Removed and moved to be annotations in the queryset
+    # @property
+    # def number_of_likes(self):
+    #     return self.likes.count()
 
-    @property
-    def number_of_dislikes(self):
-        return self.dislikes.count()
+    # @property
+    # def number_of_dislikes(self):
+    #     return self.dislikes.count()
 
 
 @receiver(pre_save, sender=Article)

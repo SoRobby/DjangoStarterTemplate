@@ -84,6 +84,8 @@ class AccountSettingsAdmin(admin.ModelAdmin):
 
     search_fields = ()
 
+    autocomplete_fields = ('account',)
+
     readonly_fields = ('id', 'uuid', 'date_created', 'date_modified')
 
     fieldsets = (

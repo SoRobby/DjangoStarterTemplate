@@ -4,6 +4,8 @@ from uuid import uuid4
 
 from PIL import Image
 from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.db.models import Prefetch, Count
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
@@ -19,6 +21,8 @@ from apps.core.utils import send_info_notification, send_success_notification, s
 from .forms import ArticleForm
 from .models import Article, upload_to_featured_images, Comment
 from .services import CommentService
+
+User = get_user_model()
 
 
 # Create your views here.
@@ -57,14 +61,58 @@ def does_user_have_access(article: Article, user) -> bool:
 @register_view(namespace="blog", url_name="post", app_name="blog", model=Article)
 class ArticleDetailView(DetailView):
     model = Article
-    template_name = 'blog/article.html'
+    template_name = 'blog/article-detail.html'
     context_object_name = 'article'
     slug_url_kwarg = 'slug'
 
-    # if you need to perform additional operations, you can override the get_context_data method
+    def get_queryset(self):
+        # Prefetch comments and use annotations to count likes and dislikes
+
+        # super().get_queryset(): This calls the get_queryset method of the parent class (DetailView). This is the
+        # default queryset which would normally retrieve all Article objects from the database. If there are any
+        # default filters or ordering applied in the base DetailView, they will be included.
+        queryset = super().get_queryset().prefetch_related(
+            Prefetch(
+                'comment',
+                queryset=Comment.objects.select_related('user')
+                .annotate(
+                    number_of_likes=Count('likes', distinct=True),
+                    number_of_dislikes=Count('dislikes', distinct=True)
+                )
+            )
+        ).annotate(comment_count=Count('comment'))
+        return queryset
+
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
-    #     # add any additional context if needed
+    #
+    #     # Define Prefetch objects for likes and dislikes to optimize retrieval
+    #     likes_prefetch = Prefetch('likes', queryset=User.objects.all())
+    #     dislikes_prefetch = Prefetch('dislikes', queryset=User.objects.all())
+    #
+    #     # Fetch comments with related user data and prefetch likes and dislikes
+    #     # Annotations are added for likes and dislikes count
+    #     blog_comments = Comment.objects.filter(article=self.object).select_related('user').prefetch_related(
+    #         likes_prefetch,
+    #         dislikes_prefetch
+    #     ).annotate(
+    #         likes_count=Count('likes'),
+    #         dislikes_count=Count('dislikes')
+    #     )
+    #
+    #     print(blog_comments)
+    #     context['blog_comments'] = blog_comments
+    #     return context
+
+    # if you need to perform additional operations, you can override the get_context_data method
+    # def get_context_data(self, **kwargs):
+    #     from django.core.serializers import serialize
+    #     # prefetch_related
+    #
+    #     context = super().get_context_data(**kwargs)
+    #     blog_comments = Comment.objects.filter(article=self.object)
+    #     context['blog_comments'] = list(blog_comments)
+    #
     #     return context
 
 
@@ -326,9 +374,7 @@ def add_comment(request, article_uuid):
         # Get the comment content
         if request.user.is_authenticated:
             comment_content = request.POST.get('comment')
-            print(comment_content)
-
-            comment = Comment.objects.create(
+            Comment.objects.create(
                 article=article,
                 user=request.user,
                 content=comment_content

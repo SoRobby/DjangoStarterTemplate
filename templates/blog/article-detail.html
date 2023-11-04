@@ -206,10 +206,10 @@
                                 </div>
                                 {% if article.comment.all %}
                                     <div class="text-gray-500 text-sm">
-                                        {% if article.comment.all.count == 1 %}
+                                        {% if article.comment.count == 1 %}
                                             1 comment
                                         {% else %}
-                                            {{ article.comment.all.count }} comments
+                                            {{ article.comment.count }} comments
                                         {% endif %}
                                     </div>
                                 {% endif %}
@@ -251,7 +251,6 @@
                                 Latest news
                             </h4>
                         </div>
-
                     </div>
                 </aside>
 

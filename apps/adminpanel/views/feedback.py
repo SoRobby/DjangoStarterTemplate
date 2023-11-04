@@ -35,7 +35,7 @@ class FeedbacksExportToCSV(ExportToCSVView):
 
 class FeedbackDetailView(UserPassesTestMixin, DetailView):
     model = Feedback
-    template_name = 'adminpanel/feedback/view.html'
+    template_name = 'adminpanel/feedback/detail.html'
     context_object_name = 'feedback'
     slug_field = 'uuid'
     slug_url_kwarg = 'uuid'

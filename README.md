@@ -21,3 +21,21 @@ A Django starter template for projects. **Note: This is a work in progress**.
 5. Run `python manage.py runserver` to start the django server.
 6. In a separate terminal, navigate to \libs\npm\ run `npm run build-watch` to start the webpack server that will
    compile Tailwind CSS in realtime.
+
+
+
+## Utility Hooks
+
+### Process form
+1. Add the x-data of `x-data={ isProcessing: false }` to the form element.
+2. Also on the form, @submit="isProcessing = validateForm('supportForm')"
+
+```html
+<form id="myForm" 
+      action="#"
+      method="POST"
+      x-data="{ isProcessing: false}"
+      @submit="isProcessing = validateForm('supportForm')">
+   ...   
+</form>
+```

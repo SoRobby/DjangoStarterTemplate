@@ -78,6 +78,8 @@ class CommentAdmin(admin.ModelAdmin):
 
     search_fields = ('content',)
 
+    autocomplete_fields = ('article', 'user')
+
     readonly_fields = ('id', 'uuid', 'date_created', 'date_modified', 'date_deleted')
 
     fieldsets = (
