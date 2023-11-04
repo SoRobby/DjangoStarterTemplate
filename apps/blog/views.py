@@ -5,7 +5,7 @@ from uuid import uuid4
 from PIL import Image
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.db.models import Prefetch, Count
+from django.db.models import Prefetch
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
@@ -66,54 +66,29 @@ class ArticleDetailView(DetailView):
     slug_url_kwarg = 'slug'
 
     def get_queryset(self):
-        # Prefetch comments and use annotations to count likes and dislikes
-
-        # super().get_queryset(): This calls the get_queryset method of the parent class (DetailView). This is the
-        # default queryset which would normally retrieve all Article objects from the database. If there are any
-        # default filters or ordering applied in the base DetailView, they will be included.
-        queryset = super().get_queryset().prefetch_related(
+        queryset = Article.objects.with_comments_count().prefetch_related(
             Prefetch(
                 'comment',
-                queryset=Comment.objects.select_related('user')
-                .annotate(
-                    number_of_likes=Count('likes', distinct=True),
-                    number_of_dislikes=Count('dislikes', distinct=True)
-                )
+                queryset=Comment.objects.with_likes_and_dislikes()
             )
-        ).annotate(comment_count=Count('comment'))
+        )
+
+        # comments = Comment.objects.soft_deleted_comments()
+        # print(f'comments = {comments}')
+
         return queryset
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #
-    #     # Define Prefetch objects for likes and dislikes to optimize retrieval
-    #     likes_prefetch = Prefetch('likes', queryset=User.objects.all())
-    #     dislikes_prefetch = Prefetch('dislikes', queryset=User.objects.all())
-    #
-    #     # Fetch comments with related user data and prefetch likes and dislikes
-    #     # Annotations are added for likes and dislikes count
-    #     blog_comments = Comment.objects.filter(article=self.object).select_related('user').prefetch_related(
-    #         likes_prefetch,
-    #         dislikes_prefetch
-    #     ).annotate(
-    #         likes_count=Count('likes'),
-    #         dislikes_count=Count('dislikes')
-    #     )
-    #
-    #     print(blog_comments)
-    #     context['blog_comments'] = blog_comments
-    #     return context
-
-    # if you need to perform additional operations, you can override the get_context_data method
-    # def get_context_data(self, **kwargs):
-    #     from django.core.serializers import serialize
-    #     # prefetch_related
-    #
-    #     context = super().get_context_data(**kwargs)
-    #     blog_comments = Comment.objects.filter(article=self.object)
-    #     context['blog_comments'] = list(blog_comments)
-    #
-    #     return context
+        # Prefetch comments and use annotations to count likes and dislikes
+        # queryset = super().get_queryset().prefetch_related(
+        #     Prefetch(
+        #         'comment',
+        #         queryset=Comment.objects.select_related('user')
+        #         .annotate(
+        #             number_of_likes=Count('likes', distinct=True),
+        #             number_of_dislikes=Count('dislikes', distinct=True)
+        #         )
+        #     )
+        # ).annotate(comment_count=Count('comment'))
+        # return queryset
 
 
 def create_article(request):
@@ -419,6 +394,19 @@ class ReportComment(View):
         # Send notification to the user
         send_info_notification(request, title='Comment reported',
                                message='Comment has been reported and will be reviewed by a moderator')
+
+        # Return redirect to the article
+        return redirect(reverse('blog:article', kwargs={'slug': comment.article.slug}))
+
+
+class DeleteComment(View):
+    def post(self, request, comment_uuid):
+        # Get the comment by UUID
+        comment = get_object_or_404(Comment, uuid=comment_uuid)
+        comment.soft_delete()
+
+        # Send notification to the user
+        send_success_notification(request, title='Comment deleted', message='Comment has been successfully deleted')
 
         # Return redirect to the article
         return redirect(reverse('blog:article', kwargs={'slug': comment.article.slug}))

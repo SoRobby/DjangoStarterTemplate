@@ -55,6 +55,11 @@ class SoftDeletionModel(models.Model):
     class Meta:
         abstract = True
 
+    def soft_delete(self):
+        self.is_deleted = True
+        self.date_deleted = timezone.now()
+        self.save()
+
 
 class SoftDeletionWithUserModel(SoftDeletionModel):
     deleted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True,

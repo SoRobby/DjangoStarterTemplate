@@ -115,6 +115,16 @@ class CommentAdmin(admin.ModelAdmin):
          ),
     )
 
+    def get_queryset(self, request):
+        # Use the 'admin_objects' manager to get the queryset for the admin view
+        qs = self.model.admin_objects.get_queryset()
+
+        # If you need to apply any admin-specific filtering or ordering, you can do so here
+        # For example, if you want to order by 'date_created' you can do:
+        # qs = qs.order_by('-date_created')
+
+        return qs
+
     def formfield_for_dbfield(self, db_field, **kwargs):
         field = super().formfield_for_dbfield(db_field, **kwargs)
         field_type = db_field.get_internal_type()

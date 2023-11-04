@@ -13,7 +13,7 @@ from tinymce.models import HTMLField
 
 from apps.core.models import BaseModel, SoftDeletionModel
 from apps.core.utils import generate_unique_slug
-from .managers import ArticleManager
+from .managers import ArticleManager, CommentManager, CommentAdminManager
 
 
 def upload_to_featured_images(instance, filename):
@@ -240,6 +240,9 @@ class Comment(BaseModel, SoftDeletionModel):
     is_edited = models.BooleanField(default=False, verbose_name='Is edited',
                                     help_text='Has the comment been edited by the user?')
 
+    objects = CommentManager()
+    admin_objects = CommentAdminManager()
+
     class Meta:
         ordering = ['-date_created']
         verbose_name = 'Comment'
@@ -258,6 +261,7 @@ class Comment(BaseModel, SoftDeletionModel):
 
         # Call the original save method of models.model
         super().save(*args, **kwargs)
+
 
     # Removed and moved to be annotations in the queryset
     # @property
