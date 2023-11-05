@@ -79,6 +79,7 @@ PROJECT_APPS = [
     'apps.feedback',
     'apps.profiles',
     'apps.roadmap',
+    'apps.subscriptions',
 ]
 
 # Installed apps
@@ -312,3 +313,9 @@ TINYMCE_BLOG_ARTICLE_CONFIG = {
                "alignright alignjustify | bullist numlist outdent indent | table image code | removeformat ",
     "images_upload_url": "upload-article-image",
 }
+
+
+# Stripe settings
+# https://stripe.com/docs/api
+STRIPE_PUBLISHABLE_KEY = '<enter your stripe publishable key>'
+STRIPE_SECRET_KEY = '<enter your stripe secret key>'

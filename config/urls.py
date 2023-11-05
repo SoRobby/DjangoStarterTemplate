@@ -29,6 +29,7 @@ urlpatterns = [
     path('feedback/', include('apps.feedback.urls', namespace='feedback')),
     path('', include('apps.profiles.urls', namespace='profiles')),
     path('roadmap/', include('apps.roadmap.urls', namespace='roadmap')),
+    path('subscriptions/', include('apps.subscriptions.urls', namespace='subscriptions')),
 ]
 
 # Third party app urls
