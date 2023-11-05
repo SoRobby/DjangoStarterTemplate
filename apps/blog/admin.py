@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from apps.blog.models import Article, Comment
+from apps.core.utils import AdminExportMixin
 
 
 # Blog objects
@@ -69,7 +70,7 @@ class ArticleAdmin(admin.ModelAdmin):
 
 
 @admin.register(Comment)
-class CommentAdmin(admin.ModelAdmin):
+class CommentAdmin(admin.ModelAdmin, AdminExportMixin):
     list_display = ('__str__', 'user', 'is_flagged', 'is_deleted', 'date_created', 'date_modified')
 
     list_filter = ('is_flagged', 'is_deleted')
@@ -79,6 +80,8 @@ class CommentAdmin(admin.ModelAdmin):
     search_fields = ('content',)
 
     autocomplete_fields = ('article', 'user')
+
+    actions = ('uncheck_is_flagged', 'export_as_csv', 'export_as_json', 'export_as_text')
 
     readonly_fields = ('id', 'uuid', 'date_created', 'date_modified', 'date_deleted')
 
@@ -124,6 +127,9 @@ class CommentAdmin(admin.ModelAdmin):
         # qs = qs.order_by('-date_created')
 
         return qs
+
+    def uncheck_is_flagged(self, request, queryset):
+        queryset.update(is_flagged=False)
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         field = super().formfield_for_dbfield(db_field, **kwargs)

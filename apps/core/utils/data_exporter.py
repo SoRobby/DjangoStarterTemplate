@@ -1,10 +1,10 @@
 import csv
 
+from django.core.exceptions import ImproperlyConfigured
+from django.core.serializers import serialize
 from django.http import HttpResponse
 from django.views import View
-import json
-from django.core.serializers import serialize
-from django.core.exceptions import ImproperlyConfigured
+
 
 class BaseDataExporterView(View):
     """
@@ -90,3 +90,52 @@ class ExportToTextView(BaseDataExporterView):
         response = HttpResponse('\n'.join(lines), content_type='text/plain')
         response['Content-Disposition'] = f'attachment; filename="{self.filename}"'
         return response
+
+
+class AdminExportMixin:
+    def export_as_csv(self, request, queryset):
+        meta = self.model._meta
+        field_names = [field.name for field in meta.fields]
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+        writer = csv.writer(response)
+
+        writer.writerow(field_names)
+        for obj in queryset:
+            row = writer.writerow([getattr(obj, field) for field in field_names])
+
+        return response
+
+    def export_as_json(self, request, queryset):
+        # Serialize the queryset
+        data = serialize('json', queryset)
+
+        # Create the HttpResponse object with the appropriate JSON header.
+        response = HttpResponse(data, content_type='application/json')
+        # Set the HTTP header for a download.
+        response['Content-Disposition'] = 'attachment; filename={}.json'.format(self.model._meta)
+
+        return response
+
+    def export_as_text(self, request, queryset):
+        meta = self.model._meta
+        field_names = [field.name for field in meta.fields]
+
+        response = HttpResponse(content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename={}.txt'.format(meta)
+
+        # Write header
+        response.write(','.join(field_names) + '\n')
+
+        # Write data rows
+        for obj in queryset:
+            row = ','.join([str(getattr(obj, field)) for field in field_names])
+            response.write(row + '\n')
+
+        return response
+
+
+    export_as_csv.short_description = "Export selected to csv"
+    export_as_json.short_description = "Export selected to json"
+    export_as_text.short_description = "Export selected to text"

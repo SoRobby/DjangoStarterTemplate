@@ -1,11 +1,12 @@
 from django.contrib import admin
 
 from .models import UserSession, ObjectViewed
+from apps.core.utils import AdminExportMixin
 
 
 # Register your models here.
 @admin.register(UserSession)
-class UserSessionAdmin(admin.ModelAdmin):
+class UserSessionAdmin(admin.ModelAdmin, AdminExportMixin):
     list_display = ('__str__', 'is_session_active', 'date_created', 'date_modified')
 
     list_filter = ('is_session_active', )
@@ -13,6 +14,8 @@ class UserSessionAdmin(admin.ModelAdmin):
     filter_horizontal = ()
 
     search_fields = ()
+
+    actions = ('export_as_csv', 'export_as_json', 'export_as_text')
 
     readonly_fields = ('id', 'uuid', 'date_created', 'date_modified', 'date_session_ended', 'expire_date')
 
@@ -38,7 +41,7 @@ class UserSessionAdmin(admin.ModelAdmin):
 
 
 @admin.register(ObjectViewed)
-class ObjectViewedAdmin(admin.ModelAdmin):
+class ObjectViewedAdmin(admin.ModelAdmin, AdminExportMixin):
     list_display = ('__str__', 'content_type', 'user_session', 'date_viewed')
 
     list_filter = ()
@@ -46,6 +49,8 @@ class ObjectViewedAdmin(admin.ModelAdmin):
     filter_horizontal = ()
 
     search_fields = ()
+
+    actions = ('export_as_csv', 'export_as_json', 'export_as_text')
 
     readonly_fields = ('id', 'uuid', 'date_viewed')
 
