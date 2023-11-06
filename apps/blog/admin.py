@@ -1,13 +1,13 @@
 from django.contrib import admin
 
 from apps.blog.models import Article, Comment
-from apps.core.utils import AdminExportMixin
+from apps.core.utils import AdminExportMixin, ModelDocumentationMixin
 
 
 # Blog objects
 
 @admin.register(Article)
-class ArticleAdmin(admin.ModelAdmin):
+class ArticleAdmin(ModelDocumentationMixin, AdminExportMixin, admin.ModelAdmin):
     list_display = ('__str__', 'slug', 'release_status', 'date_created', 'date_modified', 'date_published')
 
     list_filter = ('release_status', 'visibility', 'is_deleted')
@@ -60,17 +60,9 @@ class ArticleAdmin(admin.ModelAdmin):
          ),
     )
 
-    def formfield_for_dbfield(self, db_field, **kwargs):
-        field = super().formfield_for_dbfield(db_field, **kwargs)
-        field_type = db_field.get_internal_type()
-        field.help_text = f'{field.help_text}<br>' \
-                          f'Field name = "<code><small>{db_field.name}</small></code>"<br>' \
-                          f'Field type = "<code><small>{field_type}</small></code>"'
-        return field
-
 
 @admin.register(Comment)
-class CommentAdmin(admin.ModelAdmin, AdminExportMixin):
+class CommentAdmin(ModelDocumentationMixin, AdminExportMixin, admin.ModelAdmin):
     list_display = ('__str__', 'user', 'is_flagged', 'is_deleted', 'date_created', 'date_modified')
 
     list_filter = ('is_flagged', 'is_deleted')
@@ -131,10 +123,3 @@ class CommentAdmin(admin.ModelAdmin, AdminExportMixin):
     def uncheck_is_flagged(self, request, queryset):
         queryset.update(is_flagged=False)
 
-    def formfield_for_dbfield(self, db_field, **kwargs):
-        field = super().formfield_for_dbfield(db_field, **kwargs)
-        field_type = db_field.get_internal_type()
-        field.help_text = f'{field.help_text}<br>' \
-                          f'Field name = "<code><small>{db_field.name}</small></code>"<br>' \
-                          f'Field type = "<code><small>{field_type}</small></code>"'
-        return field

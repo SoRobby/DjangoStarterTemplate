@@ -314,8 +314,7 @@ TINYMCE_BLOG_ARTICLE_CONFIG = {
     "images_upload_url": "upload-article-image",
 }
 
-
 # Stripe settings
 # https://stripe.com/docs/api
-STRIPE_PUBLISHABLE_KEY = '<enter your stripe publishable key>'
-STRIPE_SECRET_KEY = '<enter your stripe secret key>'
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51O9FnhKKHhvy7iMXvNlrE9gXg2poyglZbteI3wrCTLJ5M3mXKL1YK7vaaYogj9yMCCFsf2Y9GxlWcSBMdc7YdBkX0090Vieh6w'
+STRIPE_SECRET_KEY = 'sk_test_51O9FnhKKHhvy7iMX2AT2accqTcpCuKoLkhPpop4141AE0xdTQUhZeA0atJATyvJQRU2kgF3L5dlBcDtB73thIQVs00oDEfZPcv'
