@@ -3,6 +3,7 @@ import logging
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 
 from apps.core.models import BaseModel
 from .managers import SubscriptionPlanManager, SubscriptionTermManager
@@ -195,13 +196,14 @@ class SubscriptionOrder(BaseModel):
     def __str__(self):
         return f'{self.pk} - {self.purchaser.username}'
 
-
     def checkout_cancelled(self):
         """Set the status to cancelled and set the date_cancelled field to now."""
         self.purchase_status = self.PurchaseStatusChoices.CHECKOUT_CANCELLED
         self.is_active = False
         self.save()
 
-
-
-
+    def checkout_success(self):
+        """Set the status to paid and set the date_end field to now."""
+        self.purchase_status = self.PurchaseStatusChoices.PAID
+        self.date_start = timezone.now()
+        self.save()

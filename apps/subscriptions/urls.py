@@ -11,6 +11,11 @@ urlpatterns = [
     path('purchase/checkout/<str:term_uuid>/', views.CheckoutSessionCreateView.as_view(), name='subscription-checkout'),
 
     path('purchase/checkout/<str:term_uuid>/orders/<str:order_uuid>/cancel/', views.CheckoutSessionCancelView.as_view(),
-         name='subscription-checkout-cancel')
+         name='subscription-checkout-cancel'),
+
+    path('purchase/checkout/<str:term_uuid>/orders/<str:order_uuid>/success/',
+         views.CheckoutSessionSuccessView.as_view(), name='subscription-checkout-success'),
+
+    path('webhooks/stripe/', views.stripe_webhook, name='stripe-webhook'),
 
 ]
