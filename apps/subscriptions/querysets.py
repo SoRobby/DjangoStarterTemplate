@@ -6,7 +6,7 @@ class SubscriptionPlanQuerySet(models.QuerySet):
         return self.filter(is_active=True)
 
 
-class SubscriptionTermQuerySet(models.QuerySet):
+class SubscriptionPeriodQuerySet(models.QuerySet):
     def active(self):
         return self.filter(is_active=True)
 

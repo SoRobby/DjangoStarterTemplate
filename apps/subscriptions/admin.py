@@ -1,12 +1,7 @@
 from django.contrib import admin
-from django.db import models
-from django.utils.html import format_html
-from django.template.defaultfilters import linebreaksbr
 
-import inspect
 from apps.core.utils import AdminExportMixin, ModelDocumentationMixin
-from .models import SubscriptionPlan, SubscriptionTerm, SubscriptionOrder
-
+from .models import SubscriptionPlan, SubscriptionPeriod, SubscriptionOrder
 
 # Register your models here.
 
@@ -30,8 +25,10 @@ class SubscriptionPlanAdmin(ModelDocumentationMixin, AdminExportMixin, admin.Mod
 
     fieldsets = (
         ('Subscription plan information', {
-            'fields': ('name', 'plan_category', 'description', 'stripe_product_id', 'is_plan_showcased', 'features_list', 'json_data',
-                       'is_active'),
+            'fields': (
+            'name', 'plan_category', 'description', 'stripe_product_id', 'is_plan_showcased', 'features_list',
+            'json_data',
+            'is_active'),
             'description': 'Object related information'}
          ),
 
@@ -47,8 +44,8 @@ class SubscriptionPlanAdmin(ModelDocumentationMixin, AdminExportMixin, admin.Mod
     )
 
 
-@admin.register(SubscriptionTerm)
-class SubscriptionTermAdmin(ModelDocumentationMixin, AdminExportMixin, admin.ModelAdmin):
+@admin.register(SubscriptionPeriod)
+class SubscriptionPeriodAdmin(ModelDocumentationMixin, AdminExportMixin, admin.ModelAdmin):
     list_display = ('__str__', 'is_active', 'stripe_price_id', 'date_created')
 
     list_filter = ('subscription_plan', 'interval', 'is_active')
@@ -82,5 +79,3 @@ class SubscriptionTermAdmin(ModelDocumentationMixin, AdminExportMixin, admin.Mod
 
     def set_selected_active(self, request, queryset):
         queryset.update(is_active=True)
-
-

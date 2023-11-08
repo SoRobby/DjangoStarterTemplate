@@ -31,6 +31,23 @@
     <main class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 py-4 sm:py-6">
         {% block content %}
 
+            {% if user_subscription %}
+            <div class="border border-gray-200 rounded-md p-4">
+                <div>
+                    User Subscription: {{ user_subscription }}
+                </div>
+
+                <div>
+                    <form action="{% url 'subscriptions:cancel-subscription' subscription_uuid=user_subscription.uuid %}"
+                          method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="border border-gray-200 p-2 hover:bg-red-50">Cancel subscription</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+
+
             <!-- Pricing section -->
             <div class="mx-auto mt-16 max-w-7xl px-6 sm:mt-32 lg:px-8" x-data="{selectedTerm : 'monthly'}">
                 <div class="mx-auto max-w-4xl text-center">

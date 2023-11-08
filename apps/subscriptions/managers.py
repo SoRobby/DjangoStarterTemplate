@@ -1,6 +1,6 @@
 from django.db import models
 
-from .querysets import SubscriptionPlanQuerySet, SubscriptionTermQuerySet
+from .querysets import SubscriptionPlanQuerySet, SubscriptionPeriodQuerySet
 
 
 class SubscriptionPlanManager(models.Manager):
@@ -12,9 +12,9 @@ class SubscriptionPlanManager(models.Manager):
 
 
 
-class SubscriptionTermManager(models.Manager):
+class SubscriptionPeriodManager(models.Manager):
     def get_queryset(self):
-        return SubscriptionTermQuerySet(self.model, using=self._db)
+        return SubscriptionPeriodQuerySet(self.model, using=self._db)
 
     def active(self):
         return self.get_queryset().active()

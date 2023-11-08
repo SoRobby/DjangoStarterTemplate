@@ -6,7 +6,7 @@ from django.db import models
 from django.utils import timezone
 
 from apps.core.models import BaseModel
-from .managers import SubscriptionPlanManager, SubscriptionTermManager
+from .managers import SubscriptionPlanManager, SubscriptionPeriodManager
 from .validators import validate_features_list
 
 
@@ -71,15 +71,15 @@ class SubscriptionPlan(BaseModel):
     @property
     def monthly_term(self):
         """The monthly term for this subscription plan."""
-        return self.subscription_terms.filter(interval=SubscriptionTerm.IntervalChoices.MONTHLY).first()
+        return self.subscription_terms.filter(interval=SubscriptionPeriod.IntervalChoices.MONTHLY).first()
 
     @property
     def annual_term(self):
         """The monthly term for this subscription plan."""
-        return self.subscription_terms.filter(interval=SubscriptionTerm.IntervalChoices.ANNUAL).first()
+        return self.subscription_terms.filter(interval=SubscriptionPeriod.IntervalChoices.ANNUAL).first()
 
 
-class SubscriptionTerm(BaseModel):
+class SubscriptionPeriod(BaseModel):
     class IntervalChoices(models.TextChoices):
         MONTHLY = 'monthly', 'Monthly'
         ANNUAL = 'annual', 'Annual'
@@ -102,12 +102,12 @@ class SubscriptionTerm(BaseModel):
     admin_notes = models.TextField(max_length=1000, blank=True, null=True, verbose_name='Admin notes',
                                    help_text='Notes for the staff and admins, notes are not shown to the users')
 
-    objects = SubscriptionTermManager()
+    objects = SubscriptionPeriodManager()
 
     class Meta:
         ordering = ('price_cents',)
-        verbose_name = 'Subscription term'
-        verbose_name_plural = 'Subscription terms'
+        verbose_name = 'Subscription period'
+        verbose_name_plural = 'Subscription periods'
         constraints = [
             models.UniqueConstraint(fields=['subscription_plan', 'interval'], name='unique_subscription_plan_interval')
         ]
@@ -132,21 +132,44 @@ class SubscriptionTerm(BaseModel):
 
 
 class SubscriptionOrder(BaseModel):
+    class StatusChoices(models.TextChoices):
+        """
+        The status of a subscription order.
+
+        ERROR: The subscription order encountered an error and requires admin intervention.
+        PROCESSING: The subscription order has been placed and is being processed.
+        PAYMENT_FAILED: The payment failed for the subscription order.
+        ACTIVE = The subscription order is active.
+        CHECKOUT_CANCELLED = The checkout session was cancelled by the user.
+        CANCELLED = The subscription order was cancelled by the user.
+        PAST_DUE = If a payment is missed but the service has not yet been suspended, indicating that the subscription
+        is at risk of becoming inactive.
+        """
+        ACTIVE = 'active', 'Active'
+        CANCELLED = 'cancelled', 'Cancelled'
+        CHECKOUT_CANCELLED = 'checkout_cancelled', 'Checkout cancelled'
+        ERROR = 'error', 'Error'
+        PAST_DUE = 'past_due', 'Past due'
+        PAYMENT_FAILED = 'payment_failed', 'Payment failed'
+        PROCESSING = 'processing', 'Processing'
+
     class PurchaseStatusChoices(models.TextChoices):
         CHECKOUT_CANCELLED = 'checkout_cancelled', 'Checkout cancelled'
-        SUBSCRIPTION_CANCELLED = 'subscription_cancelled', 'Subscription cancelled'
+        ERROR = 'error', 'Error'
+        PAYMENT_FAILED = 'payment_failed', 'Payment failed'
         PENDING = 'pending', 'Pending'
         PAID = 'paid', 'Paid'
-        PAYMENT_FAILED = 'payment_failed', 'Payment failed'
+
         REFUNDED = 'refunded', 'Refunded'
+        SUBSCRIPTION_CANCELLED = 'subscription_cancelled', 'Subscription cancelled'
 
     purchaser = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                   related_name='subscription_orders',
                                   help_text='The user who purchased the subscription')
 
-    subscription_term = models.ForeignKey(SubscriptionTerm, on_delete=models.SET_NULL, null=True,
-                                          related_name='subscription_orders',
-                                          help_text='The subscription term that was purchased')
+    subscription_period = models.ForeignKey(SubscriptionPeriod, on_delete=models.SET_NULL, null=True,
+                                            related_name='subscription_orders',
+                                            help_text='The subscription period that was purchased')
 
     purchase_status = models.CharField(max_length=50, choices=PurchaseStatusChoices.choices,
                                        help_text='Purchase status')
@@ -157,15 +180,17 @@ class SubscriptionOrder(BaseModel):
 
     is_active = models.BooleanField(default=True, help_text='If true, this subscription order is active')
 
-    date_start = models.DateTimeField(auto_now_add=True, help_text='Date when the subscription period started')
+    current_period_start_date = models.DateTimeField(blank=True, null=True,
+                                                     help_text='Date when the subscription period started')
 
-    date_end = models.DateTimeField(blank=True, null=True, help_text='Date when the subscription period will end')
+    current_period_end_date = models.DateTimeField(blank=True, null=True,
+                                                   help_text='Date when the subscription period will end')
 
-    date_renewal = models.DateTimeField(blank=True, null=True, help_text='Date the subscription will renew')
+    date_refunded = models.DateTimeField(blank=True, null=True, help_text='Date the subscription was refunded')
 
     date_cancelled = models.DateTimeField(blank=True, null=True, help_text='Date the subscription was cancelled')
 
-    date_refunded = models.DateTimeField(blank=True, null=True, help_text='Date the subscription was refunded')
+    date_ended = models.DateTimeField(blank=True, null=True, help_text='Date the subscription ended')
 
     date_changed_plan = models.DateTimeField(blank=True, null=True, help_text='Date the subscription plan was changed')
 
@@ -206,4 +231,30 @@ class SubscriptionOrder(BaseModel):
         """Set the status to paid and set the date_end field to now."""
         self.purchase_status = self.PurchaseStatusChoices.PAID
         self.date_start = timezone.now()
+        self.save()
+
+    def checkout_error(self):
+        """
+        The stripe checkout session returned success, however the returned checkout session data
+        did not match what was expected and requires an admin to investigate.
+        """
+        self.purchase_status = self.PurchaseStatusChoices.ERROR
+        self.date_start = timezone.now()
+        self.save()
+
+    def set_stripe_data(self, stripe_checkout_session_id=None, stripe_product_id=None, stripe_price_id=None,
+                        stripe_subscription_id=None):
+        """Set the stripe data for this order."""
+        if stripe_checkout_session_id:
+            self.stripe_checkout_session_id = stripe_checkout_session_id
+
+        if stripe_product_id:
+            self.stripe_product_id = stripe_product_id
+
+        if stripe_price_id:
+            self.stripe_price_id = stripe_price_id
+
+        if stripe_subscription_id:
+            self.stripe_subscription_id = stripe_subscription_id
+
         self.save()
