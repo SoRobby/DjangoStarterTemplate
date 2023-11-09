@@ -1,189 +1,6 @@
-{#<aside class="flex overflow-x-auto border-b border-gray-900/5 py-4 lg:block lg:w-64 lg:flex-none lg:border-0">#}
-{#    <nav class="flex-none px-4 sm:px-6 lg:px-0">#}
-{#        <ul role="list" class="flex gap-x-3 gap-y-1 whitespace-nowrap lg:flex-col">#}
-{##}
-{#            <li>#}
-{#                {% if request.resolver_match.url_name == 'settings-general' %}#}
-{#                    <a href="{% url 'profiles:settings-general' %}"#}
-{#                       class="bg-gray-100 text-indigo-600 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">#}
-{#                        <svg class="h-6 w-6 shrink-0 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5"#}
-{#                             stroke="currentColor" aria-hidden="true">#}
-{#                            <path stroke-linecap="round" stroke-linejoin="round"#}
-{#                                  d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"/>#}
-{#                        </svg>#}
-{#                        General#}
-{#                    </a>#}
-{#                {% else %}#}
-{#                    <a href="{% url 'profiles:settings-general' %}"#}
-{#                       class="text-gray-700 hover:text-gray-800 hover:bg-gray-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">#}
-{#                        <svg class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-gray-500" fill="none"#}
-{#                             viewBox="0 0 24 24" stroke-width="1.5"#}
-{#                             stroke="currentColor" aria-hidden="true">#}
-{#                            <path stroke-linecap="round" stroke-linejoin="round"#}
-{#                                  d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"/>#}
-{#                        </svg>#}
-{#                        General#}
-{#                    </a>#}
-{#                {% endif %}#}
-{#            </li>#}
-{##}
-{#            <li>#}
-{#                {% if request.resolver_match.url_name == 'settings-notifications' %}#}
-{#                    <a href="{% url 'profiles:settings-notifications' %}"#}
-{#                       class="bg-gray-100 text-indigo-600 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">#}
-{#                        <svg class="h-6 w-6 shrink-0 text-indigo-600" fill="none"#}
-{#                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">#}
-{#                            <path stroke-linecap="round" stroke-linejoin="round"#}
-{#                                  d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>#}
-{#                        </svg>#}
-{#                        Notifications#}
-{#                    </a>#}
-{#                {% else %}#}
-{#                    <a href="{% url 'profiles:settings-notifications' %}"#}
-{#                       class="text-gray-700 hover:text-gray-800 hover:bg-gray-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">#}
-{#                        <svg class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-gray-500" fill="none"#}
-{#                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">#}
-{#                            <path stroke-linecap="round" stroke-linejoin="round"#}
-{#                                  d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>#}
-{#                        </svg>#}
-{#                        Notifications#}
-{#                    </a>#}
-{#                {% endif %}#}
-{#            </li>#}
-{##}
-{#            <li>#}
-{#                {% if request.resolver_match.url_name == 'settings-security' %}#}
-{#                    <a href="{% url 'profiles:settings-security' %}"#}
-{#                       class="bg-gray-100 text-indigo-600 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">#}
-{#                        <svg class="h-6 w-6 shrink-0 text-indigo-600" fill="none"#}
-{#                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">#}
-{#                            <path stroke-linecap="round" stroke-linejoin="round"#}
-{#                                  d="M7.864 4.243A7.5 7.5 0 0119.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 004.5 10.5a7.464 7.464 0 01-1.15 3.993m1.989 3.559A11.209 11.209 0 008.25 10.5a3.75 3.75 0 117.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 01-3.6 9.75m6.633-4.596a18.666 18.666 0 01-2.485 5.33"/>#}
-{#                        </svg>#}
-{#                        Security#}
-{#                    </a>#}
-{#                {% else %}#}
-{#                    <a href="{% url 'profiles:settings-security' %}"#}
-{#                       class="text-gray-700 hover:text-gray-800 hover:bg-gray-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">#}
-{#                        <svg class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-gray-500" fill="none"#}
-{#                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">#}
-{#                            <path stroke-linecap="round" stroke-linejoin="round"#}
-{#                                  d="M7.864 4.243A7.5 7.5 0 0119.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 004.5 10.5a7.464 7.464 0 01-1.15 3.993m1.989 3.559A11.209 11.209 0 008.25 10.5a3.75 3.75 0 117.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 01-3.6 9.75m6.633-4.596a18.666 18.666 0 01-2.485 5.33"/>#}
-{#                        </svg>#}
-{#                        Security#}
-{#                    </a>#}
-{#                {% endif %}#}
-{#            </li>#}
-{##}
-{#            <li>#}
-{#                <a href="#"#}
-{#                   class="text-gray-700 hover:text-gray-800 hover:bg-gray-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">#}
-{#                    <svg class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-gray-500" fill="none"#}
-{#                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">#}
-{#                        <path stroke-linecap="round" stroke-linejoin="round"#}
-{#                              d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/>#}
-{#                    </svg>#}
-{#                    Plan#}
-{#                </a>#}
-{#            </li>#}
-{#            <li>#}
-{#                <a href="#"#}
-{#                   class="text-gray-700 hover:text-gray-800 hover:bg-gray-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">#}
-{#                    <svg class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-gray-500" fill="none"#}
-{#                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">#}
-{#                        <path stroke-linecap="round" stroke-linejoin="round"#}
-{#                              d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/>#}
-{#                    </svg>#}
-{#                    Billing#}
-{#                </a>#}
-{#            </li>#}
-{#            <li>#}
-{#                <a href="#"#}
-{#                   class="text-gray-700 hover:text-gray-800 hover:bg-gray-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">#}
-{#                    <svg class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-gray-500" fill="none"#}
-{#                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">#}
-{#                        <path stroke-linecap="round" stroke-linejoin="round"#}
-{#                              d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>#}
-{#                    </svg>#}
-{#                    Team members#}
-{#                </a>#}
-{#            </li>#}
-{##}
-{#            <li>#}
-{#                {% if request.resolver_match.url_name == 'settings-support' %}#}
-{#                    <a href="{% url 'profiles:settings-support' %}"#}
-{#                       class="bg-gray-100 text-indigo-600 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">#}
-{#                        <svg class="h-6 w-6 shrink-0 text-indigo-600" fill="none"#}
-{#                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">#}
-{#                            <path stroke-linecap="round" stroke-linejoin="round"#}
-{#                                  d="M16.712 4.33a9.027 9.027 0 011.652 1.306c.51.51.944 1.064 1.306 1.652M16.712 4.33l-3.448 4.138m3.448-4.138a9.014 9.014 0 00-9.424 0M19.67 7.288l-4.138 3.448m4.138-3.448a9.014 9.014 0 010 9.424m-4.138-5.976a3.736 3.736 0 00-.88-1.388 3.737 3.737 0 00-1.388-.88m2.268 2.268a3.765 3.765 0 010 2.528m-2.268-4.796a3.765 3.765 0 00-2.528 0m4.796 4.796c-.181.506-.475.982-.88 1.388a3.736 3.736 0 01-1.388.88m2.268-2.268l4.138 3.448m0 0a9.027 9.027 0 01-1.306 1.652c-.51.51-1.064.944-1.652 1.306m0 0l-3.448-4.138m3.448 4.138a9.014 9.014 0 01-9.424 0m5.976-4.138a3.765 3.765 0 01-2.528 0m0 0a3.736 3.736 0 01-1.388-.88 3.737 3.737 0 01-.88-1.388m2.268 2.268L7.288 19.67m0 0a9.024 9.024 0 01-1.652-1.306 9.027 9.027 0 01-1.306-1.652m0 0l4.138-3.448M4.33 16.712a9.014 9.014 0 010-9.424m4.138 5.976a3.765 3.765 0 010-2.528m0 0c.181-.506.475-.982.88-1.388a3.736 3.736 0 011.388-.88m-2.268 2.268L4.33 7.288m6.406 1.18L7.288 4.33m0 0a9.024 9.024 0 00-1.652 1.306A9.025 9.025 0 004.33 7.288"/>#}
-{#                        </svg>#}
-{#                        Support#}
-{#                    </a>#}
-{#                {% else %}#}
-{#                    <a href="{% url 'profiles:settings-support' %}"#}
-{#                       class="text-gray-700 hover:text-gray-800 hover:bg-gray-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">#}
-{#                        <svg class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-gray-500" fill="none"#}
-{#                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">#}
-{#                            <path stroke-linecap="round" stroke-linejoin="round"#}
-{#                                  d="M16.712 4.33a9.027 9.027 0 011.652 1.306c.51.51.944 1.064 1.306 1.652M16.712 4.33l-3.448 4.138m3.448-4.138a9.014 9.014 0 00-9.424 0M19.67 7.288l-4.138 3.448m4.138-3.448a9.014 9.014 0 010 9.424m-4.138-5.976a3.736 3.736 0 00-.88-1.388 3.737 3.737 0 00-1.388-.88m2.268 2.268a3.765 3.765 0 010 2.528m-2.268-4.796a3.765 3.765 0 00-2.528 0m4.796 4.796c-.181.506-.475.982-.88 1.388a3.736 3.736 0 01-1.388.88m2.268-2.268l4.138 3.448m0 0a9.027 9.027 0 01-1.306 1.652c-.51.51-1.064.944-1.652 1.306m0 0l-3.448-4.138m3.448 4.138a9.014 9.014 0 01-9.424 0m5.976-4.138a3.765 3.765 0 01-2.528 0m0 0a3.736 3.736 0 01-1.388-.88 3.737 3.737 0 01-.88-1.388m2.268 2.268L7.288 19.67m0 0a9.024 9.024 0 01-1.652-1.306 9.027 9.027 0 01-1.306-1.652m0 0l4.138-3.448M4.33 16.712a9.014 9.014 0 010-9.424m4.138 5.976a3.765 3.765 0 010-2.528m0 0c.181-.506.475-.982.88-1.388a3.736 3.736 0 011.388-.88m-2.268 2.268L4.33 7.288m6.406 1.18L7.288 4.33m0 0a9.024 9.024 0 00-1.652 1.306A9.025 9.025 0 004.33 7.288"/>#}
-{#                        </svg>#}
-{#                        Support#}
-{#                    </a>#}
-{#                {% endif %}#}
-{#            </li>#}
-{##}
-{#            {% if user.is_superuser %}#}
-{#                <hr class="mt-4 pb-4">#}
-{#                <li>#}
-{#                    {% if request.resolver_match.url_name == 'profile-edit-components' %}#}
-{#                        <a href="{% url 'profiles:settings-support' %}"#}
-{#                           class="bg-gray-100 text-indigo-600 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">#}
-{#                            <svg class="h-6 w-6 shrink-0 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none"#}
-{#                                 viewBox="0 0 24 24" stroke-width="1.5"#}
-{#                                 stroke="currentColor">#}
-{#                                <path stroke-linecap="round" stroke-linejoin="round"#}
-{#                                      d="M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 01-.657.643 48.39 48.39 0 01-4.163-.3c.186 1.613.293 3.25.315 4.907a.656.656 0 01-.658.663v0c-.355 0-.676-.186-.959-.401a1.647 1.647 0 00-1.003-.349c-1.036 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401v0c.31 0 .555.26.532.57a48.039 48.039 0 01-.642 5.056c1.518.19 3.058.309 4.616.354a.64.64 0 00.657-.643v0c0-.355-.186-.676-.401-.959a1.647 1.647 0 01-.349-1.003c0-1.035 1.008-1.875 2.25-1.875 1.243 0 2.25.84 2.25 1.875 0 .369-.128.713-.349 1.003-.215.283-.4.604-.4.959v0c0 .333.277.599.61.58a48.1 48.1 0 005.427-.63 48.05 48.05 0 00.582-4.717.532.532 0 00-.533-.57v0c-.355 0-.676.186-.959.401-.29.221-.634.349-1.003.349-1.035 0-1.875-1.007-1.875-2.25s.84-2.25 1.875-2.25c.37 0 .713.128 1.003.349.283.215.604.401.96.401v0a.656.656 0 00.658-.663 48.422 48.422 0 00-.37-5.36c-1.886.342-3.81.574-5.766.689a.578.578 0 01-.61-.58v0z"/>#}
-{#                            </svg>#}
-{#                            Components#}
-{#                        </a>#}
-{#                    {% else %}#}
-{#                        <a href="{% url 'profiles:settings-support' %}"#}
-{#                           class="text-gray-700 hover:text-gray-800 hover:bg-gray-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">#}
-{#                            <svg class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-gray-500"#}
-{#                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"#}
-{#                                 stroke="currentColor">#}
-{#                                <path stroke-linecap="round" stroke-linejoin="round"#}
-{#                                      d="M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 01-.657.643 48.39 48.39 0 01-4.163-.3c.186 1.613.293 3.25.315 4.907a.656.656 0 01-.658.663v0c-.355 0-.676-.186-.959-.401a1.647 1.647 0 00-1.003-.349c-1.036 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401v0c.31 0 .555.26.532.57a48.039 48.039 0 01-.642 5.056c1.518.19 3.058.309 4.616.354a.64.64 0 00.657-.643v0c0-.355-.186-.676-.401-.959a1.647 1.647 0 01-.349-1.003c0-1.035 1.008-1.875 2.25-1.875 1.243 0 2.25.84 2.25 1.875 0 .369-.128.713-.349 1.003-.215.283-.4.604-.4.959v0c0 .333.277.599.61.58a48.1 48.1 0 005.427-.63 48.05 48.05 0 00.582-4.717.532.532 0 00-.533-.57v0c-.355 0-.676.186-.959.401-.29.221-.634.349-1.003.349-1.035 0-1.875-1.007-1.875-2.25s.84-2.25 1.875-2.25c.37 0 .713.128 1.003.349.283.215.604.401.96.401v0a.656.656 0 00.658-.663 48.422 48.422 0 00-.37-5.36c-1.886.342-3.81.574-5.766.689a.578.578 0 01-.61-.58v0z"/>#}
-{#                            </svg>#}
-{#                            Components#}
-{#                        </a>#}
-{#                    {% endif %}#}
-{#                </li>#}
-{##}
-{#                <li>#}
-{#                    <a href="{% url 'admin:index' %}"#}
-{#                       class="text-gray-700 hover:text-gray-800 hover:bg-gray-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">#}
-{#                        <svg class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-gray-500"#}
-{#                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"#}
-{#                             stroke="currentColor" class="w-6 h-6">#}
-{#                            <path stroke-linecap="round" stroke-linejoin="round"#}
-{#                                  d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.87c1.355 0 2.697.055 4.024.165C17.155 8.51 18 9.473 18 10.608v2.513m-3-4.87v-1.5m-6 1.5v-1.5m12 9.75l-1.5.75a3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0L3 16.5m15-3.38a48.474 48.474 0 00-6-.37c-2.032 0-4.034.125-6 .37m12 0c.39.049.777.102 1.163.16 1.07.16 1.837 1.094 1.837 2.175v5.17c0 .62-.504 1.124-1.125 1.124H4.125A1.125 1.125 0 013 20.625v-5.17c0-1.08.768-2.014 1.837-2.174A47.78 47.78 0 016 13.12M12.265 3.11a.375.375 0 11-.53 0L12 2.845l.265.265zm-3 0a.375.375 0 11-.53 0L9 2.845l.265.265zm6 0a.375.375 0 11-.53 0L15 2.845l.265.265z"/>#}
-{#                        </svg>#}
-{#                        Admin panel#}
-{#                    </a>#}
-{#                </li>#}
-{#            {% endif %}#}
-{##}
-{#        </ul>#}
-{#    </nav>#}
-{#</aside>#}
-
-
 <aside class="overflow-x-auto border-b border-gray-900/5 py-4 lg:block lg:w-64 lg:flex-none lg:border-0">
     <nav class="flex-none px-4 sm:px-6 lg:px-0">
         <ul role="list" class="gap-x-3 gap-y-1 whitespace-nowrap lg:flex-col">
-
             <li>
                 {% if request.resolver_match.url_name == 'settings-general' %}
                     <a href="{% url 'profiles:settings-general' %}"
@@ -257,17 +74,31 @@
                 {% endif %}
             </li>
 
+
             <li>
-                <a href="#"
-                   class="text-gray-700 hover:text-gray-800 hover:bg-gray-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">
-                    <svg class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-gray-500" fill="none"
-                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                              d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/>
-                    </svg>
-                    Plan
-                </a>
+                {% if request.resolver_match.url_name == 'settings-membership' %}
+                    <a href="{% url 'profiles:settings-membership' %}"
+                       class="bg-gray-100 text-indigo-600 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">
+                        <svg class="h-6 w-6 shrink-0 text-indigo-600" fill="none"
+                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/>
+                        </svg>
+                        Membership
+                    </a>
+                {% else %}
+                    <a href="{% url 'profiles:settings-membership' %}"
+                       class="text-gray-700 hover:text-gray-800 hover:bg-gray-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">
+                        <svg class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-gray-500" fill="none"
+                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/>
+                        </svg>
+                        Membership
+                    </a>
+                {% endif %}
             </li>
+
             <li>
                 <a href="#"
                    class="text-gray-700 hover:text-gray-800 hover:bg-gray-50 group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold">

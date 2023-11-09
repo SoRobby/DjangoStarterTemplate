@@ -47,7 +47,6 @@ def subscription_plans(request):
 
     # Get the users active subscription
     user_subscription = SubscriptionOrder.objects.filter(purchaser=request.user,
-                                                         purchase_status=SubscriptionOrder.PurchaseStatusChoices.PAID,
                                                          is_active=True).order_by('-date_created')
 
     if user_subscription:
@@ -77,11 +76,16 @@ def subscription_plans(request):
             if stripe_subscription_data.ended_at:
                 user_subscription.is_active = False
                 user_subscription.date_cancelled = datetime.fromtimestamp(stripe_subscription_data.ended_at)
-                user_subscription.purchase_status = 'subscription_cancelled'
+                user_subscription.status = SubscriptionOrder.StatusChoices.CANCELLED
+
+            if stripe_subscription_data.cancel_at_period_end:
+                logging.debug('CANCELING SOON!')
+                user_subscription.date_cancelled = datetime.fromtimestamp(stripe_subscription_data.canceled_at)
+                user_subscription.status = SubscriptionOrder.StatusChoices.CANCELLED
+
 
             user_subscription.save()
 
-            print(f'current_period_end = {current_period_end}')
 
             # return subscription.status  # possible values are 'active', 'past_due', 'canceled', and others
         except stripe.error.StripeError as e:
@@ -121,7 +125,7 @@ class CheckoutSessionCreateView(View):
             order = SubscriptionOrder.objects.create(
                 purchaser=purchaser,
                 subscription_period=subscription_period,
-                purchase_status=SubscriptionOrder.PurchaseStatusChoices.PENDING,
+                status=SubscriptionOrder.StatusChoices.PROCESSING,
             )
 
             # Set the stripe variables
@@ -295,9 +299,7 @@ class CancelSubscriptionView(View):
 
         # Make sure the user owns the subscription
         if user_subscription.purchaser == request.user:
-
             try:
-
                 # Attempt to retrieve the subscription from Stripe
                 subscription = stripe.Subscription.retrieve(user_subscription.stripe_subscription_id)
 
@@ -305,16 +307,13 @@ class CancelSubscriptionView(View):
                     subscription.cancel_at_period_end = True
                     subscription.save()
 
-                    # Update the user_subscription model
-                    user_subscription.is_active = False
+                    # Update the user_subscription model. Subscription is still active until the end of the period is
+                    # reached
                     user_subscription.date_cancelled = datetime.fromtimestamp(subscription.current_period_end)
-                    user_subscription.purchase_status = 'subscription_cancelled'
+                    user_subscription.status = SubscriptionOrder.StatusChoices.CANCELLED
                     user_subscription.save()
-
-
                     send_success_notification(request, title='Subscription cancelled',
                                               message='Your subscription has been successfully cancelled')
-
 
             except stripe.error.StripeError as e:
                 send_error_notification(request, title='Error cancelling subscription',
@@ -325,7 +324,7 @@ class CancelSubscriptionView(View):
                 logging.error(e)
 
         else:
-            # Todo - add better message and handling of this sceanrio
+            # Todo - add better message and handling of this scenario
             send_error_notification(request, title='Error cancelling subscription',
                                     message='You do not have permission')
 

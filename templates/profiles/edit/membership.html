@@ -2,7 +2,7 @@
 {% load static %}
 
 
-{% block title %}<title>Account Security</title>{% endblock title %}
+{% block title %}<title>Account Membership</title>{% endblock title %}
 
 
 {% block meta %}
@@ -19,7 +19,7 @@
 
 {% block content %}
     <div>
-        {% include 'profiles/components/profile-header.html' with mode='edit' user_instance=user %}
+        {% include 'profiles/components/profile-header.html' with mode='no-save' user_instance=user %}
 
         <div class="lg:flex lg:gap-x-16">
             {% include 'profiles/edit/components/sidebar.html' %}
@@ -28,30 +28,18 @@
                 <div class="mx-auto max-w-4xl lg:mx-0 lg:max-w-none">
 
                     {% if not user.email_verified %}
-                        <div class="pb-2">
-                            <div class="bg-red-50 px-4 py-2 text-sm rounded-md text-red-600">
-                                <div class="font-semibold">
-                                    Email has not been verified
-                                </div>
-                                <div>
-                                    You will have limited access to certain features until your account has been
-                                    verified.
-                                </div>
-                                <a href="{% url 'send-verification-email' username=user.username %}"
-                                   class="font-semibold underline">Resend verification email</a>
-                            </div>
-                        </div>
+                        {% include 'profiles/edit/components/email-not-verified-banner.html' with username=user.username %}
                     {% endif %}
 
                     <div class="text-2xl text-gray-800 font-semibold pb-4">
-                        Security
+                        Membership
                     </div>
                     <div class="space-y-16 sm:space-y-20">
                         {# Email and password #}
                         <div>
-                            <h2 class="text-base font-semibold leading-7 text-gray-900">Email and password</h2>
-                            <p class="mt-1 text-sm leading-6 text-gray-500">Change your account's email address or
-                                account password.</p>
+                            <h2 class="text-base font-semibold leading-7 text-gray-900">Overview</h2>
+                            <p class="mt-1 text-sm leading-6 text-gray-500">Overview of your membership and payment
+                                period</p>
                             <div class="mt-4 space-y-4 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
 
                                 {# Change email (top) #}
@@ -61,10 +49,10 @@
                                         <div class="w-full">
                                             <label for="name"
                                                    class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                Email address
+                                                Current plan
                                             </label>
-                                            <div class="text-xs text-gray-600 font-normal sr-only">Emails are always
-                                                kept private
+                                            <div class="text-xs text-gray-600 font-normal">
+                                                Membership plans can be modified at any time.
                                             </div>
                                         </div>
                                     </div>
@@ -79,7 +67,8 @@
                                         <input type="hidden" name="username" value="{{ user.username }}">
 
                                         <p x-show="!isEditing" x-transition:enter
-                                           class="text-gray-900">{{ user.email }}</p>
+                                           class="text-gray-900">{{ user_subscription_plan.name }}
+                                            ({{ user_subscription_period.get_interval_display|lower }})</p>
 
                                         <div x-show="isEditing" x-cloak x-transition:enter class="w-full">
                                             <label for="email" class="sr-only">Email</label>
@@ -88,6 +77,7 @@
                                                        value="{{ user.email }}" required
                                                        class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                             </div>
+
                                             <div class="flex justify-end gap-4">
                                                 <button type="button" x-show="isEditing && !isProcessing"
                                                         @click="isEditing=false"
@@ -106,7 +96,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <button type="button" x-show="!isEditing" @click="isEditing=true"
                                                 x-transition:enter
                                                 class="font-semibold text-indigo-600 hover:text-indigo-500">Change
@@ -115,62 +104,110 @@
                                 </div>
 
 
-                                {# Change password (centered vertically) #}
-                                <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
-                                     x-data="{ showError: false }">
+                                <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12" x-data="{ isEditing: true }">
                                     <div class="col-span-12 md:col-span-6 flex items-center">
                                         <div class="w-full">
                                             <label for="name"
                                                    class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                Password
+                                                Current plan
                                             </label>
-                                            <div class="text-xs text-gray-600 font-normal sr-only">Change or modify your
-                                                account's password
+                                            <div class="text-xs text-gray-600 font-normal">
+                                                Membership plans can be modified at any time.
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="col-span-12 md:col-span-6 flex items-center justify-between">
-                                        <p class="text-gray-900">************</p>
-                                        <a href="{% url 'password_change' %}"
-                                           class="font-semibold text-indigo-600 hover:text-indigo-500">Change</a>
+                                        <p class="text-gray-900">{{ user_subscription_plan.name }}
+                                            ({{ user_subscription_period.get_interval_display|lower }})</p>
+                                        <button type="button" x-show="!isEditing" @click="isEditing=true"
+                                                x-transition:enter
+                                                class="font-semibold text-indigo-600 hover:text-indigo-500">
+                                            Change
+                                        </button>
+                                        <button type="button" x-show="isEditing" @click="isEditing=false" x-cloak
+                                                x-transition:enter
+                                                class="font-semibold text-indigo-600 hover:text-indigo-500">Close
+                                        </button>
+                                    </div>
+
+                                    <div x-show="isEditing" x-collapse class="col-span-12">
+
+                                        <div class="grid grid-cols-3">
+                                            <div class="border border-gray-200">
+
+                                                <div>
+                                                    Hobby plan
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+
+                                </div>
+
+
+                                <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12">
+                                    <div class="col-span-12 md:col-span-6 flex items-center">
+                                        <div class="w-full">
+                                            <label for="name"
+                                                   class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                {{ user_subscription_period.get_interval_display }} payment
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-span-12 md:col-span-6 flex items-center justify-between">
+                                        <p class="text-gray-900">${{ user_subscription_period.price_dollars }}</p>
                                     </div>
                                 </div>
 
-                            </div>
-                        </div>
-
-                        {# Danger Zone #}
-                        <div x-data="{ isDeleteModalOpen: false }">
-                            <h2 class="text-base font-semibold leading-7 text-gray-900">Danger zone</h2>
-                            <p class="mt-1 text-sm leading-6 text-gray-500">Critical settings and account changes, be
-                                certain before modifying.</p>
-                            <div class="mt-4 space-y-4 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
-
-                                {# Danger Zone > Delete account #}
                                 <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
                                      x-data="{ showError: false }">
                                     <div class="col-span-12 md:col-span-6 flex items-center">
                                         <div class="w-full">
                                             <label for="name"
                                                    class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                Delete account
+                                                Next billing date
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-span-12 md:col-span-6 flex items-center justify-between">
+                                        <p class="text-gray-900">
+                                            <time datetime="{{ user_subscription_order.current_period_end_date }}">{{ user_subscription_order.current_period_end_date|date:'M d, Y' }}</time>
+                                        </p>
+                                    </div>
+                                </div>
+
+
+                                <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                     x-data="{ showError: false }">
+                                    <div class="col-span-12 md:col-span-6 flex items-center">
+                                        <div class="w-full">
+                                            <label for="name"
+                                                   class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6 cursor-text">
+                                                Cancel membership
                                             </label>
                                             <div class="text-xs text-gray-600 font-normal">
-                                                Once you delete your account, there is no going back.
+                                                All the data will remain in your account, but you will lose access to
+                                                premium features.
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-span-12 md:col-span-6 flex items-center md:justify-end">
                                         <button type="button" @click="isDeleteModalOpen=true"
                                                 class="font-semibold text-gray-600 hover:text-red-500 focus:outline-none">
-                                            Delete account
+                                            Cancel membership
                                         </button>
                                         {% include 'profiles/edit/modals/delete-account-confirm-modal.html' %}
                                     </div>
                                 </div>
-
                             </div>
                         </div>
+
+
                     </div>
                 </div>
             </div>

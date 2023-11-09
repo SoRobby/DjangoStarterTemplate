@@ -34,6 +34,8 @@ urlpatterns = [
 
     path('settings/notifications/', views.ProfileEditNotificationsView.as_view(), name='settings-notifications'),
 
+    path('settings/membership/', views.ProfileEditMembershipView.as_view(), name='settings-membership'),
+
     path('settings/support/', views.ProfileEditSupportView.as_view(), name='settings-support'),
 
     # Send support message

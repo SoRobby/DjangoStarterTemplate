@@ -153,15 +153,14 @@ class SubscriptionOrder(BaseModel):
         PAYMENT_FAILED = 'payment_failed', 'Payment failed'
         PROCESSING = 'processing', 'Processing'
 
-    class PurchaseStatusChoices(models.TextChoices):
-        CHECKOUT_CANCELLED = 'checkout_cancelled', 'Checkout cancelled'
-        ERROR = 'error', 'Error'
-        PAYMENT_FAILED = 'payment_failed', 'Payment failed'
-        PENDING = 'pending', 'Pending'
-        PAID = 'paid', 'Paid'
-
-        REFUNDED = 'refunded', 'Refunded'
-        SUBSCRIPTION_CANCELLED = 'subscription_cancelled', 'Subscription cancelled'
+    # class PurchaseStatusChoices(models.TextChoices):
+    #     CHECKOUT_CANCELLED = 'checkout_cancelled', 'Checkout cancelled'
+    #     ERROR = 'error', 'Error'
+    #     PAYMENT_FAILED = 'payment_failed', 'Payment failed'
+    #     PENDING = 'pending', 'Pending'
+    #     PAID = 'paid', 'Paid'
+    #     REFUNDED = 'refunded', 'Refunded'
+    #     SUBSCRIPTION_CANCELLED = 'subscription_cancelled', 'Subscription cancelled'
 
     purchaser = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                   related_name='subscription_orders',
@@ -171,8 +170,8 @@ class SubscriptionOrder(BaseModel):
                                             related_name='subscription_orders',
                                             help_text='The subscription period that was purchased')
 
-    purchase_status = models.CharField(max_length=50, choices=PurchaseStatusChoices.choices,
-                                       help_text='Purchase status')
+    status = models.CharField(max_length=50, choices=StatusChoices.choices,
+                              help_text='Purchase status')
 
     auto_renew = models.BooleanField(default=True,
                                      help_text='If true, the subscription will automatically renew at the end of the\
@@ -223,13 +222,13 @@ class SubscriptionOrder(BaseModel):
 
     def checkout_cancelled(self):
         """Set the status to cancelled and set the date_cancelled field to now."""
-        self.purchase_status = self.PurchaseStatusChoices.CHECKOUT_CANCELLED
+        self.status = self.StatusChoices.CHECKOUT_CANCELLED
         self.is_active = False
         self.save()
 
     def checkout_success(self):
         """Set the status to paid and set the date_end field to now."""
-        self.purchase_status = self.PurchaseStatusChoices.PAID
+        self.status = self.StatusChoices.ACTIVE
         self.date_start = timezone.now()
         self.save()
 
@@ -238,7 +237,7 @@ class SubscriptionOrder(BaseModel):
         The stripe checkout session returned success, however the returned checkout session data
         did not match what was expected and requires an admin to investigate.
         """
-        self.purchase_status = self.PurchaseStatusChoices.ERROR
+        self.status = self.StatusChoices.ERROR
         self.date_start = timezone.now()
         self.save()
 
@@ -258,3 +257,9 @@ class SubscriptionOrder(BaseModel):
             self.stripe_subscription_id = stripe_subscription_id
 
         self.save()
+
+    @property
+    def subscription_payment_interval(self):
+        """The subscription period for this subscription order."""
+        return self.subscription_period.get_interval_display()
+

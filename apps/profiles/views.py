@@ -2,19 +2,17 @@ import logging
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
-from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView, UpdateView, DetailView
 
+from apps.accounts.forms import AccountSettingsForm
 from apps.accounts.models import Account, AccountSettings
 from apps.accounts.services import send_verification_email
-from apps.core.models import Country
+from apps.core.utils import send_success_notification, send_error_notification
+from apps.subscriptions.models import SubscriptionOrder
 from .forms import ProfileEditGeneralForm, ChangeEmailForm, SupportMessageForm
 from .services import send_support_email
-from apps.core.utils import send_success_notification, send_error_notification
-
-from apps.accounts.forms import AccountSettingsForm
 
 
 # Create your views here.
@@ -28,12 +26,12 @@ class ProfileView(DetailView):
 
 
 # class ProfileEditGeneralView(TemplateView):
-#     template_name = 'avatar/profile-edit-general.html'
+#     template_name = 'avatar/general.html'
 
 class ProfileEditGeneralView(UpdateView):
     model = Account
     form_class = ProfileEditGeneralForm
-    template_name = 'profiles/edit/profile-edit-general.html'
+    template_name = 'profiles/edit/general.html'
 
     def get_object(self, queryset=None):
         logging.debug('[PROFILE_EDIT_GENERAL_VIEW.GET_OBJECT] Called')
@@ -54,7 +52,7 @@ class ProfileEditGeneralView(UpdateView):
 
 
 class ProfileEditSecurityView(TemplateView):
-    template_name = 'profiles/edit/profile-edit-security.html'
+    template_name = 'profiles/edit/security.html'
 
 
 @login_required
@@ -88,7 +86,7 @@ def profile_edit_security_change_email(request, *args, **kwargs):
 
 class ProfileEditNotificationsView(TemplateView):
     model = AccountSettings
-    template_name = 'profiles/edit/profile-edit-notifications.html'
+    template_name = 'profiles/edit/notifications.html'
 
     # Reference this https://chat.openai.com/c/3bcfc02f-81b2-4518-a0c8-b6bce02f5427
     # To finish this mode, got too tired to continue working on this. Falling asleep... zzzzz...
@@ -128,8 +126,26 @@ class ProfileEditNotificationsView(TemplateView):
         return self.get(request, *args, **kwargs)
 
 
+class ProfileEditMembershipView(TemplateView):
+    template_name = 'profiles/edit/membership.html'
+
+    def get_context_data(self, **kwargs):
+        logging.debug('[PROFILE_EDIT_MEMBERSHIP_VIEW.GET_CONTEXT_DATA] Called')
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+
+        # Get subscription information if a user subscription exists
+        user_subscription_order = SubscriptionOrder.objects.filter(purchaser=self.request.user).first()
+
+        context['user_subscription_order'] = user_subscription_order
+        context['user_subscription_period'] = user_subscription_order.subscription_period
+        context['user_subscription_plan'] = user_subscription_order.subscription_period.subscription_plan
+
+        return context
+
+
 class ProfileEditSupportView(TemplateView):
-    template_name = 'profiles/edit/profile-edit-support.html'
+    template_name = 'profiles/edit/support.html'
 
 
 @login_required

@@ -1,6 +1,10 @@
+import stripe
 from django.db import models
 
+from config import settings
 from .querysets import SubscriptionPlanQuerySet, SubscriptionPeriodQuerySet
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class SubscriptionPlanManager(models.Manager):
@@ -9,7 +13,6 @@ class SubscriptionPlanManager(models.Manager):
 
     def active(self):
         return self.get_queryset().active()
-
 
 
 class SubscriptionPeriodManager(models.Manager):
@@ -31,3 +34,15 @@ class SubscriptionPeriodManager(models.Manager):
     def for_subscription_by_category(self, subscription_plan, plan_category=None):
         return self.get_queryset().for_subscription_by_category(subscription_plan, plan_category).order_by(
             'price_cents')
+
+
+class SubscriptionOrderManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset()
+
+    def verify_stripe_active_subscription(self, subscription):
+        # Check if the subscription is active
+        if subscription.status == 'active':
+            return True
+        else:
+            return False

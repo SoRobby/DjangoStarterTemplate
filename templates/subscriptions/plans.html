@@ -38,10 +38,25 @@
                 </div>
 
                 <div>
+                    Status: <span>{{ user_subscription.status }}</span>
+                </div>
+                <div>
+                    Current period start date: {{ user_subscription.current_period_start_date }}
+                </div>
+                <div>
+                    Current period end date: {{ user_subscription.current_period_end_date }}
+                </div>
+                {% if user_subscription.date_cancelled %}
+                <div>
+                    Date cancelled: {{ user_subscription.date_cancelled }}
+                </div>
+                {% endif %}
+
+                <div>
                     <form action="{% url 'subscriptions:cancel-subscription' subscription_uuid=user_subscription.uuid %}"
                           method="POST">
                         {% csrf_token %}
-                        <button type="submit" class="border border-gray-200 p-2 hover:bg-red-50">Cancel subscription</button>
+                        <button type="submit" class="mt-2 border border-gray-200 px-2 py-1.5 hover:bg-red-50 rounded font-medium text-gray-600 text-sm hover:text-red-600">Cancel subscription</button>
                     </form>
                 </div>
             </div>
@@ -58,7 +73,6 @@
                 <p class="mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600">Choose an
                     affordable plan that’s packed with the best features for engaging your audience, creating
                     customer loyalty, and driving sales.</p>
-
                 <div class="mt-16 flex justify-center">
                     <fieldset
                             class="grid grid-cols-2 gap-x-1 rounded-full p-1 text-center text-xs font-semibold leading-5 ring-1 ring-inset ring-gray-200">
@@ -77,7 +91,7 @@
                         </label>
                     </fieldset>
                 </div>
-                <div class="isolate mx-auto mt-10 grid max-w-md grid-cols-1 gap-8 md:max-w-2xl md:grid-cols-2 lg:max-w-4xl xl:mx-0 xl:max-w-none xl:grid-cols-4">
+                <div class="isolate mx-auto mt-10 grid max-w-md grid-cols-1 gap-8 md:max-w-2xl md:grid-cols-2 lg:max-w-4xl xl:mx-0 xl:max-w-none xl:grid-cols-3">
 
                     {% for plan in subscription_plans %}
                         <div class="rounded-3xl p-8 ring-1 ring-gray-200">
