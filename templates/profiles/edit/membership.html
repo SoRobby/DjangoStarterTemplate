@@ -42,69 +42,34 @@
                                 period</p>
                             <div class="mt-4 space-y-4 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
 
-                                {# Change email (top) #}
-                                <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
-                                     x-data="{ showError: false, isEditing: false, isProcessing: false }">
-                                    <div class="col-span-12 md:col-span-6 flex">
-                                        <div class="w-full">
-                                            <label for="name"
-                                                   class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                Current plan
-                                            </label>
-                                            <div class="text-xs text-gray-600 font-normal">
-                                                Membership plans can be modified at any time.
+
+                                {# Billing card #}
+                                <div class="mt-2 md:mt-4 border border-gray-200 rounded-md p-4 grid grid-cols-2">
+
+                                    <div class="space-y-4">
+                                        <div class="text-gray-900 text-base font-medium flex gap-2 items-center">
+                                            {{ user_subscription_plan.name }}
+                                            <span class="badge-gray text-xs">Monthly</span>
+                                            <span class="badge-success text-xs">Active</span>
+                                        </div>
+                                        <div>
+                                            <div class="text-gray-900 font-medium">
+                                                Your next payment
+                                            </div>
+                                            <div class="text-gray-600">
+                                                ${{ user_subscription_period.price_dollars }} on <time datetime="{{ user_subscription_order.current_period_end_date }}">{{ user_subscription_order.current_period_end_date|date:'M d, Y' }}</time>
                                             </div>
                                         </div>
                                     </div>
-                                    <form id="changeEmailForm"
-                                          action="{% url 'profiles:settings-security-change-email' %}"
-                                          method="POST"
-                                          @keydown.escape.window="isEditing=false"
-                                          @submit="isProcessing=validateForm('changeEmailForm')"
-                                          class="col-span-12 md:col-span-6 flex items-center justify-between gap-6">
-                                        {% csrf_token %}
+                                    <div>
+                                        xxxx
+                                    </div>
 
-                                        <input type="hidden" name="username" value="{{ user.username }}">
-
-                                        <p x-show="!isEditing" x-transition:enter
-                                           class="text-gray-900">{{ user_subscription_plan.name }}
-                                            ({{ user_subscription_period.get_interval_display|lower }})</p>
-
-                                        <div x-show="isEditing" x-cloak x-transition:enter class="w-full">
-                                            <label for="email" class="sr-only">Email</label>
-                                            <div>
-                                                <input type="email" id="email" name="email"
-                                                       value="{{ user.email }}" required
-                                                       class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                            </div>
-
-                                            <div class="flex justify-end gap-4">
-                                                <button type="button" x-show="isEditing && !isProcessing"
-                                                        @click="isEditing=false"
-                                                        x-transition:enter x-cloak
-                                                        class="font-semibold text-gray-500 hover:text-gray-900 py-2">
-                                                    Cancel
-                                                </button>
-                                                <button type="submit" x-show="isEditing && !isProcessing"
-                                                        x-transition:enter x-cloak
-                                                        class="font-semibold text-indigo-600 hover:text-indigo-500 py-2">
-                                                    Save
-                                                    changes
-                                                </button>
-                                                <div x-show="isEditing && isProcessing">
-                                                    {% include 'components/processing/processing-sm.html' with text="Saving..." %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button type="button" x-show="!isEditing" @click="isEditing=true"
-                                                x-transition:enter
-                                                class="font-semibold text-indigo-600 hover:text-indigo-500">Change
-                                        </button>
-                                    </form>
                                 </div>
 
 
-                                <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12" x-data="{ isEditing: true }">
+                                {# Change email (top) #}
+                                <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12">
                                     <div class="col-span-12 md:col-span-6 flex items-center">
                                         <div class="w-full">
                                             <label for="name"
@@ -120,34 +85,57 @@
                                     <div class="col-span-12 md:col-span-6 flex items-center justify-between">
                                         <p class="text-gray-900">{{ user_subscription_plan.name }}
                                             ({{ user_subscription_period.get_interval_display|lower }})</p>
-                                        <button type="button" x-show="!isEditing" @click="isEditing=true"
-                                                x-transition:enter
+                                        <button type="button"
                                                 class="font-semibold text-indigo-600 hover:text-indigo-500">
-                                            Change
+                                            Switch to annual billing
                                         </button>
-                                        <button type="button" x-show="isEditing" @click="isEditing=false" x-cloak
-                                                x-transition:enter
-                                                class="font-semibold text-indigo-600 hover:text-indigo-500">Close
-                                        </button>
-                                    </div>
-
-                                    <div x-show="isEditing" x-collapse class="col-span-12">
-
-                                        <div class="grid grid-cols-3">
-                                            <div class="border border-gray-200">
-
-                                                <div>
-                                                    Hobby plan
-                                                </div>
-
-                                            </div>
-                                        </div>
 
                                     </div>
-
-
 
                                 </div>
+
+
+                                {#                                <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"#}
+                                {#                                     x-data="{ isEditing: true }">#}
+                                {#                                    <div class="col-span-12 md:col-span-6 flex items-center">#}
+                                {#                                        <div class="w-full">#}
+                                {#                                            <label for="name"#}
+                                {#                                                   class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">#}
+                                {#                                                Current plan#}
+                                {#                                            </label>#}
+                                {#                                            <div class="text-xs text-gray-600 font-normal">#}
+                                {#                                                Membership plans can be modified at any time.#}
+                                {#                                            </div>#}
+                                {#                                        </div>#}
+                                {#                                    </div>#}
+                                {##}
+                                {#                                    <div class="col-span-12 md:col-span-6 flex items-center justify-between">#}
+                                {#                                        <p class="text-gray-900">{{ user_subscription_plan.name }}#}
+                                {#                                            ({{ user_subscription_period.get_interval_display|lower }})</p>#}
+                                {#                                        <button type="button" x-show="!isEditing" @click="isEditing=true"#}
+                                {#                                                x-transition:enter#}
+                                {#                                                class="font-semibold text-indigo-600 hover:text-indigo-500">#}
+                                {#                                            Change#}
+                                {#                                        </button>#}
+                                {#                                        <button type="button" x-show="isEditing" @click="isEditing=false" x-cloak#}
+                                {#                                                x-transition:enter#}
+                                {#                                                class="font-semibold text-indigo-600 hover:text-indigo-500">Close#}
+                                {#                                        </button>#}
+                                {#                                    </div>#}
+                                {##}
+                                {#                                    <div x-show="isEditing" x-collapse class="col-span-12">#}
+                                {##}
+                                {#                                        <div class="grid grid-cols-3">#}
+                                {#                                            <div class="border border-gray-200">#}
+                                {##}
+                                {#                                                <div>#}
+                                {#                                                    Hobby plan#}
+                                {#                                                </div>#}
+                                {##}
+                                {#                                            </div>#}
+                                {#                                        </div>#}
+                                {#                                    </div>#}
+                                {#                                </div>#}
 
 
                                 <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12">
