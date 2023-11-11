@@ -8,13 +8,11 @@ from django.utils import timezone
 from apps.core.models import BaseModel
 from .managers import SubscriptionPlanManager, SubscriptionPeriodManager
 from .validators import validate_features_list
+from .choices import PlanCategories, IntervalChoices, StatusChoices
 
 
 # Models
 class SubscriptionPlan(BaseModel):
-    class PlanCategories(models.TextChoices):
-        DEFAULT = 'default', 'Default'
-
     name = models.CharField(max_length=120, verbose_name='Name', help_text='Name of the subscription plan')
 
     description = models.TextField(max_length=1000, verbose_name='Description',
@@ -71,19 +69,15 @@ class SubscriptionPlan(BaseModel):
     @property
     def monthly_term(self):
         """The monthly term for this subscription plan."""
-        return self.subscription_terms.filter(interval=SubscriptionPeriod.IntervalChoices.MONTHLY).first()
+        return self.subscription_terms.filter(interval=IntervalChoices.MONTHLY).first()
 
     @property
     def annual_term(self):
         """The monthly term for this subscription plan."""
-        return self.subscription_terms.filter(interval=SubscriptionPeriod.IntervalChoices.ANNUAL).first()
+        return self.subscription_terms.filter(interval=IntervalChoices.ANNUAL).first()
 
 
 class SubscriptionPeriod(BaseModel):
-    class IntervalChoices(models.TextChoices):
-        MONTHLY = 'monthly', 'Monthly'
-        ANNUAL = 'annual', 'Annual'
-
     subscription_plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE, verbose_name='Subscription plan',
                                           related_name='subscription_terms',
                                           help_text='Subscription plan that this term belongs to')
@@ -132,36 +126,6 @@ class SubscriptionPeriod(BaseModel):
 
 
 class SubscriptionOrder(BaseModel):
-    class StatusChoices(models.TextChoices):
-        """
-        The status of a subscription order.
-
-        ERROR: The subscription order encountered an error and requires admin intervention.
-        PROCESSING: The subscription order has been placed and is being processed.
-        PAYMENT_FAILED: The payment failed for the subscription order.
-        ACTIVE = The subscription order is active.
-        CHECKOUT_CANCELLED = The checkout session was cancelled by the user.
-        CANCELLED = The subscription order was cancelled by the user.
-        PAST_DUE = If a payment is missed but the service has not yet been suspended, indicating that the subscription
-        is at risk of becoming inactive.
-        """
-        ACTIVE = 'active', 'Active'
-        CANCELLED = 'cancelled', 'Cancelled'
-        CHECKOUT_CANCELLED = 'checkout_cancelled', 'Checkout cancelled'
-        ERROR = 'error', 'Error'
-        PAST_DUE = 'past_due', 'Past due'
-        PAYMENT_FAILED = 'payment_failed', 'Payment failed'
-        PROCESSING = 'processing', 'Processing'
-
-    # class PurchaseStatusChoices(models.TextChoices):
-    #     CHECKOUT_CANCELLED = 'checkout_cancelled', 'Checkout cancelled'
-    #     ERROR = 'error', 'Error'
-    #     PAYMENT_FAILED = 'payment_failed', 'Payment failed'
-    #     PENDING = 'pending', 'Pending'
-    #     PAID = 'paid', 'Paid'
-    #     REFUNDED = 'refunded', 'Refunded'
-    #     SUBSCRIPTION_CANCELLED = 'subscription_cancelled', 'Subscription cancelled'
-
     purchaser = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                   related_name='subscription_orders',
                                   help_text='The user who purchased the subscription')

@@ -1,7 +1,11 @@
+import logging
+from datetime import datetime
+
 import stripe
 from django.db import models
 
 from config import settings
+from .choices import StatusChoices
 from .querysets import SubscriptionPlanQuerySet, SubscriptionPeriodQuerySet
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -40,9 +44,4 @@ class SubscriptionOrderManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset()
 
-    def verify_stripe_active_subscription(self, subscription):
-        # Check if the subscription is active
-        if subscription.status == 'active':
-            return True
-        else:
-            return False
+

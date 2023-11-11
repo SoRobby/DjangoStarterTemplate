@@ -18,6 +18,8 @@ from django.views.decorators.http import require_POST
 
 from apps.core.utils import send_error_notification, send_success_notification
 from .models import SubscriptionPlan, SubscriptionPeriod, SubscriptionOrder
+from .choices import PlanCategories, IntervalChoices, StatusChoices
+from .services import SubscriptionService
 
 # Set the api key
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -26,7 +28,7 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 # Create your views here.
 def subscription_plans(request):
     context = {}
-    plan_category = SubscriptionPlan.PlanCategories.DEFAULT
+    plan_category = PlanCategories.DEFAULT
 
     subscription_plans = SubscriptionPlan.objects.active().filter(plan_category=plan_category)
     subscription_terms = SubscriptionPeriod.objects.active().filter(subscription_plan__in=subscription_plans).order_by(
@@ -58,41 +60,19 @@ def subscription_plans(request):
 
         stripe_subscription_id = user_subscription.stripe_subscription_id
         try:
-
-            stripe_subscription_data = stripe.Subscription.retrieve(stripe_subscription_id)
-
-            print(type(stripe_subscription_data))
-
-            logging.debug(f'stripe_subscription_data = {stripe_subscription_data}')
-
-            # Set sub
-            current_period_start = stripe_subscription_data.current_period_start
-            current_period_end = stripe_subscription_data.current_period_end
-
-            user_subscription.current_period_start_date = datetime.fromtimestamp(current_period_start)
-            user_subscription.current_period_end_date = datetime.fromtimestamp(current_period_end)
-
-            # Check to see if the subscription has ended
-            if stripe_subscription_data.ended_at:
-                user_subscription.is_active = False
-                user_subscription.date_cancelled = datetime.fromtimestamp(stripe_subscription_data.ended_at)
-                user_subscription.status = SubscriptionOrder.StatusChoices.CANCELLED
-
-            if stripe_subscription_data.cancel_at_period_end:
-                logging.debug('CANCELING SOON!')
-                user_subscription.date_cancelled = datetime.fromtimestamp(stripe_subscription_data.canceled_at)
-                user_subscription.status = SubscriptionOrder.StatusChoices.CANCELLED
-
-
-            user_subscription.save()
-
-
+            SubscriptionService.verify_stripe_subscription(user_subscription)
             # return subscription.status  # possible values are 'active', 'past_due', 'canceled', and others
         except stripe.error.StripeError as e:
             logging.error('Error retrieving subscription')
             logging.error(e)
             # Handle error
             pass
+
+
+    user_subscription = SubscriptionOrder.objects.filter(purchaser=request.user,
+                                                         is_active=True).order_by('-date_created')
+    if user_subscription:
+        context['user_subscription'] = user_subscription
 
     # annual_plans = SubscriptionTerm.objects.active().annual(category_type)
 

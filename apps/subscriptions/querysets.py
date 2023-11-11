@@ -1,5 +1,7 @@
 from django.db import models
 
+from .choices import IntervalChoices
+
 
 class SubscriptionPlanQuerySet(models.QuerySet):
     def active(self):
@@ -11,14 +13,14 @@ class SubscriptionPeriodQuerySet(models.QuerySet):
         return self.filter(is_active=True)
 
     def active_monthly(self, plan_category=None):
-        queryset = self.active().filter(interval=self.model.IntervalChoices.MONTHLY)
+        queryset = self.active().filter(interval=IntervalChoices.MONTHLY)
         if plan_category:
             print(plan_category)
             queryset = queryset.filter(subscription_plan__plan_category=plan_category)
         return queryset.order_by('price_cents')
 
     def active_annual(self, plan_category=None):
-        queryset = self.active().filter(interval=self.model.IntervalChoices.ANNUAL)
+        queryset = self.active().filter(interval=IntervalChoices.ANNUAL)
         if plan_category:
             queryset = queryset.filter(subscription_plan__plan_category=plan_category)
         return queryset.order_by('price_cents')

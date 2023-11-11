@@ -32,7 +32,7 @@
                     {% endif %}
 
                     <div class="space-y-16 sm:space-y-20">
-                        {# Email and password #}
+                        {# Membership #}
                         <div>
                             {% include 'profiles/edit/components/section-header.html' with title='Membership' description=None %}
 
@@ -40,21 +40,39 @@
 
                                 {# Billing card #}
                                 <div class="mt-2 md:mt-4 border border-gray-200 rounded-md p-4 grid grid-cols-2 divide-x">
-
-                                    <div class="space-y-4">
+                                    <div class="space-y-4 pr-4">
                                         <div class="text-gray-900 text-base font-medium flex gap-2 items-center">
-                                            Plan Name{{ user_subscription_plan.name }}
-                                            <span class="badge-gray text-xs">Monthly</span>
-                                            <span class="badge-success text-xs">Active</span>
+                                            {{ user_subscription_plan.name }}
+                                            {% if user_subscription_order.status == 'active' %}
+                                                <span class="badge-gray text-xs">Monthly</span>
+                                                <span class="badge-success">Active</span>
+                                            {% elif user_subscription_order.status == 'cancelled' %}
+                                                <span class="badge-error">Cancelled</span>
+                                            {% elif user_subscription_order.status == 'processing' %}
+                                                <span class="badge-gray text-xs">Monthly</span>
+                                                <span class="badge-warning">Processing</span>
+                                            {% endif %}
                                         </div>
                                         <div>
-                                            <div class="text-gray-900 font-medium">
-                                                Your next payment
-                                            </div>
-                                            <div class="text-gray-600">
-                                                ${{ user_subscription_period.price_dollars }} on
-                                                <time datetime="{{ user_subscription_order.current_period_end_date }}">{{ user_subscription_order.current_period_end_date|date:'M d, Y' }}</time>
-                                            </div>
+                                            {% if user_subscription_order.status == 'active' %}
+                                                <div class="text-gray-900 font-medium">
+                                                    Your next payment
+                                                </div>
+                                                <div class="text-gray-600">
+                                                    <span class="text-xl font-semibold pr-2 text-gray-900">${{ user_subscription_period.price_dollars }}</span> Due by
+                                                    <time datetime="{{ user_subscription_order.current_period_end_date }}">{{ user_subscription_order.current_period_end_date|date:'F d, Y' }}</time>
+                                                </div>
+                                            {% elif user_subscription_order.status == 'cancelled' %}
+                                                <div class="text-gray-900 font-medium">
+                                                    Plan cancelled
+                                                </div>
+                                                <div class="text-gray-600">
+                                                    Your plan will expire on
+                                                    <time datetime="{{ user_subscription_order.current_period_end_date }}">{{ user_subscription_order.current_period_end_date|date:'M d, Y' }}</time>
+                                                    <p class="text-xs mt-2">All the data will remain in your account,
+                                                        but you will lose access to premium features.</p>
+                                                </div>
+                                            {% endif %}
                                         </div>
                                     </div>
                                     <div class="pl-4">
@@ -65,101 +83,44 @@
                                             <div class="text-indigo-600 hover:text-indigo-500">
                                                 View payment history
                                             </div>
-                                            <div class="text-indigo-600 hover:text-indigo-500">
-                                                Switch to annual billing
+                                            {% if user_subscription_order.status == 'active' %}
+                                                <div class="text-indigo-600 hover:text-indigo-500">
+                                                    Switch to annual billing
+                                                </div>
+                                                <div class="text-indigo-600 hover:text-indigo-500">
+                                                    Modify plan
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {% if user_subscription_order.status == 'active' %}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                         x-data="{ isCancelPlanOpen: false }">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <label for="name"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6 cursor-text">
+                                                    Cancel membership
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">
+                                                    All the data will remain in your account, but you will lose access
+                                                    to
+                                                    premium features.
+                                                </div>
                                             </div>
-                                            <div class="text-indigo-600 hover:text-indigo-500">
-                                                Modify plan
-                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-
-
-                                {# Change email (top) #}
-                                <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12">
-                                    <div class="col-span-12 md:col-span-6">
-                                        <div class="w-full">
-                                            <label for="name"
-                                                   class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                Current plan
-                                            </label>
-                                            <div class="text-xs text-gray-600 font-normal">
-                                                Membership plans can be modified at any time.
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-span-12 md:col-span-6 flex justify-between">
-                                        <p class="text-gray-900">{{ user_subscription_plan.name }}
-                                            ({{ user_subscription_period.get_interval_display|lower }})</p>
-                                        <div class="flex flex-col items-end">
-                                            <button type="button"
-                                                    class="font-semibold text-indigo-600 hover:text-indigo-500">
-                                                Switch to annual billing
-                                            </button>
-                                            <button type="button"
-                                                    class="font-semibold text-indigo-600 hover:text-indigo-500">
-                                                Change plan
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12">
-                                    <div class="col-span-12 md:col-span-6 flex items-center">
-                                        <div class="w-full">
-                                            <label for="name"
-                                                   class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                {{ user_subscription_period.get_interval_display }} payment
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-span-12 md:col-span-6 flex items-center justify-between">
-                                        <p class="text-gray-900">${{ user_subscription_period.price_dollars }}</p>
-                                    </div>
-                                </div>
-
-                                <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
-                                     x-data="{ showError: false }">
-                                    <div class="col-span-12 md:col-span-6 flex items-center">
-                                        <div class="w-full">
-                                            <label for="name"
-                                                   class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                                                Next billing date
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-span-12 md:col-span-6 flex items-center justify-between">
-                                        <p class="text-gray-900">
-                                            <time datetime="{{ user_subscription_order.current_period_end_date }}">{{ user_subscription_order.current_period_end_date|date:'M d, Y' }}</time>
-                                        </p>
-                                    </div>
-                                </div>
-
-
-                                <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
-                                     x-data="{ showError: false }">
-                                    <div class="col-span-12 md:col-span-6 flex items-center">
-                                        <div class="w-full">
-                                            <label for="name"
-                                                   class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6 cursor-text">
+                                        <div class="col-span-12 md:col-span-6 flex items-center md:justify-end">
+                                            <button type="button" @click="isCancelPlanOpen=true"
+                                                    class="font-semibold text-gray-600 hover:text-red-500 focus:outline-none">
                                                 Cancel membership
-                                            </label>
-                                            <div class="text-xs text-gray-600 font-normal">
-                                                All the data will remain in your account, but you will lose access to
-                                                premium features.
-                                            </div>
+                                            </button>
+                                            {% include 'profiles/edit/modals/cancel-membership-confirm-modal.html' %}
                                         </div>
                                     </div>
-                                    <div class="col-span-12 md:col-span-6 flex items-center md:justify-end">
-                                        <button type="button" @click="isDeleteModalOpen=true"
-                                                class="font-semibold text-gray-600 hover:text-red-500 focus:outline-none">
-                                            Cancel membership
-                                        </button>
-                                        {% include 'profiles/edit/modals/delete-account-confirm-modal.html' %}
-                                    </div>
-                                </div>
+                                {% endif %}
+
                             </div>
                         </div>
 
