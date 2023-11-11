@@ -33,15 +33,12 @@
                             {% include 'profiles/edit/components/email-not-verified-banner.html' with username=user.username %}
                         {% endif %}
 
-                        <div class="text-2xl text-gray-800 font-semibold pb-4">
-                            Notifications
-                        </div>
                         <div class="space-y-16 sm:space-y-20">
                             {# Email section #}
                             <div>
-                                <h2 class="text-base font-semibold leading-7 text-gray-900">Emails</h2>
-                                <p class="mt-1 text-sm leading-6 text-gray-500">Modify what emails are sent to your
-                                    email</p>
+
+                                {% include 'profiles/edit/components/section-header.html' with title='Emails' description='Modify what emails are sent to your email' %}
+
                                 <div class="mt-4 space-y-4 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
 
                                     {# Emails > Marketing emails #}
@@ -120,9 +117,7 @@
 
                             {# Notification section #}
                             <div>
-                                <h2 class="text-base font-semibold leading-7 text-gray-900">Notifications</h2>
-                                <p class="mt-1 text-sm leading-6 text-gray-500">This information will be displayed
-                                    publicly so be careful what you share.</p>
+                                {% include 'profiles/edit/components/section-header.html' with title='Notifications' description=None %}
                                 <div class="mt-4 space-y-4 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
 
                                     {# Notifications > Inbox messages #}

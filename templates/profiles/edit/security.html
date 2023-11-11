@@ -31,15 +31,10 @@
                         {% include 'profiles/edit/components/email-not-verified-banner.html' with username=user.username %}
                     {% endif %}
 
-                    <div class="text-2xl text-gray-800 font-semibold pb-4">
-                        Security
-                    </div>
                     <div class="space-y-16 sm:space-y-20">
                         {# Email and password #}
                         <div>
-                            <h2 class="text-base font-semibold leading-7 text-gray-900">Email and password</h2>
-                            <p class="mt-1 text-sm leading-6 text-gray-500">Change your account's email address or
-                                account password.</p>
+                            {% include 'profiles/edit/components/section-header.html' with title='Email and password' description=None %}
                             <div class="mt-4 space-y-4 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
 
                                 {# Change email (top) #}
@@ -129,9 +124,7 @@
 
                         {# Danger Zone #}
                         <div x-data="{ isDeleteModalOpen: false }">
-                            <h2 class="text-base font-semibold leading-7 text-gray-900">Danger zone</h2>
-                            <p class="mt-1 text-sm leading-6 text-gray-500">Critical settings and account changes, be
-                                certain before modifying.</p>
+                            {% include 'profiles/edit/components/section-header.html' with title='Danger zone' description=None %}
                             <div class="mt-4 space-y-4 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
 
                                 {# Danger Zone > Delete account #}

@@ -135,11 +135,14 @@ class ProfileEditMembershipView(TemplateView):
         context = super().get_context_data(**kwargs)
 
         # Get subscription information if a user subscription exists
-        user_subscription_order = SubscriptionOrder.objects.filter(purchaser=self.request.user).first()
+        user_subscription_order = SubscriptionOrder.objects.filter(purchaser=self.request.user)
 
-        context['user_subscription_order'] = user_subscription_order
-        context['user_subscription_period'] = user_subscription_order.subscription_period
-        context['user_subscription_plan'] = user_subscription_order.subscription_period.subscription_plan
+        if user_subscription_order:
+            user_subscription_order = user_subscription_order.first()
+            logging.debug(user_subscription_order)
+            context['user_subscription_order'] = user_subscription_order
+            context['user_subscription_period'] = user_subscription_order.subscription_period
+            context['user_subscription_plan'] = user_subscription_order.subscription_period.subscription_plan
 
         return context
 

@@ -31,24 +31,19 @@
                         {% include 'profiles/edit/components/email-not-verified-banner.html' with username=user.username %}
                     {% endif %}
 
-                    <div class="text-2xl text-gray-800 font-semibold pb-4">
-                        Membership
-                    </div>
                     <div class="space-y-16 sm:space-y-20">
                         {# Email and password #}
                         <div>
-                            <h2 class="text-base font-semibold leading-7 text-gray-900">Overview</h2>
-                            <p class="mt-1 text-sm leading-6 text-gray-500">Overview of your membership and payment
-                                period</p>
+                            {% include 'profiles/edit/components/section-header.html' with title='Membership' description=None %}
+
                             <div class="mt-4 space-y-4 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
 
-
                                 {# Billing card #}
-                                <div class="mt-2 md:mt-4 border border-gray-200 rounded-md p-4 grid grid-cols-2">
+                                <div class="mt-2 md:mt-4 border border-gray-200 rounded-md p-4 grid grid-cols-2 divide-x">
 
                                     <div class="space-y-4">
                                         <div class="text-gray-900 text-base font-medium flex gap-2 items-center">
-                                            {{ user_subscription_plan.name }}
+                                            Plan Name{{ user_subscription_plan.name }}
                                             <span class="badge-gray text-xs">Monthly</span>
                                             <span class="badge-success text-xs">Active</span>
                                         </div>
@@ -57,20 +52,33 @@
                                                 Your next payment
                                             </div>
                                             <div class="text-gray-600">
-                                                ${{ user_subscription_period.price_dollars }} on <time datetime="{{ user_subscription_order.current_period_end_date }}">{{ user_subscription_order.current_period_end_date|date:'M d, Y' }}</time>
+                                                ${{ user_subscription_period.price_dollars }} on
+                                                <time datetime="{{ user_subscription_order.current_period_end_date }}">{{ user_subscription_order.current_period_end_date|date:'M d, Y' }}</time>
                                             </div>
                                         </div>
                                     </div>
-                                    <div>
-                                        xxxx
+                                    <div class="pl-4">
+                                        <div class="text-base text-gray-600 font-medium">
+                                            Payment information
+                                        </div>
+                                        <div class="mt-2">
+                                            <div class="text-indigo-600 hover:text-indigo-500">
+                                                View payment history
+                                            </div>
+                                            <div class="text-indigo-600 hover:text-indigo-500">
+                                                Switch to annual billing
+                                            </div>
+                                            <div class="text-indigo-600 hover:text-indigo-500">
+                                                Modify plan
+                                            </div>
+                                        </div>
                                     </div>
-
                                 </div>
 
 
                                 {# Change email (top) #}
                                 <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12">
-                                    <div class="col-span-12 md:col-span-6 flex items-center">
+                                    <div class="col-span-12 md:col-span-6">
                                         <div class="w-full">
                                             <label for="name"
                                                    class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
@@ -82,61 +90,21 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-span-12 md:col-span-6 flex items-center justify-between">
+                                    <div class="col-span-12 md:col-span-6 flex justify-between">
                                         <p class="text-gray-900">{{ user_subscription_plan.name }}
                                             ({{ user_subscription_period.get_interval_display|lower }})</p>
-                                        <button type="button"
-                                                class="font-semibold text-indigo-600 hover:text-indigo-500">
-                                            Switch to annual billing
-                                        </button>
-
+                                        <div class="flex flex-col items-end">
+                                            <button type="button"
+                                                    class="font-semibold text-indigo-600 hover:text-indigo-500">
+                                                Switch to annual billing
+                                            </button>
+                                            <button type="button"
+                                                    class="font-semibold text-indigo-600 hover:text-indigo-500">
+                                                Change plan
+                                            </button>
+                                        </div>
                                     </div>
-
                                 </div>
-
-
-                                {#                                <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"#}
-                                {#                                     x-data="{ isEditing: true }">#}
-                                {#                                    <div class="col-span-12 md:col-span-6 flex items-center">#}
-                                {#                                        <div class="w-full">#}
-                                {#                                            <label for="name"#}
-                                {#                                                   class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">#}
-                                {#                                                Current plan#}
-                                {#                                            </label>#}
-                                {#                                            <div class="text-xs text-gray-600 font-normal">#}
-                                {#                                                Membership plans can be modified at any time.#}
-                                {#                                            </div>#}
-                                {#                                        </div>#}
-                                {#                                    </div>#}
-                                {##}
-                                {#                                    <div class="col-span-12 md:col-span-6 flex items-center justify-between">#}
-                                {#                                        <p class="text-gray-900">{{ user_subscription_plan.name }}#}
-                                {#                                            ({{ user_subscription_period.get_interval_display|lower }})</p>#}
-                                {#                                        <button type="button" x-show="!isEditing" @click="isEditing=true"#}
-                                {#                                                x-transition:enter#}
-                                {#                                                class="font-semibold text-indigo-600 hover:text-indigo-500">#}
-                                {#                                            Change#}
-                                {#                                        </button>#}
-                                {#                                        <button type="button" x-show="isEditing" @click="isEditing=false" x-cloak#}
-                                {#                                                x-transition:enter#}
-                                {#                                                class="font-semibold text-indigo-600 hover:text-indigo-500">Close#}
-                                {#                                        </button>#}
-                                {#                                    </div>#}
-                                {##}
-                                {#                                    <div x-show="isEditing" x-collapse class="col-span-12">#}
-                                {##}
-                                {#                                        <div class="grid grid-cols-3">#}
-                                {#                                            <div class="border border-gray-200">#}
-                                {##}
-                                {#                                                <div>#}
-                                {#                                                    Hobby plan#}
-                                {#                                                </div>#}
-                                {##}
-                                {#                                            </div>#}
-                                {#                                        </div>#}
-                                {#                                    </div>#}
-                                {#                                </div>#}
-
 
                                 <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12">
                                     <div class="col-span-12 md:col-span-6 flex items-center">

@@ -1740,6 +1740,10 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
   margin-right: -0.5rem;
 }
 
+.-mr-4 {
+  margin-right: -1rem;
+}
+
 .-mt-1 {
   margin-top: -0.25rem;
 }
@@ -2951,6 +2955,10 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
   padding-left: 0.75rem;
 }
 
+.pl-4 {
+  padding-left: 1rem;
+}
+
 .pl-6 {
   padding-left: 1.5rem;
 }
@@ -4071,12 +4079,12 @@ input.input-text-sm:focus, textarea.input-text-sm:focus {
     margin-top: 0px;
   }
 
-  .md\:mt-8 {
-    margin-top: 2rem;
-  }
-
   .md\:mt-4 {
     margin-top: 1rem;
+  }
+
+  .md\:mt-8 {
+    margin-top: 2rem;
   }
 
   .md\:block {

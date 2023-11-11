@@ -8,30 +8,26 @@
         <div class="group relative text-center space-y-6 px-4">
             <h3 class="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900 group-hover:text-gray-600">
                 <a href="#">
-                    <span class="absolute inset-0"></span>
-                    Sit amet consectetur adipisicing eli</a>
+                    <span class="absolute inset-0"></span>{{ article.title }}</a>
             </h3>
-            <p class="line-clamp-2 text-lg leading-6 text-gray-600 group-hover:text-gray-500">
-                Lorem ipsum dolor sit amet consectetur
-                adipisicing elit.
-                Quisquam, voluptatum.</p>
+            <p class="line-clamp-2 text-lg leading-6 text-gray-600 group-hover:text-gray-500">{{ article.meta_description }}</p>
         </div>
 
         <div class="flex items-center gap-x-4">
-            <img src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                 alt="" class="h-10 w-10 rounded-full bg-gray-100">
-            <div class="text-sm leading-6">
-                <p class="font-semibold text-gray-800 hover:text-blue-800">
-                    <a href="authorname">
-                        Michael Foster
-                    </a>
-                </p>
-                <div class="flex items-center gap-x-2 text-xs text-gray-500">
-                    <time datetime="2020-03-16">Mar 16, 2020</time>
-                    <p>•</p>
-                    <p>12 min read</p>
-                </div>
-            </div>
+            {% include 'blog/components/article-list-author-read-time.html' %}
+{#            {% include 'components/avatar/avatar-10x10.html' with user_instance=article.lead_author %}#}
+{#            <div class="text-sm leading-6">#}
+{#                <p class="font-semibold text-gray-800 hover:text-blue-800">#}
+{#                    <a href="#">#}
+{#                        {{ article.lead_author.display_name }}#}
+{#                    </a>#}
+{#                </p>#}
+{#                <div class="flex items-center gap-x-2 text-xs text-gray-500">#}
+{#                    <time datetime="2020-03-16">{{ article.date_published|date:'M d, Y' }}</time>#}
+{#                    <p>•</p>#}
+{#                    <p>{{ article.reading_time_minutes }} min read</p>#}
+{#                </div>#}
+{#            </div>#}
         </div>
     </div>
     <div>

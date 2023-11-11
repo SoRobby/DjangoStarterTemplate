@@ -26,18 +26,29 @@ User = get_user_model()
 
 
 # Create your views here.
+
 def article_list(request):
-    content = {}
+    context = {}
 
     published_articles = Article.objects.published()
-    content['published_articles'] = published_articles
+
+    featured_article = published_articles.first()
+    featured_secondary_articles = published_articles[:3]
+
+
+    context['featured_article'] = featured_article
+    context['featured_secondary_articles'] = featured_secondary_articles
+
+    context['published_articles'] = published_articles
+
+
 
     # Check if user is admin/superuser
     if request.user.is_superuser:
         unpublished_articles = Article.objects.not_published()
-        content['unpublished_articles'] = unpublished_articles
+        context['unpublished_articles'] = unpublished_articles
 
-    return render(request, 'blog/articles-list.html', content)
+    return render(request, 'blog/articles-list.html', context)
 
 
 def does_user_have_access(article: Article, user) -> bool:

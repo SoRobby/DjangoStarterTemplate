@@ -127,6 +127,14 @@ class Account(AbstractBaseUser):
     def theme_choices_as_list(self):
         return [{'key': key, 'name': name} for i, (key, name) in enumerate(self.ThemeChoices.choices)]
 
+    @property
+    def display_name(self):
+        if self.is_profile_public and self.name:
+            return self.name
+        else:
+            return self.username
+
+
     @staticmethod
     def get_theme_choices_as_dict():
         return dict(Account.ThemeChoices.choices)

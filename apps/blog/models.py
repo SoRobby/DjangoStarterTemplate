@@ -166,6 +166,13 @@ class Article(BaseModel, SoftDeletionModel):
     def keywords_list(self):
         return self.meta_keywords.split(',')
 
+    # @property
+    # def display_description(self):
+    #     if self.meta_description:
+    #         return self.meta_description
+    #     else:
+    #         return self.content
+
     def title_has_changed(self):
         # Check if the title has changed and needs a new slug
         try:
@@ -261,7 +268,6 @@ class Comment(BaseModel, SoftDeletionModel):
 
         # Call the original save method of models.model
         super().save(*args, **kwargs)
-
 
     # Removed and moved to be annotations in the queryset
     # @property
