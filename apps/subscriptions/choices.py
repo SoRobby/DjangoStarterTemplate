@@ -2,8 +2,18 @@ from django.db import models
 from enum import Enum
 
 
-class PlanCategories(models.TextChoices):
-    DEFAULT = 'default', 'Default'
+# class PlanCategories(models.TextChoices):
+#     DEFAULT = 'default', 'Default'
+class PlanCategories(Enum):
+    DEFAULT = ('default', 'Default')
+
+    def __init__(self, value, label):
+        self._value_ = value
+        self.label = label
+
+    @classmethod
+    def choices(cls):
+        return [(choice.value, choice.label) for choice in cls]
 
 
 # class IntervalChoices(models.TextChoices):
