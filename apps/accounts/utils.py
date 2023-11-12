@@ -1,4 +1,5 @@
 from uuid import uuid4
+import os
 
 """
 Accounts utility (utils.py) functions for the accounts app.
@@ -34,3 +35,9 @@ def generate_short_uuid(instance, length=8):
     if len(instances) > 0:
         short_uuid = generate_short_uuid(length)
     return short_uuid
+
+def upload_to_profile_images(instance, filename):
+    if filename:
+        return os.path.join('users', str(instance.uuid), 'profile-image', filename)
+    else:
+        return os.path.join('users', str(instance.uuid), 'profile-image')

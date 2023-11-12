@@ -1,3 +1,4 @@
+import logging
 from uuid import uuid4
 
 from django import forms
@@ -27,6 +28,7 @@ class ChangeEmailForm(forms.Form):
     """
 
     email = forms.EmailField(max_length=255)
+    profile_image = forms.ImageField()
 
     def clean_email(self) -> str:
         email = self.cleaned_data.get('email')

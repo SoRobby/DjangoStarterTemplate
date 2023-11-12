@@ -8,11 +8,16 @@ from django.dispatch import receiver
 from django.utils import timezone
 
 from apps.accounts.managers import AccountManager
-from apps.accounts.utils import generate_short_uuid
+from apps.accounts.utils import generate_short_uuid, upload_to_profile_images
+
 
 
 # Models
 class Account(AbstractBaseUser):
+    PROFILE_IMAGE_ASPECT_RATIO = 1 / 1
+    PROFILE_IMAGE_SIZE = (300, 300)
+    PROFILE_IMAGE_THUMBNAIL_SIZE = (100, 100)
+
     # Choice classes
     class ThemeChoices(models.TextChoices):
         LIGHT = 'light', 'Light'
@@ -51,7 +56,7 @@ class Account(AbstractBaseUser):
                                                  'assigning them')
 
     # TODO - Make profile images upload the the uuid of the user.
-    profile_image = models.ImageField(upload_to='accounts/', blank=True, null=True, verbose_name='Profile image',
+    profile_image = models.ImageField(upload_to=upload_to_profile_images, blank=True, null=True, verbose_name='Profile image',
                                       help_text='Profile image or avatar')
 
     theme = models.CharField(max_length=55, default=ThemeChoices.SYSTEM, choices=ThemeChoices.choices,
