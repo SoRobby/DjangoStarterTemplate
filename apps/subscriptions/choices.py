@@ -4,6 +4,7 @@ from enum import Enum
 
 # class PlanCategories(models.TextChoices):
 #     DEFAULT = 'default', 'Default'
+
 class PlanCategories(Enum):
     DEFAULT = ('default', 'Default')
 

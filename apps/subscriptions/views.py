@@ -1,4 +1,3 @@
-import json
 import logging
 import urllib
 import urllib.parse
@@ -31,6 +30,8 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 def subscription_plans(request):
     context = {}
 
+    # Check to see if the current user has a subscription, if the user has a subscription,
+    # pass the user subscription to the template
     if request.user.is_authenticated:
         user_subscription = SubscriptionOrder.objects.filter(purchaser=request.user, is_active=True)
         if user_subscription:
@@ -43,13 +44,11 @@ def subscription_plans(request):
     )
 
     available_plans = SubscriptionPlan.objects.active().order_by_price_for_category(
-        PlanCategories.DEFAULT).prefetch_related(sorted_terms_prefetch)
-
-    # Check to see if the current user has a subscription
-
+        PlanCategories.DEFAULT.value).prefetch_related(sorted_terms_prefetch)
 
     context['available_plans'] = available_plans
 
+    # TODO - Remove...
     # if user_subscription:
     #     user_subscription = user_subscription.first()
     #
@@ -68,13 +67,6 @@ def subscription_plans(request):
     #         pass
 
     return render(request, 'subscriptions/plans.html', context)
-
-
-# def subscription_checkout(request, term_uuid):
-#     context = {}
-#
-#     # Get the subscription Term or 404
-#     term = SubscriptionTerm.objects.get_object_or_404(uuid=term_uuid)
 
 
 class CheckoutSessionCreateView(View):
@@ -302,4 +294,3 @@ class CancelSubscriptionView(View):
             # Handle error
 
         return redirect('subscriptions:subscription-plans')
-
