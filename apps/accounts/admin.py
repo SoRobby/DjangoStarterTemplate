@@ -84,6 +84,8 @@ class AccountSettingsAdmin(admin.ModelAdmin):
 
     search_fields = ()
 
+    autocomplete_fields = ('account',)
+
     readonly_fields = ('id', 'uuid', 'date_created', 'date_modified')
 
     fieldsets = (
@@ -98,12 +100,13 @@ class AccountSettingsAdmin(admin.ModelAdmin):
          ),
 
         ('Email settings', {
-            'fields': ('marketing_emails', 'weekly_digest_emails', 'discovery_emails', 'site_update_emails'),
+            'fields': ('receive_marketing_emails', 'receive_weekly_digest_emails', 'receive_discovery_emails',
+                       'receive_site_update_emails'),
             'description': 'Type of emails the user will receive'}
          ),
 
         ('Notification settings', {
-            'fields': ('inbox_message_notifications', 'announcement_notifications'),
+            'fields': ('receive_inbox_message_notifications', 'receive_announcement_notifications'),
             'description': 'Type of notifications the user will receive'}
          ),
 

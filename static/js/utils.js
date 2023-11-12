@@ -13,7 +13,6 @@
 // }
 
 
-
 document.addEventListener("DOMContentLoaded", function (event) {
 
     document.querySelectorAll('.convert-time').forEach(element => {
@@ -21,8 +20,15 @@ document.addEventListener("DOMContentLoaded", function (event) {
         element.textContent = new Date(utcDateString).toLocaleString();
     });
 
-
 });
+
+
+function openFeedbackModal() {
+    const feedbackButton = document.getElementById('btn-feedback');
+    if (feedbackButton) {
+        feedbackButton.click();
+    }
+}
 
 
 // function convertUTCToLocalTime(utcTimeString, dateFormat, timeFormat) {

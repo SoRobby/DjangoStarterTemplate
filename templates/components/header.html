@@ -46,7 +46,7 @@
                     <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"></div>
 
                     <div @click.away="isMobileMenuOpen=false" @keyup.escape.window="isMobileMenuOpen=false"
-                         class="fixed inset-y-0 left-0 z-10 w-3/4 px-6 py-6 overflow-y-auto bg-white sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+                         class="fixed inset-y-0 left-0 z-30 w-3/4 px-6 py-6 overflow-y-auto bg-white sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
 
                         <div class="flex items-center justify-between border-b border-gray-200 pb-4">
                             <a href="{% url 'home' %}" class="-m-1.5 p-1.5 flex items-center">
@@ -237,7 +237,8 @@
                 <div class="hidden md:flex gap-x-12"
                      x-data="{ isMegaMenuTypeOpen1: false, isMegaMenuTypeOpen2: false, isMegaMenuTypeOpen3: false }">
                     <a href="{% url 'home' %}" class="text-sm font-semibold leading-6 text-gray-800">Home</a>
-                    <a href="{% url 'blog:post-list' %}" class="text-sm font-semibold leading-6 text-gray-800">Blog</a>
+                    <a href="{% url 'blog:article-list' %}"
+                       class="text-sm font-semibold leading-6 text-gray-800">Blog</a>
 
                     <button @click="isMegaMenuTypeOpen1=!isMegaMenuTypeOpen1" type="button"
                             class="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900"
@@ -251,7 +252,7 @@
                     </button>
                     <div x-show="isMegaMenuTypeOpen1" @click.away="isMegaMenuTypeOpen1=false"
                          @keyup.escape.window="isMegaMenuTypeOpen1=false" x-transition x-cloak
-                         class="absolute z-20 mt-10 flex w-screen max-w-max px-4">
+                         class="absolute z-30 mt-10 flex w-screen max-w-max px-4">
                         <div class="w-screen max-w-md flex-auto overflow-hidden rounded-2xl bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
                             <div class="p-4">
                                 <div class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
@@ -259,18 +260,16 @@
                                         <svg class="h-6 w-6 text-gray-600 group-hover:text-indigo-600" fill="none"
                                              viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                                              aria-hidden="true">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                  d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                  d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
                                         </svg>
                                     </div>
                                     <div>
                                         <a href="#" class="font-semibold text-gray-900">
-                                            Analytics
+                                            eShop
                                             <span class="absolute inset-0"></span>
                                         </a>
-                                        <p class="mt-1 text-gray-600">Get a better understanding of your traffic</p>
+                                        <p class="mt-1 text-gray-600">Products delivered to your door</p>
                                     </div>
                                 </div>
                                 <div class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
@@ -283,63 +282,11 @@
                                         </svg>
                                     </div>
                                     <div>
-                                        <a href="#" class="font-semibold text-gray-900">
-                                            Engagement
+                                        <a href="{% url 'subscriptions:subscription-plans' %}" class="font-semibold text-gray-900">
+                                            Subscription plans
                                             <span class="absolute inset-0"></span>
                                         </a>
-                                        <p class="mt-1 text-gray-600">Speak directly to your customers</p>
-                                    </div>
-                                </div>
-                                <div class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
-                                    <div class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                        <svg class="h-6 w-6 text-gray-600 group-hover:text-indigo-600" fill="none"
-                                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                             aria-hidden="true">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                  d="M7.864 4.243A7.5 7.5 0 0119.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 004.5 10.5a7.464 7.464 0 01-1.15 3.993m1.989 3.559A11.209 11.209 0 008.25 10.5a3.75 3.75 0 117.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 01-3.6 9.75m6.633-4.596a18.666 18.666 0 01-2.485 5.33"/>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <a href="#" class="font-semibold text-gray-900">
-                                            Security
-                                            <span class="absolute inset-0"></span>
-                                        </a>
-                                        <p class="mt-1 text-gray-600">Your customers&#039; data will be safe and
-                                            secure</p>
-                                    </div>
-                                </div>
-                                <div class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
-                                    <div class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                        <svg class="h-6 w-6 text-gray-600 group-hover:text-indigo-600" fill="none"
-                                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                             aria-hidden="true">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                  d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 002.25-2.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v2.25A2.25 2.25 0 006 10.5zm0 9.75h2.25A2.25 2.25 0 0010.5 18v-2.25a2.25 2.25 0 00-2.25-2.25H6a2.25 2.25 0 00-2.25 2.25V18A2.25 2.25 0 006 20.25zm9.75-9.75H18a2.25 2.25 0 002.25-2.25V6A2.25 2.25 0 0018 3.75h-2.25A2.25 2.25 0 0013.5 6v2.25a2.25 2.25 0 002.25 2.25z"/>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <a href="#" class="font-semibold text-gray-900">
-                                            Integrations
-                                            <span class="absolute inset-0"></span>
-                                        </a>
-                                        <p class="mt-1 text-gray-600">Connect with third-party tools</p>
-                                    </div>
-                                </div>
-                                <div class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
-                                    <div class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                        <svg class="h-6 w-6 text-gray-600 group-hover:text-indigo-600" fill="none"
-                                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                             aria-hidden="true">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                  d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <a href="#" class="font-semibold text-gray-900">
-                                            Automations
-                                            <span class="absolute inset-0"></span>
-                                        </a>
-                                        <p class="mt-1 text-gray-600">Build strategic funnels that will convert</p>
+                                        <p class="mt-1 text-gray-600">Top subscription plans</p>
                                     </div>
                                 </div>
                             </div>
@@ -381,7 +328,7 @@
                     </button>
                     <div x-show="isMegaMenuTypeOpen2" @click.away="isMegaMenuTypeOpen2=false"
                          @keyup.escape.window="isMegaMenuTypeOpen2=false" x-transition x-cloak
-                         class="absolute z-20 mt-10 flex w-screen max-w-max px-4">
+                         class="absolute z-30 mt-10 flex w-screen max-w-max px-4">
                         <div class="w-screen max-w-md flex-auto overflow-hidden rounded-2xl bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5 lg:max-w-3xl">
                             <div class="grid grid-cols-1 gap-x-6 gap-y-1 p-4 lg:grid-cols-2">
                                 <div class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
@@ -518,7 +465,7 @@
                     </button>
                     <div x-show="isMegaMenuTypeOpen3" @click.away="isMegaMenuTypeOpen3=false"
                          @keyup.escape.window="isMegaMenuTypeOpen3=false" x-transition x-cloak
-                         class="absolute inset-x-0 z-20 mt-10 flex mx-auto max-w-7xl px-4">
+                         class="absolute inset-x-0 z-30 mt-10 flex mx-auto max-w-7xl px-4">
                         <div class="mx-auto max-w-7xl flex-auto overflow-hidden rounded-2xl bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
                             <div class="grid grid-cols-1 gap-x-6 gap-y-1 p-4 lg:grid-cols-2">
                                 <div class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
@@ -721,7 +668,7 @@
 
                         {# User menu #}
                         <div x-show="isUserMenuOpen" x-cloak
-                             class="absolute right-0 z-20 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                             class="absolute right-0 z-30 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                              role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
 
                             <div class="px-4 py-2">
@@ -754,10 +701,20 @@
                                    id="user-menu-item-2">Admin panel</a>
                                 {% if user.is_superuser %}
                                     <a href="{% url 'admin:index' %}"
-                                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                       target="_blank"
+                                       @click="isUserMenuOpen=false"
+                                       class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex justify-between group"
                                        role="menuitem"
                                        tabindex="-1"
-                                       id="user-menu-item-2">Django panel</a>
+                                       id="user-menu-item-2">Django panel
+                                        <span class="text-gray-400 group-hover:text-gray-700">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                 stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
+                                        </svg>
+                                        </span>
+                                    </a>
                                 {% endif %}
                             {% endif %}
 
@@ -855,5 +812,4 @@
 
     </nav>
 </header>
-
 

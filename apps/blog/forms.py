@@ -1,32 +1,43 @@
 from django import forms
-from django_ckeditor_5.widgets import CKEditor5Widget
+from django.conf import settings
+from django.utils import timezone
+from tinymce.widgets import TinyMCE
 
 from apps.accounts.models import Account
-from .models import Post
+from .models import Article
 
 
-class PostForm(forms.ModelForm):
-    # content = forms.CharField(required=False, widget=forms.Textarea())
+class ArticleForm(forms.ModelForm):
     lead_author_email = forms.EmailField(label="Lead Author's Email", required=True)
+    save_type = forms.CharField(required=False)
 
     class Meta:
-        model = Post
-        fields = ['title', 'content', 'release_status', 'allow_comments', 'allow_sharing',
+        model = Article
+        fields = ['title', 'release_status', 'visibility', 'allow_comments', 'content', 'allow_sharing',
                   'meta_title', 'meta_description', 'meta_keywords']
+        widgets = {
+            'content': TinyMCE(mce_attrs=settings.TINYMCE_BLOG_ARTICLE_CONFIG),
+        }
 
     def save(self, commit=True):
         # Call the parent class's save method and get the Post object
         instance = super().save(commit=False)
 
-        # Try to get the lead author by email
-        lead_author_email = self.cleaned_data['lead_author_email']
-        instance.lead_author = Account.objects.get(email=lead_author_email)
+        if len(self.cleaned_data['title']) == 0:
+            print('SETTING TITLE')
+            instance.title = f'Untitled {timezone.now()}'
+        else:
+            print('Title is not empty')
 
-        # try:
-        #     user = Account.objects.get(email=lead_author_email)
-        #     instance.lead_author = user
-        # except Account.DoesNotExist:
-        #     print('User does not exist')
+        print(self.cleaned_data)
+
+        # Try to get the lead author by email
+        instance.lead_author = Account.objects.get(email=self.cleaned_data['lead_author_email'])
+
+        # Handle logic for save_type
+        save_type = self.cleaned_data['save_type']
+        if save_type == 'publish':
+            instance.release_status = 'published'
 
         # Save the instance if commit is True
         if commit:

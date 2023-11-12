@@ -301,3 +301,14 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+document.querySelectorAll('[data-copy-url]').forEach(button => {
+    button.addEventListener('click', () => {
+        navigator.clipboard.writeText(window.location.href)
+            .then(() => {
+                console.log('URL copied to clipboard');
+            })
+            .catch(err => {
+                console.error('Error in copying URL: ', err);
+            });
+    });
+});

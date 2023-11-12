@@ -1,15 +1,15 @@
 <tbody id="feedback-tbody" class="divide-y divide-gray-200 bg-white">
-{% for feedback in feedbacks %}
+{% for list_item in list_items %}
     <tr class="group">
-        <td class="whitespace-nowrap px-4 py-2 text-sm text-muted group-hover:bg-indigo-50">{{ feedback.id }}</td>
+        <td class="whitespace-nowrap px-4 py-2 text-sm text-muted group-hover:bg-indigo-50">{{ list_item.id }}</td>
         <td class="whitespace-nowrap px-2 py-2 text-sm text-muted group-hover:bg-indigo-50"><a
-                href="{{ feedback.page_url }}" class="hover:text-indigo-600 hover:underline">{{ feedback.page_url }}</a>
+                href="{{ list_item.page_url }}" class="hover:text-indigo-600 hover:underline">{{ list_item.page_url }}</a>
         </td>
-        <td class="whitespace-nowrap px-2 py-2 text-sm text-muted group-hover:bg-indigo-50">{{ feedback.category }}</td>
+        <td class="whitespace-nowrap px-2 py-2 text-sm text-muted group-hover:bg-indigo-50">{{ list_item.category }}</td>
         <td class="whitespace-nowrap px-2 py-2 text-sm text-muted group-hover:bg-indigo-50 convert-time"
-            data-utc-time="{{ feedback.date_created.isoformat }}"></td>
+            data-utc-time="{{ list_item.date_created.isoformat }}"></td>
         <td class="relative whitespace-nowrap px-4 py-2 text-right text-sm font-medium group-hover:bg-indigo-50">
-            <a href="{% url 'adminpanel:feedback-detail' uuid=feedback.uuid %}"
+            <a href="{% url 'adminpanel:feedback-detail' uuid=list_item.uuid %}"
                class="text-indigo-600 hover:text-indigo-900">Edit</a>
         </td>
     </tr>

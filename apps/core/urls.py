@@ -4,9 +4,9 @@ from . import views
 
 # Base url of the core app is '' (root)
 urlpatterns = [
-    path('', views.home, name='home'),
-    path('legal/terms-of-service/', views.terms_of_service, name='terms-of-service'),
+    path('', views.HomeView.as_view(), name='home'),
+    path('legal/terms-of-service/', views.TermsOfServiceView.as_view(), name='terms-of-service'),
 
     # Test url for testing various items
-    path('test/', views.test, name='test'),
+    path('test/', views.TestView.as_view(), name='test'),
 ]

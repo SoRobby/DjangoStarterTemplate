@@ -1,0 +1,13 @@
+{% include 'components/avatar/avatar-10x10.html' with user_instance=article.lead_author %}
+<div class="text-sm leading-6">
+    <p class="font-semibold text-gray-800 hover:text-blue-800">
+        <a href="authorname">
+            {{ article.lead_author.display_name }}
+        </a>
+    </p>
+    <div class="flex items-center gap-x-2 text-xs text-gray-500">
+        <time datetime="{{ article.date_published|date:"Y-m-d" }}">{{ article.date_published|date:"M d, Y" }}</time>
+        <p>•</p>
+        <p>{{ article.reading_time_minutes }} min read</p>
+    </div>
+</div>

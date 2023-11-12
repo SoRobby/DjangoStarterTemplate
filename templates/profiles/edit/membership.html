@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}<title>Account Membership</title>{% endblock title %}
+
+
+{% block meta %}
+{% endblock meta %}
+
+
+{% block style %}
+{% endblock style %}
+
+
+{% block head_script %}
+{% endblock head_script %}
+
+
+{% block content %}
+    <div>
+        {% include 'profiles/components/profile-header.html' with mode='return-to-profile' user_instance=user %}
+
+        <div class="lg:flex lg:gap-x-16">
+            {% include 'profiles/edit/components/sidebar.html' %}
+
+            <div class="px-4 py-2 sm:px-6 lg:flex-auto lg:px-0">
+                <div class="mx-auto max-w-4xl lg:mx-0 lg:max-w-none">
+
+                    {% if not user.email_verified %}
+                        {% include 'profiles/edit/components/email-not-verified-banner.html' with username=user.username %}
+                    {% endif %}
+
+                    <div class="space-y-16 sm:space-y-20">
+                        {# Membership #}
+
+                        <div>
+                            {% include 'profiles/edit/components/section-header.html' with title='Membership' description=None %}
+
+                            <div class="mt-4 space-y-4 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
+
+                                {# Billing card #}
+                                {% if user_subscription_plan %}
+                                    <div class="mt-2 md:mt-4 border border-gray-200 rounded-md p-4 grid grid-cols-2 divide-x">
+                                        <div class="space-y-4 pr-4">
+                                            <div class="text-gray-900 text-base font-medium flex gap-2 items-center">
+                                                {{ user_subscription_plan.name }}
+                                                {% if user_subscription_order.status == 'active' %}
+                                                    <span class="badge-gray text-xs">Monthly</span>
+                                                    <span class="badge-success">Active</span>
+                                                {% elif user_subscription_order.status == 'cancelled' %}
+                                                    <span class="badge-error">Cancelled</span>
+                                                {% elif user_subscription_order.status == 'processing' %}
+                                                    <span class="badge-gray text-xs">Monthly</span>
+                                                    <span class="badge-warning">Processing</span>
+                                                {% endif %}
+                                            </div>
+                                            <div>
+                                                {% if user_subscription_order.status == 'active' %}
+                                                    <div class="text-gray-900 font-medium">
+                                                        Your next payment
+                                                    </div>
+                                                    <div class="text-gray-600">
+                                                        <span class="text-xl font-semibold pr-2 text-gray-900">${{ user_subscription_period.price_dollars }}</span>
+                                                        Due by
+                                                        <time datetime="{{ user_subscription_order.current_period_end_date }}">{{ user_subscription_order.current_period_end_date|date:'F d, Y' }}</time>
+                                                    </div>
+                                                {% elif user_subscription_order.status == 'cancelled' %}
+                                                    <div class="text-gray-900 font-medium">
+                                                        Plan cancelled
+                                                    </div>
+                                                    <div class="text-gray-600">
+                                                        Your plan will expire on
+                                                        <time datetime="{{ user_subscription_order.current_period_end_date }}">{{ user_subscription_order.current_period_end_date|date:'M d, Y' }}</time>
+                                                        <p class="text-xs mt-2">All the data will remain in your
+                                                            account,
+                                                            but you will lose access to premium features.</p>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="pl-4">
+                                            <div class="text-base text-gray-600 font-medium">
+                                                Payment information
+                                            </div>
+                                            <div class="mt-2">
+                                                <div class="text-indigo-600 hover:text-indigo-500">
+                                                    View payment history
+                                                </div>
+                                                {% if user_subscription_order.status == 'active' %}
+                                                    <div class="text-indigo-600 hover:text-indigo-500">
+                                                        Switch to annual billing
+                                                    </div>
+                                                    <div class="text-indigo-600 hover:text-indigo-500">
+                                                        Modify plan
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="mt-2 md:mt-4 border border-gray-200 rounded-md p-4 flex justify-between">
+                                        <div class="font-semibold text-gray-600">
+                                            No active subscription
+                                        </div>
+                                        <div class="font-semibold text-indigo-600 hover:text-indigo-500">
+                                            <a href="{% url 'subscriptions:subscription-plans' %}">View plans</a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if user_subscription_order.status == 'active' %}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                         x-data="{ isCancelPlanOpen: false }">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <label for="name"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6 cursor-text">
+                                                    Cancel membership
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">
+                                                    All the data will remain in your account, but you will lose access
+                                                    to
+                                                    premium features.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex items-center md:justify-end">
+                                            <button type="button" @click="isCancelPlanOpen=true"
+                                                    class="font-semibold text-gray-600 hover:text-red-500 focus:outline-none">
+                                                Cancel membership
+                                            </button>
+                                            {% include 'profiles/edit/modals/cancel-membership-confirm-modal.html' %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+
+{% block scripts %}
+{% endblock scripts %}

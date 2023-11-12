@@ -1,8 +1,8 @@
-{% if user.profile_image %}
-    <img src="{{ user.profile_image.url }}?lastmod{{ user.last_login|date:"YmdHis" }}"
+{% if user_instance.profile_image %}
+    <img src="{{ user_instance.profile_image.url }}?lastmod{{ user_instance.last_login|date:"YmdHis" }}"
          alt="Profile picture" class="rounded-full w-10 h-10{% if extra_classes %} {{ extra_classes }}{% endif %}">
 {% else %}
     <div class="text-gray-800 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center font-semibold text-2xl{% if extra_classes %} {{ extra_classes }}{% endif %}">
-        {{ user.username.0|upper }}
+        {{ user_instance.username.0|upper }}
     </div>
 {% endif %}

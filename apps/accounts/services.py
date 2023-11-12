@@ -1,5 +1,6 @@
 from uuid import uuid4
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -37,4 +38,4 @@ def send_verification_email(user: get_user_model(), domain: str):
     })
 
     # Send email to user's email
-    send_mail(mail_subject, message, 'noreply@your-domain.com', [user.email])
+    send_mail(mail_subject, message, settings.EMAIL_ADDRESSES['NO_REPLY'], [user.email])

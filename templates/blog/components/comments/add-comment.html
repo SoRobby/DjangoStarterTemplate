@@ -1,0 +1,24 @@
+<div class="flex sm:space-x-4">
+    <div class="hidden sm:block flex-shrink-0">
+        {% include 'components/avatar/avatar-10x10.html' with user_instance=user %}
+    </div>
+    <form action="{% url 'blog:add-comment' article_uuid=article.uuid %}"
+          method="POST"
+          x-data="{ isProcessing: false}"
+          @submit="isProcessing=true"
+          class="min-w-0 flex-1">
+        {% csrf_token %}
+        <label for="comment" class="sr-only">Add your comment</label>
+        <textarea name="comment" id="comment" rows="2" required class="input-text auto-expand"></textarea>
+
+        <div class="mt-2 flex justify-end gap-4">
+            <button x-show="!isProcessing" type="button" class="btn-text-normal">Cancel</button>
+            <button x-show="!isProcessing" type="submit" class="btn-primary">
+                Post comment
+            </button>
+            <div x-show="isProcessing" x-cloak class="mt-1">
+                {% include 'components/processing/processing-sm.html' with text="Adding comment..." %}
+            </div>
+        </div>
+    </form>
+</div>

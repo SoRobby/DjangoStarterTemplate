@@ -1,0 +1,42 @@
+<div class="flex gap-4 items-center">
+    <div class="relative inline-block text-left" x-data="{ isDropdownOpen: false }"
+         @click.away="isDropdownOpen=false" @keyup.escape.window="isDropdownOpen=false">
+        <div>
+            <button type="button" @click="isDropdownOpen=!isDropdownOpen"
+                    class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                    id="menu-button" aria-expanded="true" aria-haspopup="true">
+                Export
+                <svg class="-mr-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20"
+                     fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                          clip-rule="evenodd"/>
+                </svg>
+            </button>
+        </div>
+        <div x-show="isDropdownOpen" x-transition x-cloak
+             class="absolute whitespace-nowrap right-0 z-10 mt-2 w-min origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+             role="menu" aria-orientation="vertical" aria-labelledby="menu-button"
+             tabindex="-1">
+            <div class="py-1" role="none">
+                <a href="#" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-50"
+                   role="menuitem"
+                   tabindex="-1" id="menu-item-2">Export as csv</a>
+                <a href="#" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-50"
+                   role="menuitem"
+                   tabindex="-1" id="menu-item-1">Export as json</a>
+            </div>
+        </div>
+    </div>
+
+    <a href="{% url 'admin:feedback_feedback_changelist' %}"
+       class="gap-x-1.5 btn-secondary-lg">
+        <svg class="-ml-0.5 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+             viewBox="0 0 24 24"
+             stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>
+        </svg>
+        Advanced edit
+    </a>
+</div>

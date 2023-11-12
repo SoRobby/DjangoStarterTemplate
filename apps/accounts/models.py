@@ -8,11 +8,15 @@ from django.dispatch import receiver
 from django.utils import timezone
 
 from apps.accounts.managers import AccountManager
-from apps.accounts.utils import generate_short_uuid
+from apps.accounts.utils import generate_short_uuid, upload_to_profile_images
 
 
 # Models
 class Account(AbstractBaseUser):
+    PROFILE_IMAGE_ASPECT_RATIO = 1 / 1
+    PROFILE_IMAGE_SIZE = (300, 300)
+    PROFILE_IMAGE_THUMBNAIL_SIZE = (100, 100)
+
     # Choice classes
     class ThemeChoices(models.TextChoices):
         LIGHT = 'light', 'Light'
@@ -34,7 +38,7 @@ class Account(AbstractBaseUser):
 
     name = models.CharField(max_length=120, blank=True, verbose_name='Name', help_text='Name of the user')
 
-    description = models.TextField(max_length=500, blank=True, verbose_name='Description',
+    description = models.TextField(max_length=300, blank=True, verbose_name='Description',
                                    help_text='User bio or description')
 
     is_active = models.BooleanField(default=True, verbose_name='Active',
@@ -51,7 +55,8 @@ class Account(AbstractBaseUser):
                                                  'assigning them')
 
     # TODO - Make profile images upload the the uuid of the user.
-    profile_image = models.ImageField(upload_to='accounts/', blank=True, null=True, verbose_name='Profile image',
+    profile_image = models.ImageField(upload_to=upload_to_profile_images, blank=True, null=True,
+                                      verbose_name='Profile image',
                                       help_text='Profile image or avatar')
 
     theme = models.CharField(max_length=55, default=ThemeChoices.SYSTEM, choices=ThemeChoices.choices,
@@ -127,6 +132,13 @@ class Account(AbstractBaseUser):
     def theme_choices_as_list(self):
         return [{'key': key, 'name': name} for i, (key, name) in enumerate(self.ThemeChoices.choices)]
 
+    @property
+    def display_name(self):
+        if self.is_profile_public and self.name:
+            return self.name
+        else:
+            return self.username
+
     @staticmethod
     def get_theme_choices_as_dict():
         return dict(Account.ThemeChoices.choices)
@@ -180,6 +192,11 @@ class AccountSettings(models.Model):
 
     def __str__(self) -> str:
         return f"{self.account.username} settings"
+
+
+# class AccountInteraction(models.Model):
+#     account = models.OneToOneField(Account, on_delete=models.CASCADE, verbose_name='Account',
+#                                    related_name='interactions', help_text='Account that is connected to the settings')
 
 
 # Model signals

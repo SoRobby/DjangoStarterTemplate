@@ -23,16 +23,22 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('apps.accounts.urls')),
     path('adminpanel/', include('apps.adminpanel.urls')),
-    path('', include('apps.analytics.urls')),
-    path('', include('apps.core.urls')),
+    path('analytics/', include('apps.analytics.urls')),
     path('blog/', include('apps.blog.urls', namespace='blog')),
-    path('', include('apps.feedback.urls', namespace='feedback')),
+    path('', include('apps.core.urls')),
+    path('feedback/', include('apps.feedback.urls', namespace='feedback')),
     path('', include('apps.profiles.urls', namespace='profiles')),
-
+    path('roadmap/', include('apps.roadmap.urls', namespace='roadmap')),
+    path('subscriptions/', include('apps.subscriptions.urls', namespace='subscriptions')),
 ]
 
-# CKEditor5 url pattern
-urlpatterns.append(path("ckeditor5/", include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"))
+# Third party app urls
+third_party_urlpatterns = [
+    path('tinymce/', include('tinymce.urls')),
+]
+
+# Combine the urlpatterns
+urlpatterns.extend(third_party_urlpatterns)
 
 # Sitemap url pattern
 urlpatterns.append(path('sitemaps/', include('config.sitemaps')))
@@ -43,6 +49,10 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # Enable Django Debug Toolbar if configured
 if settings.ENABLE_DEBUG_TOOLBAR:
     urlpatterns.append(path('__debug__/', include('debug_toolbar.urls')))
+
+# Enable Django Browser Reload if configured
+if settings.ENABLE_DJANGO_BROWSER_RELOAD:
+    urlpatterns.append(path("__reload__/", include("django_browser_reload.urls")))
 
 # Page error handlers
 handler400 = 'apps.core.views.handle400'

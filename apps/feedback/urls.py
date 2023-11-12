@@ -4,7 +4,7 @@ from . import views
 
 app_name = 'feedback'
 
-# Base url of the core app is '' (root)
+# Root url of "feedback" is 'feedback/', defined in config.urls.py
 urlpatterns = [
-    path('feedback/submit/', views.submit_feedback, name='submit-feedback')
+    path('submit/', views.submit_feedback, name='submit-feedback')
 ]

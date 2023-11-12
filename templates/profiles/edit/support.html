@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}<title>Edit Account</title>{% endblock title %}
+
+
+{% block meta %}
+{% endblock meta %}
+
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{% static 'cropper.min.css' %}">
+{% endblock style %}
+
+
+{% block head_script %}
+{% endblock head_script %}
+
+
+{% block content %}
+    <div>
+        <div>
+            {% csrf_token %}
+            {% include 'profiles/components/profile-header.html' with mode='return-to-profile' user_instance=user %}
+
+            <div class="lg:flex lg:gap-x-16">
+                {% include 'profiles/edit/components/sidebar.html' %}
+
+
+                <div class="px-4 py-2 sm:px-6 lg:flex-auto lg:px-0">
+                    <div class="mx-auto max-w-4xl lg:mx-0 lg:max-w-none">
+
+                        {% if not user.email_verified %}
+                            {% include 'profiles/edit/components/email-not-verified-banner.html' with username=user.username %}
+                        {% endif %}
+
+                        <div class="space-y-16 sm:space-y-20">
+
+                            {% comment %} Support area {% endcomment %}
+                            <form id="supportForm"
+                                  action="{% url 'profiles:support-send-message' %}"
+                                  method="POST"
+                                  x-data="{ isProcessing: false}"
+                                  @submit="isProcessing = validateForm('supportForm')">
+                                {% csrf_token %}
+
+                                {% include 'profiles/edit/components/section-header.html' with title='Contact support' description='Our support team will reach out to you as soon as possible' %}
+
+                                <div class="mt-4 space-y-2 border-t border-gray-200 text-sm leading-6">
+
+                                    <div class="grid grid-cols-6 md:grid-cols-12 pt-4 gap-4 md:gap-12">
+
+                                        {# Name field #}
+                                        <div class="col-span-6">
+                                            <label for="name" class="font-medium text-gray-900">Name</label>
+                                            <div class="mt-1">
+                                                <input type="text" id="name" name="name" required
+                                                       value="{{ user.name }}"
+                                                       class="input-text">
+                                            </div>
+                                        </div>
+
+                                        {# Email field #}
+                                        <div class="col-span-6">
+                                            <label for="email" class="font-medium text-gray-900">Email</label>
+                                            <div class="mt-1">
+                                                <input type="email" id="email" name="email" required
+                                                       value="{{ user.email }}"
+                                                       class="input-text">
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    {# Subject field #}
+                                    <div class="pt-4">
+                                        <label for="subject" class="font-medium text-gray-900">Subject</label>
+                                        <div class="mt-1">
+                                            <input type="text" id="subject" name="subject" required
+                                                   class="input-text">
+                                        </div>
+                                    </div>
+
+                                    {# Message field #}
+                                    <div class="pt-4">
+                                        <label for="message" class="font-medium text-gray-900">Message</label>
+                                        <div class="mt-1">
+                                                <textarea type="text" name="message" id="message" minlength="25"
+                                                          required
+                                                          class="auto-expand input-text"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="pt-4 flex justify-end sm:flex-row space-x-4">
+                                    <a href="{% url 'profiles:settings-support' %}"
+                                       x-show="!isProcessing"
+                                       class="inline-flex items-center justify-center px-3 py-2 text-sm font-semibold text-gray-500 hover:text-gray-900">Cancel</a>
+                                    <button type="submit"
+                                            x-show="!isProcessing"
+                                            class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                        Send message
+                                    </button>
+                                    <div x-show="isProcessing" x-cloak>
+                                        {% include 'components/processing/processing-sm.html' with text="Sending message..." %}
+                                    </div>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+{% endblock content %}
+
+
+

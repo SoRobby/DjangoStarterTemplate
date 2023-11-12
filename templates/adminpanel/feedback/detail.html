@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{# Title #}
+{% block title %}<title>Admin | Home</title>{% endblock title %}
+
+
+{# General meta information (i.e. Description, tags, etc...) #}
+{% block meta %}
+{% endblock meta %}
+
+
+{# Stylesheets #}
+{% block style %}
+{% endblock style %}
+
+
+{# Head Scripts #}
+{% block head_script %}
+{% endblock head_script %}
+
+
+{# Header #}
+{% block header %}
+    {% include 'components/header.html' %}
+{% endblock header %}
+
+
+{# Page content #}
+{% block content %}
+
+    <div>
+        <div class="lg:flex lg:gap-x-16">
+            {% include 'adminpanel/components/sidebar.html' %}
+
+            <div class="px-4 py-2 sm:px-6 lg:flex-auto lg:px-0">
+                <div class="mx-auto max-w-4xl lg:mx-0 lg:max-w-none">
+
+                    {# Table #}
+                    <div class="space-y-4 divide-y">
+
+                        <div class="flex justify-between">
+                            <a href="#"
+                               class="inline-flex items-center gap-x-1.5 px-2.5 text-sm font-semibold text-gray-800 hover:text-indigo-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                     class="-ml-0.5 h-5 w-5">
+                                    <path fill-rule="evenodd"
+                                          d="M7.28 7.72a.75.75 0 010 1.06l-2.47 2.47H21a.75.75 0 010 1.5H4.81l2.47 2.47a.75.75 0 11-1.06 1.06l-3.75-3.75a.75.75 0 010-1.06l3.75-3.75a.75.75 0 011.06 0z"
+                                          clip-rule="evenodd"/>
+                                </svg>
+                                Return to list
+                            </a>
+
+                            <div class="flex gap-4 items-center">
+                                <a href="#"
+                                   class="gap-x-1.5 btn-secondary-lg">
+                                    <svg class="-ml-0.5 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>
+                                    </svg>
+                                    Edit
+                                </a>
+                                <a href="{% url 'admin:feedback_feedback_change' feedback.pk %}"
+                                   class="gap-x-1.5 btn-secondary-lg">
+                                    <svg class="-ml-0.5 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>
+                                    </svg>
+                                    Advanced edit
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 space-y-4">
+
+                            <div class="text-gray-800 p-2">
+                                <h3 class="text-gray-800 font-medium text-lg border-b pb-2">User information</h3>
+                                <div class="space-y-2 divide-y divide-gray-100 mt-2 text-xs">
+                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=feedback field_name="name" %}
+                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=feedback field_name="email" %}
+                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=feedback field_name="user" %}
+                                </div>
+                            </div>
+
+                            <div class="text-gray-800 p-2">
+                                <h3 class="text-gray-800 font-medium text-lg border-b pb-2">Object properties</h3>
+                                <div class="space-y-2 divide-y divide-gray-100 mt-2 text-xs">
+                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=feedback field_name="page_url" %}
+                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=feedback field_name="category" %}
+                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=feedback field_name="content" %}
+                                    {% include 'adminpanel/feedback/components/attribute-display.html' with instance=feedback field_name="is_processed" %}
+                                </div>
+                            </div>
+
+                            <div class="text-gray-800 bg-gray-50 p-2 border border-gray-200 rounded">
+                                <h3 class="text-gray-800 font-medium text-lg border-b pb-2">Read only properties</h3>
+                                <div class="space-y-2 divide-y divide-transparent mt-2 text-xs">
+                                    <dl class="grid grid-cols-1 sm:grid-cols-3">
+                                        <dt class="font-medium text-muted">ID</dt>
+                                        <dd class="sm:col-span-2 text-normal">{{ feedback.id }}</dd>
+                                    </dl>
+                                    <dl class="grid grid-cols-1 sm:grid-cols-3">
+                                        <dt class="font-medium text-muted">UUID</dt>
+                                        <dd class="sm:col-span-2 text-normal">{{ feedback.uuid }}</dd>
+                                    </dl>
+                                    <dl class="grid grid-cols-1 sm:grid-cols-3">
+                                        <dt class="font-medium text-muted">Date created</dt>
+                                        <dd class="sm:col-span-2 text-normal">
+                                            <div class="flex">
+                                                <div class="w-12 text-muted">
+                                                    Server
+                                                </div>
+                                                <div>
+                                                    {{ feedback.date_created|date:"m/d/Y, h:i:s A" }}
+                                                </div>
+                                            </div>
+                                            <div class="flex">
+                                                <div class="w-12 text-muted">
+                                                    Local
+                                                </div>
+                                                <div data-utc-time="{{ feedback.date_created.isoformat }}"
+                                                     class="convert-time">
+                                                    {{ feedback.date_created|date:"m/d/Y, h:i:s A" }}
+                                                </div>
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                    <dl class="grid grid-cols-1 sm:grid-cols-3">
+                                        <dt class="font-medium text-muted">Date modified</dt>
+                                        <dd class="sm:col-span-2 text-normal">
+                                            <div class="flex">
+                                                <div class="w-12 text-muted">
+                                                    Server
+                                                </div>
+                                                <div>
+                                                    {{ feedback.date_modified|date:"m/d/Y, h:i:s A" }}
+                                                </div>
+                                            </div>
+                                            <div class="flex">
+                                                <div class="w-12 text-muted">
+                                                    Local
+                                                </div>
+                                                <div data-utc-time="{{ feedback.date_modified.isoformat }}"
+                                                     class="convert-time">
+                                                    {{ feedback.date_modified|date:"m/d/Y, h:i:s A" }}
+                                                </div>
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="pt-4 flex justify-between">
+                            <button class="inline-flex items-center justify-center rounded-md bg-white text-sm font-semibold text-muted ring-1 ring-inset ring-transparent hover:text-red-600">
+                                Delete
+                            </button>
+                            <div class="flex gap-4">
+                                <button type="button" class="btn-secondary-lg">
+                                    Cancel
+                                </button>
+                                <button type="button" class="btn-primary-lg">
+                                    Action item...
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock content %}
+
+
+{# Footer #}
+{% block footer %}
+    {% include 'components/footer.html' %}
+{% endblock footer %}
+
+
+{# Scripts #}
+{% block scripts %}
+{% endblock scripts %}

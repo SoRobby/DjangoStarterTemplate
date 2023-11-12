@@ -34,12 +34,18 @@ DEBUG = env.bool('DEBUG', default=True)
 # SECURITY WARNING: don't run with debug turned on in production!
 ENABLE_DEBUG_TOOLBAR = env.bool('ENABLE_DEBUG_TOOLBAR', default=True)
 
+# USE IN DEVELOPMENT ONLY: Allows the browser to automatically reload when a file is changed
+ENABLE_DJANGO_BROWSER_RELOAD = env.bool('ENABLE_DJANGO_BROWSER_RELOAD', default=True)
+
 # Set this value to True to have URLs generated with https instead of http
 # SECURITY WARNING: set to True in production
 USE_HTTPS_IN_ABSOLUTE_URLS = env.bool("USE_HTTPS_IN_ABSOLUTE_URLS", default=False)
 
 # The fully qualified domain name associated with the website
 SITE_ID = 1
+
+# Site name (used in templates)
+SITE_NAME = 'Django Boilerplate'
 
 # The site domain
 SITE_DOMAIN = '127.0.0.1:8000'
@@ -60,7 +66,7 @@ DJANGO_APPS = [
 
 # Third party apps
 THIRD_PARTY_APPS = [
-    'django_ckeditor_5',
+    'tinymce',
 ]
 
 # Project apps
@@ -72,6 +78,8 @@ PROJECT_APPS = [
     'apps.core',
     'apps.feedback',
     'apps.profiles',
+    'apps.roadmap',
+    'apps.subscriptions',
 ]
 
 # Installed apps
@@ -97,6 +105,10 @@ if ENABLE_DEBUG_TOOLBAR:
     MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
     INTERNAL_IPS = ['127.0.0.1']
 
+if ENABLE_DJANGO_BROWSER_RELOAD:
+    INSTALLED_APPS.append('django_browser_reload')
+    MIDDLEWARE.append('django_browser_reload.middleware.BrowserReloadMiddleware')
+
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
@@ -112,7 +124,9 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 
                 # Project / app context_processors
-                'apps.core.context_processors.google_analytics_id',
+                'config.context_processors.google_analytics_id',
+                'config.context_processors.site_name',
+
             ],
         },
     },
@@ -173,7 +187,6 @@ STATICFILES_DIRS = [
     BASE_DIR / 'libs/npm/node_modules/alpinejs/dist/',
     BASE_DIR / 'libs/npm/node_modules/@alpinejs/',
     BASE_DIR / 'libs/npm/node_modules/htmx.org/dist/',
-    BASE_DIR / 'libs/npm/node_modules/@ckeditor/',
     BASE_DIR / 'libs/npm/node_modules/jquery/dist/',
 ]
 
@@ -213,9 +226,15 @@ EMAIL_USE_TLS = False
 
 EMAIL_USE_SSL = False
 
+EMAIL_ADDRESSES = {
+    'NO_REPLY': 'noreply@your-domain.com',
+    'SUPPORT': 'support@your-domain.com',
+}
+
 # Google analytics ID
 # https://support.google.com/analytics/answer/9304153
-GOOGLE_ANALYTICS_ID = env('GOOGLE_ANALYTICS_ID', default='')
+# The variable can be accessed in templates using {{ GOOGLE_ANALYTICS_ID }}
+GOOGLE_ANALYTICS_ID = env('GOOGLE_ANALYTICS_ID', default='MY-GOOGLE_ANALYTICS_ID')
 
 # Google reCAPTCHA secret key
 RECAPTCHA_SECRET_KEY = env('RECAPTCHA_SECRET_KEY', default='')
@@ -265,75 +284,37 @@ LOGGING = {
 #         },
 #     }
 
-# CKEditor5 settings
-customColorPalette = [
-    {'color': 'hsl(4, 90%, 58%)', 'label': 'Red'},
-    {'color': 'hsl(340, 82%, 52%)', 'label': 'Pink'},
-    {'color': 'hsl(291, 64%, 42%)', 'label': 'Purple'},
-    {'color': 'hsl(262, 52%, 47%)', 'label': 'Deep Purple'},
-    {'color': 'hsl(231, 48%, 48%)', 'label': 'Indigo'},
-    {'color': 'hsl(207, 90%, 54%)', 'label': 'Blue'},
-]
 
-CKEDITOR_5_CONFIGS = {
-    'default': {
-        'toolbar': ['heading', '|', 'bold', 'italic', 'link',
-                    'bulletedList', 'numberedList', 'blockQuote', 'imageUpload', ],
+# TinyMCE settings
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5 MB
 
-    },
-    'extends': {
-        'blockToolbar': [
-            'paragraph', 'heading1', 'heading2', 'heading3',
-            '|',
-            'bulletedList', 'numberedList',
-            '|',
-            'blockQuote',
-        ],
-        'toolbar': ['heading', '|', 'outdent', 'indent', '|', 'bold', 'italic', 'link', 'underline', 'strikethrough',
-                    'code', 'subscript', 'superscript', 'highlight', '|', 'codeBlock', 'sourceEditing', 'insertImage',
-                    'bulletedList', 'numberedList', 'todoList', '|', 'blockQuote', 'imageUpload', '|',
-                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'mediaEmbed', 'removeFormat',
-                    'insertTable', ],
-        'image': {
-            'toolbar': ['imageTextAlternative', '|', 'imageStyle:alignLeft',
-                        'imageStyle:alignRight', 'imageStyle:alignCenter', 'imageStyle:side', '|'],
-            'styles': [
-                'full',
-                'side',
-                'alignLeft',
-                'alignRight',
-                'alignCenter',
-            ]
-
-        },
-        'table': {
-            'contentToolbar': ['tableColumn', 'tableRow', 'mergeTableCells',
-                               'tableProperties', 'tableCellProperties'],
-            'tableProperties': {
-                'borderColors': customColorPalette,
-                'backgroundColors': customColorPalette
-            },
-            'tableCellProperties': {
-                'borderColors': customColorPalette,
-                'backgroundColors': customColorPalette
-            }
-        },
-        'heading': {
-            'options': [
-                {'model': 'paragraph', 'title': 'Paragraph', 'class': 'ck-heading_paragraph'},
-                {'model': 'heading1', 'view': 'h1', 'title': 'Heading 1', 'class': 'ck-heading_heading1'},
-                {'model': 'heading2', 'view': 'h2', 'title': 'Heading 2', 'class': 'ck-heading_heading2'},
-                {'model': 'heading3', 'view': 'h3', 'title': 'Heading 3', 'class': 'ck-heading_heading3'}
-            ]
-        }
-    },
-    'list': {
-        'properties': {
-            'styles': 'true',
-            'startIndex': 'true',
-            'reversed': 'true',
-        }
-    }
+TINYMCE_DEFAULT_CONFIG = {
+    "theme": "silver",
+    "height": 512,
+    "menubar": False,
+    "plugins": "image",
+    # "plugins": "advlist,autolink,lists,link,image,charmap,print,preview,anchor,"
+    #            "searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,paste,"
+    #            "code,help,wordcount",
+    "toolbar": "undo redo | formatselect | "
+               "bold italic backcolor | alignleft aligncenter "
+               "alignright alignjustify | bullist numlist outdent indent | "
+               "removeformat | help ",
 }
 
-CKEDITOR_5_FILE_STORAGE = "apps.blog.storage.CustomStorage"
+TINYMCE_BLOG_ARTICLE_CONFIG = {
+    "theme": "silver",
+    "menubar": False,
+    "plugins": "advlist,autolink,lists,link,image,charmap,print,preview,anchor,"
+               "searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,paste,"
+               "code,help,wordcount,image,autoresize",
+    "toolbar": "undo redo | formatselect | "
+               "bold italic | alignleft aligncenter "
+               "alignright alignjustify | bullist numlist outdent indent | table image code | removeformat ",
+    "images_upload_url": "upload-article-image",
+}
+
+# Stripe settings
+# https://stripe.com/docs/api
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51O9FnhKKHhvy7iMXvNlrE9gXg2poyglZbteI3wrCTLJ5M3mXKL1YK7vaaYogj9yMCCFsf2Y9GxlWcSBMdc7YdBkX0090Vieh6w'
+STRIPE_SECRET_KEY = 'sk_test_51O9FnhKKHhvy7iMX2AT2accqTcpCuKoLkhPpop4141AE0xdTQUhZeA0atJATyvJQRU2kgF3L5dlBcDtB73thIQVs00oDEfZPcv'

@@ -4,20 +4,31 @@ from . import views
 
 app_name = 'blog'
 
-# Base url of the profile app is 'profile' (root)
+# Root url of "blog" is 'blog/', defined in config.urls.py
 urlpatterns = [
-    # Account profile urls
-    # URL of blog post by slug
-    path('posts/', views.post_list, name='post-list'),
-    
-    # path is /blog/<str:slug>/
-    # path('posts/<str:slug>/', views.post, name='post'),
-    path('posts/<str:slug>/', views.PostDetailView.as_view(), name='post'),
+    # Articles
+    path('articles/', views.article_list, name='article-list'),
+    path('articles/<str:slug>/', views.ArticleDetailView.as_view(), name='article'),
 
-    # path is /blog/edit/create-post/
+    # Edit articles
+    path('edit/create/', views.create_article, name='create-article'),
+    path('edit/<str:uuid>/', views.edit_article, name='edit-article'),
+    path('edit/<str:uuid>/delete/', views.delete_article, name='delete-article'),
+    path('edit/<str:uuid>/upload-article-image', views.upload_article_image, name='upload-article-image'),
 
-    path('edit/create/', views.create_post, name='create-post'),
-    path('edit/<str:uuid>/', views.edit_post, name='edit-post'),
-    path('edit/<str:uuid>/delete/', views.delete_post, name='delete-post'),
+    # Comments
+    path('article/<str:article_uuid>/comment/', views.add_comment, name='add-comment'),
+    path('article/<str:article_uuid>/comments/<str:comment_uuid>/like/', views.toggle_comment_like,
+         name='toggle-comment-like'),
+    path('article/<str:article_uuid>/comments/<str:comment_uuid>/dislike/', views.toggle_comment_dislike,
+         name='toggle-comment-dislike'),
 
+    path('article/<str:article_uuid>/comments/<str:comment_uuid>/report/', views.ReportComment.as_view(),
+         name='report-comment'),
+
+    path('article/comments/<str:comment_uuid>/delete/', views.DeleteComment.as_view(),
+         name='delete-comment'),
+
+    # path('article/<str:article_uuid>/comment/<str:comment_uuid>/report/', views.report_comment, name='report-comment'),
+    # path('article/<str:article_uuid>/comment/<str:comment_uuid>/delete/', views.delete_comment, name='delete-comment'),
 ]

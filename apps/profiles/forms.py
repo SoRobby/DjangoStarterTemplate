@@ -1,3 +1,4 @@
+import logging
 from uuid import uuid4
 
 from django import forms
@@ -10,7 +11,7 @@ from apps.accounts.models import Account
 class ProfileEditGeneralForm(forms.ModelForm):
     class Meta:
         model = Account
-        fields = ('name', 'description', 'theme', 'is_profile_public', 'profile_image')
+        fields = ('name', 'description', 'is_profile_public', 'profile_image')
 
 
 class ChangeEmailForm(forms.Form):
@@ -27,6 +28,7 @@ class ChangeEmailForm(forms.Form):
     """
 
     email = forms.EmailField(max_length=255)
+    profile_image = forms.ImageField()
 
     def clean_email(self) -> str:
         email = self.cleaned_data.get('email')

@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{# Title #}
+{% block title %}<title>Testing page</title>{% endblock title %}
+
+
+{# General meta information (i.e. Description, tags, etc...) #}
+{% block meta %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
+{% endblock meta %}
+
+
+{# Stylesheets #}
+{% block style %}
+{% endblock style %}
+
+
+{# Head Scripts #}
+{% block head_script %}
+{% endblock head_script %}
+
+
+{# Header #}
+{% block header %}
+    {% include 'components/header.html' %}
+{% endblock header %}
+
+
+{# Page content #}
+{% block main %}
+    <main class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 py-4 sm:py-6">
+        {% block content %}
+
+            <div class="mx-auto max-w-5xl px-6 lg:px-8 divide-y">
+
+                <div class="py-12">
+                    <h2 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Roadmap</h2>
+                    <div class="mt-6 text-lg leading-8 text-gray-600 space-y-2">
+                        <p>
+                            We're actively working on improvements to the platform.
+                        </p>
+                        <p>
+                            If you have any suggestions, please
+                            <button onClick="openFeedbackModal()" class="font-medium text-gray-900 underline">let us
+                                know
+                            </button>
+                            .
+                        </p>
+                    </div>
+                </div>
+
+
+                <section class="py-12 grid grid-cols-4">
+
+                    <div class="align-top">
+                        <h2 class="flex gap-x-4 items-center text-2xl font-semibold tracking-tight text-gray-800 sm:text-3xl">
+                            <span class="text-green-500">
+                                <svg class="w-8 h-8" fill="currentColor" stroke="currentColor" stroke-width="1.5"
+                                     xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512">
+                                    <path d="M319.4 0c11.1-.3 21 7.1 23.8 17.9l79.3 303.9 27.1-57.7c9.2-19.6 29-32.2 50.7-32.2H616c13.3 0 24 10.7 24 24s-10.7 24-24 24H500.3c-3.1 0-5.9 1.8-7.2 4.6L437.7 402.2c-4.3 9.1-13.9 14.6-23.9 13.7s-18.5-8.1-21-17.8L322.7 129.4 247.5 492.9c-2.2 10.9-11.6 18.8-22.7 19.1s-21-6.9-23.9-17.6L143.3 285.9c-1-3.5-4.1-5.9-7.7-5.9H24c-13.3 0-24-10.7-24-24s10.7-24 24-24H135.6c25.2 0 47.3 16.8 54 41.1l31 112.6L296.5 19.1C298.8 8.2 308.2 .3 319.4 0z"/></svg>
+                            </span>
+                            Active
+                        </h2>
+                    </div>
+
+                    <div class="col-span-3 space-y-4">
+                        {% if active_features %}
+                            {% for feature in active_features %}
+                                {% include 'roadmap/components/feature-list-item.html' with name=feature.name description=feature.description category=feature.category.name %}
+                            {% endfor %}
+                        {% else %}
+                            <div class="bg-white rounded-md px-6 py-4 shadow-[0_1px_3px_rgba(15,23,42,0.03),0_1px_2px_rgba(15,23,42,0.06)] ring-1 ring-slate-600/[0.04]">
+                                <div class="flex justify-between">
+                                    <h3 class="font-medium text-gray-800">General improvements</h3>
+                                </div>
+                                <p class="text-muted text-sm md:text-base mt-2">
+                                    We are actively improving the platform's performance, exploring ways to enhance the
+                                    user experience, and investigating potential new features for our development
+                                    pipeline.
+                                </p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </section>
+
+
+                <section class="py-12 grid grid-cols-4">
+
+                    <div class="align-top">
+                        <h2 class="flex gap-x-4 items-center text-2xl font-semibold tracking-tight text-gray-800 sm:text-3xl">
+                            <span class="text-amber-500">
+                                <svg class="w-7 h-7 pr-2" fill="currentColor" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg" height="0.875em" viewBox="0 0 384 512"><path
+                                        d="M24 0C10.7 0 0 10.7 0 24S10.7 48 24 48h8V67c0 40.3 16 79 44.5 107.5L158.1 256 76.5 337.5C48 366 32 404.7 32 445v19H24c-13.3 0-24 10.7-24 24s10.7 24 24 24H360c13.3 0 24-10.7 24-24s-10.7-24-24-24h-8V445c0-40.3-16-79-44.5-107.5L225.9 256l81.5-81.5C336 146 352 107.3 352 67V48h8c13.3 0 24-10.7 24-24s-10.7-24-24-24H24zM192 289.9l81.5 81.5C293 391 304 417.4 304 445v19H80V445c0-27.6 11-54 30.5-73.5L192 289.9zm0-67.9l-81.5-81.5C91 121 80 94.6 80 67V48H304V67c0 27.6-11 54-30.5 73.5L192 222.1z"/></svg>
+                            </span>
+                            Planned
+                        </h2>
+                    </div>
+
+                    <div class="col-span-3 space-y-4">
+                        {% if planned_features %}
+                            {% for feature in planned_features %}
+                                {% include 'roadmap/components/feature-list-item.html' with name=feature.name description=feature.description category=feature.category.name %}
+                            {% endfor %}
+                        {% else %}
+                            <div class="px-6">
+                                <div class="flex justify-between">
+                                    <h3 class="font-medium text-gray-800">No planned features</h3>
+                                </div>
+                                <p class="text-muted text-sm md:text-base mt-2">
+                                    No new features are currently planned. If you have any suggestions for improvements,
+                                    please
+                                    <button onClick="openFeedbackModal()"
+                                            class="font-medium text-muted hover:text-gray-900 underline">let
+                                        us know
+                                    </button>
+                                    .
+                                </p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </section>
+
+                {% if released_grouped_features %}
+                    <section class="py-12">
+                        <div class="align-top">
+                            <h2 class="flex gap-x-4 items-center text-2xl font-semibold tracking-tight text-gray-800 sm:text-3xl">
+                                <span class="text-blue-500">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5"
+                                         xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
+                                    </svg>
+                                </span>
+                                Launched
+                            </h2>
+                        </div>
+
+                        <div class="grid grid-cols-4 mt-4">
+                            {% for month, features in released_grouped_features.items %}
+                                <div class="text-gray-800 font-medium text-xl">
+                                    {{ month }}
+                                </div>
+                                <div class="col-span-3 space-y-4">
+
+                                    {% for feature in features %}
+                                        {% include 'roadmap/components/feature-list-item.html' with name=feature.name description=feature.description category=feature.category.name %}
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </section>
+                {% endif %}
+            </div>
+
+
+        {% endblock content %}
+    </main>
+{% endblock main %}
+
+
+{# Footer #}
+{% block footer %}
+    {% include 'components/footer.html' %}
+{% endblock footer %}
+
+
+{# Scripts #}
+{% block scripts %}
+    <script src="{% static '/js/analytics-onload.js' %}"></script>
+    <script src="{% static '/js/analytics-beforeunload.js' %}"></script>
+
+
+{% endblock scripts %}

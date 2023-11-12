@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}<title>Edit Account</title>{% endblock title %}
+
+
+{% block meta %}
+{% endblock meta %}
+
+
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{% static 'cropper.min.css' %}">
+{% endblock style %}
+
+
+{% block head_script %}
+{% endblock head_script %}
+
+
+{% block content %}
+    <div>
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% include 'profiles/components/profile-header.html' with mode='edit' user_instance=user %}
+
+            <div class="lg:flex lg:gap-x-16">
+                {% include 'profiles/edit/components/sidebar.html' %}
+
+
+                <div class="px-4 py-2 sm:px-6 lg:flex-auto lg:px-0">
+                    <div class="mx-auto max-w-4xl lg:mx-0 lg:max-w-none">
+
+                        {% if not user.email_verified %}
+                            {% include 'profiles/edit/components/email-not-verified-banner.html' with username=user.username %}
+                        {% endif %}
+
+                        <div class="space-y-16 sm:space-y-20">
+
+                            {% comment %} Profile {% endcomment %}
+                            <div>
+                            {% include 'profiles/edit/components/section-header.html' with title='Profile' description=None %}
+
+                                <div class="mt-4 space-y-4 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
+
+                                    {# Username #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <div class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Username
+                                                </div>
+                                                <div class="text-xs text-gray-600 font-normal">
+                                                    Username is public and cannot be changed
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <p class="text-gray-900">{{ user.username }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    {# Name (centered vertically) #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                         x-data="{ showError: false }">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <label for="name"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Name
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">
+                                                    Your full name
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <input type="text" id="name" name="name"
+                                                       maxlength="{{ form.name.field.max_length }}"
+                                                       value="{{ user.name }}"
+                                                       class="input-text">
+                                                <div x-show="showError" x-cloak
+                                                     class="mt-2 text-xs text-red-600 font-normal">
+                                                    Invalid input
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {# Profile picture #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                         x-data="{ showError: false }">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <label for="profile-picture"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Profile picture
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">
+                                                    Upload a png, jpg up to 1 MB (recommended size 400 x 400 px)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex gap-4 items-center"
+                                             id="cropper-profile-container">
+                                            <div class="flex-none w-12 h-12 bg-gray-400 rounded-full">
+                                                {% include 'components/avatar/avatar-12x12.html' with user_instance=user extra_classes="cropper-cropped-preview border border-gray-300" %}
+                                            </div>
+                                            <div>
+                                                <label for="profile-image" class="cursor-pointer">
+                                                    <ul class="border border-gray-200 border-dashed divide-y divide-gray-200 rounded-md hover:bg-gray-100 overflow-hidden cropper-input-container">
+                                                        <li class="flex items-center py-2 px-4 text-sm">
+                                                            <svg class="flex-shrink-0 w-5 h-5 text-gray-400"
+                                                                 xmlns="http://www.w3.org/2000/svg"
+                                                                 viewBox="0 0 20 20"
+                                                                 fill="currentColor" aria-hidden="true">
+                                                                <path fill-rule="evenodd"
+                                                                      d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                                                                      clip-rule="evenodd"></path>
+                                                            </svg>
+                                                            <input id="profile-image" name="profile_image"
+                                                                   type="file"
+                                                                   accept="image/*" class="sr-only cropper-input">
+                                                            <div class="flex flex-shrink-0 ml-2 space-x-4 text-left">
+                                                                <p class="text-gray-500 rounded-md font-small cropper-input-text">
+                                                                    Upload profile image
+                                                                </p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                    <button type="button"
+                                                            class="mt-1 font-semibold text-indigo-600 hover:text-indigo-500 hidden">
+                                                        Remove image
+                                                    </button>
+                                                </label>
+                                                <div x-show="showError" x-cloak
+                                                     class="mt-1 text-xs text-red-600 font-normal">Show errors,
+                                                    warnings, or other feedback
+                                                </div>
+                                                <div class="mt-1 text-xs text-red-600 font-normal cropper-error-message"></div>
+                                            </div>
+                                            {% include 'components/cropperjs/crop-image-modal.html' %}
+                                        </div>
+                                    </div>
+
+
+                                    {# User bio (centered vertically) #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                         x-data="{ showError: false }">
+                                        <div class="col-span-12 md:col-span-6 flex">
+                                            <div class="w-full">
+                                                <label for="description"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    About you
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">
+                                                    Short description of yourself
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex">
+                                            <div class="w-full">
+                                                <textarea type="text" name="description" id="description"
+                                                          maxlength="{{ form.description.field.max_length }}"
+                                                          class="auto-expand input-text">{% if user.description %}{{ user.description }}{% endif %}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    {# Country (centered vertically) #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                         x-data="{ showError: false }">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <label for="country"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Country
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">
+                                                    What country are you from?
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            {#                                            {% include 'components/forms/select/custom-select-filter.html' with id="country" name="country" selected_option=user.theme options=countries %}#}
+                                        </div>
+                                    </div>
+
+                                    {# Profile visibility (centered vertically) #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"
+                                         x-data="{ showError: false }">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <label for="theme"
+                                                       class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Profile public
+                                                </label>
+                                                <div class="text-xs text-gray-600 font-normal">
+                                                    Set profile to be viewable by others
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex justify-end">
+                                            {% include 'components/forms/toggles/toggle-with-icon.html' with is_checked=user.is_profile_public id='is_profile_public' name='is_profile_public' %}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            {% comment %} User metrics {% endcomment %}
+                            <div>
+
+                                {% include 'profiles/edit/components/section-header.html' with title='Metrics' description=None %}
+
+                                <div class="mt-4 space-y-4 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
+                                    {# Username #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <div class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Date joined
+                                                </div>
+                                                <div class="text-xs text-gray-600 font-normal sr-only">
+                                                    The date and time you joined the website
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <p class="text-gray-900">{{ user.date_joined|date:"F j, Y" }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {# Followers #}
+                                    <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12">
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <div class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+                                                    Followers
+                                                </div>
+                                                <div class="text-xs text-gray-600 font-normal sr-only">
+                                                    The date and time you joined the website
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-12 md:col-span-6 flex items-center">
+                                            <div class="w-full">
+                                                <p class="text-gray-900">TBD</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+{% endblock content %}
+
+
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="{% static 'cropper.js' %}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function (event) {
+            // On change show image with crop options
+            cropperCropImage("cropper-profile-container", 1024 * 1024, 400 / 400);
+        });
+
+    </script>
+{% endblock scripts %}

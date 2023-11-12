@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{# Title #}
+{% block title %}<title>Testing page</title>{% endblock title %}
+
+
+{# General meta information (i.e. Description, tags, etc...) #}
+{% block meta %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
+{% endblock meta %}
+
+
+{# Stylesheets #}
+{% block style %}
+{% endblock style %}
+
+
+{# Head Scripts #}
+{% block head_script %}
+{% endblock head_script %}
+
+
+{# Header #}
+{% block header %}
+    {% include 'components/header.html' %}
+{% endblock header %}
+
+
+{# Page content #}
+{% block main %}
+    <main class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 py-4 sm:py-6">
+        {% block content %}
+            <p class="text-xl text-gray-700">Testing page</p>
+
+            <div>
+                <button type="button"
+                        id="buttonId"
+                        class="relative w-full cursor-default rounded-md bg-white py-2 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        aria-haspopup="listbox" aria-expanded="true"
+                        aria-labelledby="listbox-label">
+                    <span class="block truncate" id="selectedOptionName">TBD</span>
+                    <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                        <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20"
+                             fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                              d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
+                              clip-rule="evenodd"/>
+                        </svg>
+                    </span>
+                </button>
+
+
+                <ul id="listboxId"
+                    class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                </ul>
+
+            </div>
+
+        {% endblock content %}
+    </main>
+{% endblock main %}
+
+
+{# Footer #}
+{% block footer %}
+    {% include 'components/footer.html' %}
+{% endblock footer %}
+
+
+{# Scripts #}
+{% block scripts %}
+    <script src="{% static '/js/analytics-onload.js' %}"></script>
+    <script src="{% static '/js/analytics-beforeunload.js' %}"></script>
+
+    <script>
+
+            document.addEventListener("DOMContentLoaded", function () {
+                let optionsOpen = false;
+                let selectedOptionKey = 'draft';
+                let optionsList = [
+                    {'key': 'draft', 'name': 'Draft'},
+                    {'key': 'review', 'name': 'Review'},
+                    {'key': 'published', 'name': 'Published'},
+                    {'key': 'archived', 'name': 'Archived'}
+                ];
+                let focusedOptionIndex = -1;
+
+                function renderOptions() {
+                    let ul = document.getElementById('listboxId');
+                    ul.innerHTML = '';
+
+                    if (optionsOpen) {
+                        optionsList.forEach((option, index) => {
+                            let li = document.createElement('li');
+                            li.textContent = option.name;
+                            li.id = 'listbox-option-' + option.key;
+                            li.className = 'text-gray-900 hover:bg-gray-100 relative cursor-default select-none py-2 pl-8 pr-4';
+                            if (index === focusedOptionIndex) li.classList.add('bg-gray-100');
+                            li.addEventListener('click', function () {
+                                selectedOptionKey = option.key;
+                                optionsOpen = false;
+                                updateSelectedOption();
+                                renderOptions();
+                            });
+                            ul.appendChild(li);
+                        });
+                    }
+                }
+
+                function updateSelectedOption() {
+                    let span = document.getElementById('selectedOptionName');
+                    let selectedOption = optionsList.find(option => option.key === selectedOptionKey);
+                    span.textContent = selectedOption ? selectedOption.name : '';
+                }
+
+                document.getElementById('buttonId').addEventListener('click', function () {
+                    optionsOpen = !optionsOpen;
+                    if (optionsOpen && optionsList.length > 0) {
+                        focusedOptionIndex = 0; // focus the first item when the dropdown is opened
+                    }
+                    renderOptions();
+                });
+
+                document.getElementById('buttonId').addEventListener('keydown', function (event) {
+                    if (!optionsOpen) return;
+
+                    switch (event.key) {
+                        case 'ArrowUp':
+                            event.preventDefault();
+                            focusedOptionIndex = focusedOptionIndex <= 0 ? optionsList.length - 1 : focusedOptionIndex - 1;
+                            renderOptions();
+                            break;
+                        case 'ArrowDown':
+                            event.preventDefault();
+                            focusedOptionIndex = focusedOptionIndex >= optionsList.length - 1 ? 0 : focusedOptionIndex + 1;
+                            renderOptions();
+                            break;
+                        case 'Enter':
+                            event.preventDefault();
+                            selectedOptionKey = optionsList[focusedOptionIndex].key;
+                            optionsOpen = false;
+                            updateSelectedOption();
+                            renderOptions();
+                            break;
+                    }
+                });
+
+                document.addEventListener('keyup', function (event) {
+                    if (event.key === 'Escape') {
+                        optionsOpen = false;
+                        renderOptions();
+                    }
+                });
+
+                // Call renderOptions and updateSelectedOption initially to set the initial state
+                renderOptions();
+                updateSelectedOption();
+            });
+
+
+    </script>
+{% endblock scripts %}

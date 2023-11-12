@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{# Title #}
+{% block title %}<title>Admin | Home</title>{% endblock title %}
+
+
+{# General meta information (i.e. Description, tags, etc...) #}
+{% block meta %}
+{% endblock meta %}
+
+
+{# Stylesheets #}
+{% block style %}
+{% endblock style %}
+
+
+{# Head Scripts #}
+{% block head_script %}
+{% endblock head_script %}
+
+
+{# Header #}
+{% block header %}
+    {% include 'components/header.html' %}
+{% endblock header %}
+
+
+{# Page content #}
+{% block content %}
+
+    <div>
+        <div class="lg:flex lg:gap-x-16">
+            {% include 'adminpanel/components/sidebar.html' %}
+
+            <div class="px-4 py-2 sm:px-6 lg:flex-auto lg:px-0">
+                <div class="mx-auto max-w-4xl lg:mx-0 lg:max-w-none">
+
+                    {# Table #}
+                    <div class="border-b border-gray-200 pb-4">
+                        <div class="flex justify-between">
+
+                            <div class="w-1/2">
+                                <label for="table_search"
+                                       class="sr-only">Search</label>
+                                <div class="relative rounded-md shadow-sm">
+                                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                                             fill="none" viewBox="0 0 24 24"
+                                             stroke-width="1.5" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+                                        </svg>
+                                    </div>
+                                    <input type="search" name="table_search" id="table_search"
+                                           hx-get="{% url 'adminpanel:feedback-search' %}"
+                                           hx-target="#table-container"
+                                           hx-trigger="keyup changed delay:500ms"
+                                           hx-swap="outerHTML"
+                                           class="pl-10 input-text-sm"
+                                           placeholder="Search feedback...">
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4 items-center">
+                                <a href="{% url 'adminpanel:blog-article-export-to-csv' %}"
+                                   class="gap-x-1.5 btn-secondary-lg">
+                                    <svg class="-ml-0.5 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+                                    </svg>
+                                    Export
+                                </a>
+                                <a href="{% url 'admin:feedback_feedback_changelist' %}"
+                                   class="gap-x-1.5 btn-secondary-lg">
+                                    <svg class="-ml-0.5 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>
+                                    </svg>
+                                    Advanced edit
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Table container #}
+                    <div class="overflow-x-auto">
+
+                        {% include 'adminpanel/blog/partials/table-container.html' %}
+
+                    </div>
+                    {# Table container #}
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock content %}
+
+
+{# Footer #}
+{% block footer %}
+    {% include 'components/footer.html' %}
+{% endblock footer %}
+
+
+{# Scripts #}
+{% block scripts %}
+{% endblock scripts %}

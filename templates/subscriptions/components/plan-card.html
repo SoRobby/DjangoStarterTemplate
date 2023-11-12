@@ -1,0 +1,75 @@
+<div class="rounded-3xl p-8 ring-1 ring-gray-200">
+
+    {% for term in plan.subscription_terms.all %}
+        <div x-show="selectedInterval==='{{ term.get_interval_display|lower }}'">
+            <h2 id="tier-hobby"
+                class="text-lg font-semibold leading-8 text-gray-900">
+                {{ plan.name }}
+                {% if user_subscription.subscription_period == term %}
+                    <span x-show="selectedInterval==='{{ term.get_interval_display|lower }}'"
+                          class="ml-2 badge-success">Active</span>
+                {% endif %}
+            </h2>
+            <p class="mt-4 text-sm leading-6 text-gray-600">
+                {{ plan.description }}
+            </p>
+        </div>
+
+        <p class="mt-6 flex items-baseline gap-x-1"
+           x-show="selectedInterval==='{{ term.get_interval_display|lower }}'"
+           x-transition:enter>
+            <span class="text-4xl font-bold tracking-tight text-gray-900">{{ term.price_dollars|floatformat:0 }}</span>
+            <span class="text-sm font-semibold leading-6 text-gray-600">/{{ term.get_interval_display|lower }}</span>
+        </p>
+
+
+        <form x-show="selectedInterval==='{{ term.get_interval_display|lower }}'" x-data="{ processingPayment: false }"
+              action="{% url 'subscriptions:subscription-checkout' term_uuid=term.uuid %}"
+              method="POST">
+            {% csrf_token %}
+
+            {% if user_subscription.subscription_period == term %}
+                <div aria-describedby="tier-{{ term.get_interval_display|lower }}"
+                     class="w-full mt-6 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 text-gray-600 ring-1 ring-inset ring-gray-200">
+                    Current plan
+                </div>
+                {% if user_subscription.status == 'cancelled' %}
+                    <div class="mt-2 text-xs text-gray-600">
+                        Your plan will expire on {{ user_subscription.expires_at|date:"F j, Y" }}.
+                    </div>
+                {% endif %}
+            {% else %}
+                <button type="submit"
+                        @click="processingPayment=true"
+                        x-show="!processingPayment"
+                        aria-describedby="tier-{{ term.get_interval_display|lower }}"
+                        class="w-full mt-6 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 text-indigo-600 ring-1 ring-inset ring-indigo-200 hover:ring-indigo-300">
+                    {% if user_subscription %}
+                        Change plan
+                    {% else %}
+                        Buy plan
+                    {% endif %}
+                </button>
+            {% endif %}
+
+            <div class="w-full mt-6 block rounded-md py-1.5 px-3 text-center"
+                 x-show="processingPayment" x-cloak>
+                {% include 'components/processing/processing-sm.html' with text='Setting up payment...' %}
+            </div>
+        </form>
+    {% endfor %}
+
+    <ul role="list" class="mt-8 space-y-3 text-sm leading-6 text-gray-600">
+        {% for feature in plan.features %}
+            <li class="flex gap-x-3">
+                <svg class="h-6 w-5 flex-none text-indigo-600" viewBox="0 0 20 20"
+                     fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                          clip-rule="evenodd"/>
+                </svg>
+                {{ feature }}
+            </li>
+        {% endfor %}
+    </ul>
+</div>

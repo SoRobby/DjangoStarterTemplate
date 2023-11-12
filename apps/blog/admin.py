@@ -1,15 +1,16 @@
 from django.contrib import admin
 
-from apps.blog.models import Post, Comment
+from apps.blog.models import Article, Comment
+from apps.core.utils import AdminExportMixin, ModelDocumentationMixin
 
 
 # Blog objects
 
-@admin.register(Post)
-class PostAdmin(admin.ModelAdmin):
+@admin.register(Article)
+class ArticleAdmin(ModelDocumentationMixin, AdminExportMixin, admin.ModelAdmin):
     list_display = ('__str__', 'slug', 'release_status', 'date_created', 'date_modified', 'date_published')
 
-    list_filter = ('release_status',)
+    list_filter = ('release_status', 'visibility', 'is_deleted')
 
     filter_horizontal = ()
 
@@ -20,7 +21,7 @@ class PostAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Post', {
             'fields': (
-                'title', 'slug', 'lead_author', 'release_status', 'content', 'featured_image',
+                'title', 'slug', 'lead_author', 'release_status', 'visibility', 'content', 'featured_image',
                 'featured_image_thumbnail', 'featured_image_raw', 'date_published'),
             'description': 'Primary post fields and content'}
          ),
@@ -49,44 +50,43 @@ class PostAdmin(admin.ModelAdmin):
             'fields': (),
             'description': '''
                     <b>Query manager:</b><br>
-                    - published: Returns all Post's that have the status of "published"<br>
-                    - in_review: Returns all Post's that have the status of "review"<br>
-                    - in_draft: Returns all Post's that have the status of "draft"<br>
+                    - published: Returns all article's that have the status of "published"<br>
+                    - in_review: Returns all article's that have the status of "review"<br>
+                    - in_draft: Returns all article's that have the status of "draft"<br>
+                    - not_published: Returns all article's that have not been published<br>
+                    <b>Deleting logic:</b><br>
+                    - On deletion: When an instance is deleted, all of the instance data (featured images and images in the rich text editor will be deleted)<br>
                 '''}
          ),
     )
 
-    def formfield_for_dbfield(self, db_field, **kwargs):
-        field = super().formfield_for_dbfield(db_field, **kwargs)
-        field_type = db_field.get_internal_type()
-        field.help_text = f'{field.help_text}<br>' \
-                          f'Field name = "<code><small>{db_field.name}</small></code>"<br>' \
-                          f'Field type = "<code><small>{field_type}</small></code>"'
-        return field
-
 
 @admin.register(Comment)
-class CommentAdmin(admin.ModelAdmin):
+class CommentAdmin(ModelDocumentationMixin, AdminExportMixin, admin.ModelAdmin):
     list_display = ('__str__', 'user', 'is_flagged', 'is_deleted', 'date_created', 'date_modified')
 
-    list_filter = ('is_deleted',)
+    list_filter = ('is_flagged', 'is_deleted')
 
-    filter_horizontal = ('upvotes', 'downvotes')
+    filter_horizontal = ('likes', 'dislikes')
 
     search_fields = ('content',)
+
+    autocomplete_fields = ('article', 'user')
+
+    actions = ('uncheck_is_flagged', 'export_as_csv', 'export_as_json', 'export_as_text')
 
     readonly_fields = ('id', 'uuid', 'date_created', 'date_modified', 'date_deleted')
 
     fieldsets = (
         ('Comment', {
             'fields': (
-                'post', 'parent_comment', 'user', 'content'),
+                'article', 'user', 'parent_comment', 'content'),
             'description': 'Primary comment fields and content'}
          ),
 
         ('Social properties', {
-            'fields': ('upvotes', 'downvotes'),
-            'description': 'Post vote information'}
+            'fields': ('likes', 'dislikes'),
+            'description': 'Article user like and dislike information'}
          ),
 
         ('Audit information', {
@@ -110,10 +110,16 @@ class CommentAdmin(admin.ModelAdmin):
          ),
     )
 
-    def formfield_for_dbfield(self, db_field, **kwargs):
-        field = super().formfield_for_dbfield(db_field, **kwargs)
-        field_type = db_field.get_internal_type()
-        field.help_text = f'{field.help_text}<br>' \
-                          f'Field name = "<code><small>{db_field.name}</small></code>"<br>' \
-                          f'Field type = "<code><small>{field_type}</small></code>"'
-        return field
+    def get_queryset(self, request):
+        # Use the 'admin_objects' manager to get the queryset for the admin view
+        qs = self.model.admin_objects.get_queryset()
+
+        # If you need to apply any admin-specific filtering or ordering, you can do so here
+        # For example, if you want to order by 'date_created' you can do:
+        # qs = qs.order_by('-date_created')
+
+        return qs
+
+    def uncheck_is_flagged(self, request, queryset):
+        queryset.update(is_flagged=False)
+
