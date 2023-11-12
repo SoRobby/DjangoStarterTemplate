@@ -11,7 +11,6 @@ from apps.accounts.managers import AccountManager
 from apps.accounts.utils import generate_short_uuid, upload_to_profile_images
 
 
-
 # Models
 class Account(AbstractBaseUser):
     PROFILE_IMAGE_ASPECT_RATIO = 1 / 1
@@ -56,7 +55,8 @@ class Account(AbstractBaseUser):
                                                  'assigning them')
 
     # TODO - Make profile images upload the the uuid of the user.
-    profile_image = models.ImageField(upload_to=upload_to_profile_images, blank=True, null=True, verbose_name='Profile image',
+    profile_image = models.ImageField(upload_to=upload_to_profile_images, blank=True, null=True,
+                                      verbose_name='Profile image',
                                       help_text='Profile image or avatar')
 
     theme = models.CharField(max_length=55, default=ThemeChoices.SYSTEM, choices=ThemeChoices.choices,
@@ -138,7 +138,6 @@ class Account(AbstractBaseUser):
             return self.name
         else:
             return self.username
-
 
     @staticmethod
     def get_theme_choices_as_dict():

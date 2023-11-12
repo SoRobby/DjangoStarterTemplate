@@ -39,6 +39,7 @@ def login_view(request, *args, **kwargs):
         if form.is_valid():
             password = request.POST['password']
             user = authenticate(email=email, password=password)
+            a = 0/1
 
             if user:
                 login(request, user)
@@ -57,7 +58,7 @@ def login_view(request, *args, **kwargs):
             # Pass errors to frontend
             try:
                 # Check if an account with that email exists
-                account.objects.get(email=email)
+                User.objects.get(email=email)
                 context['login_error'] = mark_safe(
                     'Wrong password, try again or click <span class="italic">Forgot password</span> to reset it')
             except:

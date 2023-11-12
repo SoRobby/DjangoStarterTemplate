@@ -1,11 +1,11 @@
 from uuid import uuid4
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
-from django.conf import settings
 
 
 def send_verification_email(user: get_user_model(), domain: str):

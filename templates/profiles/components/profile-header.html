@@ -40,6 +40,13 @@
                 {% include 'components/processing/processing-sm.html' with text="Saving..." %}
             </div>
         </div>
+    {% elif mode == 'return-to-profile' %}
+        <div class="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-3 sm:space-y-0 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
+            <a href="{% url 'profiles:profile' username=user_instance.username %}"
+               class="btn-secondary-lg">Return to profile</a>
+        </div>
     {% endif %}
+
+
 </div>
 

@@ -19,7 +19,7 @@
 
 {% block content %}
     <div>
-        {% include 'profiles/components/profile-header.html' with mode='no-save' user_instance=user %}
+        {% include 'profiles/components/profile-header.html' with mode='return-to-profile' user_instance=user %}
 
         <div class="lg:flex lg:gap-x-16">
             {% include 'profiles/edit/components/sidebar.html' %}
@@ -103,9 +103,9 @@
                                         <div class="font-semibold text-gray-600">
                                             No active subscription
                                         </div>
-                                    <div class="font-semibold text-indigo-600 hover:text-indigo-500">
-                                        <a href="{% url 'subscriptions:subscription-plans' %}">View plans</a>
-                                    </div>
+                                        <div class="font-semibold text-indigo-600 hover:text-indigo-500">
+                                            <a href="{% url 'subscriptions:subscription-plans' %}">View plans</a>
+                                        </div>
                                     </div>
                                 {% endif %}
 
