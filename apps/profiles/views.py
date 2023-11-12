@@ -13,7 +13,7 @@ from apps.core.utils import send_success_notification, send_error_notification
 from apps.subscriptions.models import SubscriptionOrder
 from .forms import ProfileEditGeneralForm, ChangeEmailForm, SupportMessageForm
 from .services import send_support_email
-
+from apps.subscriptions.services import SubscriptionService
 
 # Create your views here.
 # def profile(request, *args, **kwargs):
@@ -135,14 +135,23 @@ class ProfileEditMembershipView(TemplateView):
         context = super().get_context_data(**kwargs)
 
         # Get subscription information if a user subscription exists
-        user_subscription_order = SubscriptionOrder.objects.filter(purchaser=self.request.user)
+        user_subscription_order = SubscriptionOrder.objects.filter(purchaser=self.request.user, is_active=True)
 
         if user_subscription_order:
+            user_subscription_order = user_subscription_order.first()
+            SubscriptionService.verify_stripe_subscription(user_subscription_order)
+
+        user_subscription_order = SubscriptionOrder.objects.filter(purchaser=self.request.user, is_active=True)
+        print(f'user_subscription_order = {user_subscription_order}')
+
+        if user_subscription_order:
+            print("GETTING IT!!!!")
             user_subscription_order = user_subscription_order.first()
             logging.debug(user_subscription_order)
             context['user_subscription_order'] = user_subscription_order
             context['user_subscription_period'] = user_subscription_order.subscription_period
             context['user_subscription_plan'] = user_subscription_order.subscription_period.subscription_plan
+
 
         return context
 

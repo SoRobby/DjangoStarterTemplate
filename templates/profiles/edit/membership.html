@@ -33,67 +33,81 @@
 
                     <div class="space-y-16 sm:space-y-20">
                         {# Membership #}
+
                         <div>
                             {% include 'profiles/edit/components/section-header.html' with title='Membership' description=None %}
 
                             <div class="mt-4 space-y-4 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
 
                                 {# Billing card #}
-                                <div class="mt-2 md:mt-4 border border-gray-200 rounded-md p-4 grid grid-cols-2 divide-x">
-                                    <div class="space-y-4 pr-4">
-                                        <div class="text-gray-900 text-base font-medium flex gap-2 items-center">
-                                            {{ user_subscription_plan.name }}
-                                            {% if user_subscription_order.status == 'active' %}
-                                                <span class="badge-gray text-xs">Monthly</span>
-                                                <span class="badge-success">Active</span>
-                                            {% elif user_subscription_order.status == 'cancelled' %}
-                                                <span class="badge-error">Cancelled</span>
-                                            {% elif user_subscription_order.status == 'processing' %}
-                                                <span class="badge-gray text-xs">Monthly</span>
-                                                <span class="badge-warning">Processing</span>
-                                            {% endif %}
-                                        </div>
-                                        <div>
-                                            {% if user_subscription_order.status == 'active' %}
-                                                <div class="text-gray-900 font-medium">
-                                                    Your next payment
-                                                </div>
-                                                <div class="text-gray-600">
-                                                    <span class="text-xl font-semibold pr-2 text-gray-900">${{ user_subscription_period.price_dollars }}</span> Due by
-                                                    <time datetime="{{ user_subscription_order.current_period_end_date }}">{{ user_subscription_order.current_period_end_date|date:'F d, Y' }}</time>
-                                                </div>
-                                            {% elif user_subscription_order.status == 'cancelled' %}
-                                                <div class="text-gray-900 font-medium">
-                                                    Plan cancelled
-                                                </div>
-                                                <div class="text-gray-600">
-                                                    Your plan will expire on
-                                                    <time datetime="{{ user_subscription_order.current_period_end_date }}">{{ user_subscription_order.current_period_end_date|date:'M d, Y' }}</time>
-                                                    <p class="text-xs mt-2">All the data will remain in your account,
-                                                        but you will lose access to premium features.</p>
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                    <div class="pl-4">
-                                        <div class="text-base text-gray-600 font-medium">
-                                            Payment information
-                                        </div>
-                                        <div class="mt-2">
-                                            <div class="text-indigo-600 hover:text-indigo-500">
-                                                View payment history
+                                {% if user_subscription_plan %}
+                                    <div class="mt-2 md:mt-4 border border-gray-200 rounded-md p-4 grid grid-cols-2 divide-x">
+                                        <div class="space-y-4 pr-4">
+                                            <div class="text-gray-900 text-base font-medium flex gap-2 items-center">
+                                                {{ user_subscription_plan.name }}
+                                                {% if user_subscription_order.status == 'active' %}
+                                                    <span class="badge-gray text-xs">Monthly</span>
+                                                    <span class="badge-success">Active</span>
+                                                {% elif user_subscription_order.status == 'cancelled' %}
+                                                    <span class="badge-error">Cancelled</span>
+                                                {% elif user_subscription_order.status == 'processing' %}
+                                                    <span class="badge-gray text-xs">Monthly</span>
+                                                    <span class="badge-warning">Processing</span>
+                                                {% endif %}
                                             </div>
-                                            {% if user_subscription_order.status == 'active' %}
+                                            <div>
+                                                {% if user_subscription_order.status == 'active' %}
+                                                    <div class="text-gray-900 font-medium">
+                                                        Your next payment
+                                                    </div>
+                                                    <div class="text-gray-600">
+                                                        <span class="text-xl font-semibold pr-2 text-gray-900">${{ user_subscription_period.price_dollars }}</span>
+                                                        Due by
+                                                        <time datetime="{{ user_subscription_order.current_period_end_date }}">{{ user_subscription_order.current_period_end_date|date:'F d, Y' }}</time>
+                                                    </div>
+                                                {% elif user_subscription_order.status == 'cancelled' %}
+                                                    <div class="text-gray-900 font-medium">
+                                                        Plan cancelled
+                                                    </div>
+                                                    <div class="text-gray-600">
+                                                        Your plan will expire on
+                                                        <time datetime="{{ user_subscription_order.current_period_end_date }}">{{ user_subscription_order.current_period_end_date|date:'M d, Y' }}</time>
+                                                        <p class="text-xs mt-2">All the data will remain in your
+                                                            account,
+                                                            but you will lose access to premium features.</p>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="pl-4">
+                                            <div class="text-base text-gray-600 font-medium">
+                                                Payment information
+                                            </div>
+                                            <div class="mt-2">
                                                 <div class="text-indigo-600 hover:text-indigo-500">
-                                                    Switch to annual billing
+                                                    View payment history
                                                 </div>
-                                                <div class="text-indigo-600 hover:text-indigo-500">
-                                                    Modify plan
-                                                </div>
-                                            {% endif %}
+                                                {% if user_subscription_order.status == 'active' %}
+                                                    <div class="text-indigo-600 hover:text-indigo-500">
+                                                        Switch to annual billing
+                                                    </div>
+                                                    <div class="text-indigo-600 hover:text-indigo-500">
+                                                        Modify plan
+                                                    </div>
+                                                {% endif %}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                {% else %}
+                                    <div class="mt-2 md:mt-4 border border-gray-200 rounded-md p-4 flex justify-between">
+                                        <div class="font-semibold text-gray-600">
+                                            No active subscription
+                                        </div>
+                                    <div class="font-semibold text-indigo-600 hover:text-indigo-500">
+                                        <a href="{% url 'subscriptions:subscription-plans' %}">View plans</a>
+                                    </div>
+                                    </div>
+                                {% endif %}
 
                                 {% if user_subscription_order.status == 'active' %}
                                     <div class="grid grid-cols-1 md:grid-cols-12 pt-2 md:pt-4 gap-2 md:gap-12"

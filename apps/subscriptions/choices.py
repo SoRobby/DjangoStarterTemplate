@@ -1,13 +1,28 @@
 from django.db import models
+from enum import Enum
 
 
 class PlanCategories(models.TextChoices):
     DEFAULT = 'default', 'Default'
 
 
-class IntervalChoices(models.TextChoices):
-    MONTHLY = 'monthly', 'Monthly'
-    ANNUAL = 'annual', 'Annual'
+# class IntervalChoices(models.TextChoices):
+#     MONTHLY = 'monthly', 'Monthly'
+#     ANNUAL = 'annual', 'Annual'
+
+
+class IntervalChoices(Enum):
+    MONTHLY = ('monthly', 'Monthly', 1)
+    ANNUAL = ('annual', 'Annual', 2)
+
+    def __init__(self, value, label, rank):
+        self._value_ = value
+        self.label = label
+        self.rank = rank
+
+    @classmethod
+    def choices(cls):
+        return [(choice.value, choice.label) for choice in cls]
 
 
 class StatusChoices(models.TextChoices):

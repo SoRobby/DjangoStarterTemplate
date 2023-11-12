@@ -35,8 +35,9 @@ class SubscriptionService:
         Verifies the status of a Stripe subscription and updates the subscription instance.
         """
         stripe_subscription_data = stripe.Subscription.retrieve(subscription.stripe_subscription_id)
+        print(f'stripe_subscription_data = \n{stripe_subscription_data}')
 
-        # Convert the timestamps to a native datetime object
+        # Set current period start and end dates
         subscription.current_period_start_date = timezone.make_aware(
             datetime.fromtimestamp(stripe_subscription_data.current_period_start)
         )
@@ -44,15 +45,34 @@ class SubscriptionService:
             datetime.fromtimestamp(stripe_subscription_data.current_period_end)
         )
 
-        if stripe_subscription_data.ended_at:
-            subscription.is_active = False
-            subscription.date_ended = timezone.make_aware(datetime.fromtimestamp(stripe_subscription_data.ended_at))
+        # Set subscription status
+        if stripe_subscription_data.status == 'active':
+            subscription.is_active = True
+
+        # Check to see if the subscription has been cancelled and update accordingly
+        if stripe_subscription_data.canceled_at or stripe_subscription_data.ended_at:
             subscription.status = StatusChoices.CANCELLED
 
-        if stripe_subscription_data.cancel_at_period_end:
-            subscription.date_cancelled = timezone.make_aware(
-                datetime.fromtimestamp(stripe_subscription_data.canceled_at))
-            subscription.status = StatusChoices.CANCELLED
+            if stripe_subscription_data.canceled_at:
+                subscription.date_cancelled = timezone.make_aware(
+                    datetime.fromtimestamp(stripe_subscription_data.canceled_at))
+
+            if stripe_subscription_data.cancel_at:
+                subscription.date_ended = timezone.make_aware(
+                    datetime.fromtimestamp(stripe_subscription_data.cancel_at))
+
+                if subscription.date_ended < timezone.now():
+                    subscription.is_active = False
+
+            if stripe_subscription_data.canceled_at and not stripe_subscription_data.cancel_at:
+                subscription.is_active = False
+
+        else:
+            subscription.status = StatusChoices.ACTIVE
+
+        print(subscription.date_ended)
+        print(type(subscription.date_ended))
+
 
         subscription.save()
         return subscription

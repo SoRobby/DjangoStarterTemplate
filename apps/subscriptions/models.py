@@ -6,9 +6,9 @@ from django.db import models
 from django.utils import timezone
 
 from apps.core.models import BaseModel
+from .choices import PlanCategories, IntervalChoices, StatusChoices
 from .managers import SubscriptionPlanManager, SubscriptionPeriodManager
 from .validators import validate_features_list
-from .choices import PlanCategories, IntervalChoices, StatusChoices
 
 
 # Models
@@ -88,7 +88,7 @@ class SubscriptionPeriod(BaseModel):
     stripe_price_id = models.CharField(max_length=255, blank=True, null=True, verbose_name='Stripe price ID',
                                        help_text='Stripe price API ID (e.g. "price_1KVqZYGH7IAkWYyXOExqnpAw")')
 
-    interval = models.CharField(max_length=24, choices=IntervalChoices.choices, default=IntervalChoices.MONTHLY,
+    interval = models.CharField(max_length=24, choices=IntervalChoices.choices(), default=IntervalChoices.MONTHLY.value,
                                 help_text='Billing interval for this term')
 
     is_active = models.BooleanField(default=True, help_text='If true, this subscription term is available for purchase')
@@ -99,7 +99,7 @@ class SubscriptionPeriod(BaseModel):
     objects = SubscriptionPeriodManager()
 
     class Meta:
-        ordering = ('price_cents',)
+        ordering = ('-price_cents',)
         verbose_name = 'Subscription period'
         verbose_name_plural = 'Subscription periods'
         constraints = [
@@ -141,7 +141,7 @@ class SubscriptionOrder(BaseModel):
                                      help_text='If true, the subscription will automatically renew at the end of the\
                                      term')
 
-    is_active = models.BooleanField(default=True, help_text='If true, this subscription order is active')
+    is_active = models.BooleanField(default=False, help_text='If true, this subscription order is active')
 
     current_period_start_date = models.DateTimeField(blank=True, null=True,
                                                      help_text='Date when the subscription period started')
@@ -151,9 +151,14 @@ class SubscriptionOrder(BaseModel):
 
     date_refunded = models.DateTimeField(blank=True, null=True, help_text='Date the subscription was refunded')
 
-    date_cancelled = models.DateTimeField(blank=True, null=True, help_text='Date the subscription was cancelled')
+    date_cancelled = models.DateTimeField(blank=True, null=True,
+                                          help_text='Date the subscription was cancelled by the user')
 
-    date_ended = models.DateTimeField(blank=True, null=True, help_text='Date the subscription ended')
+    date_ended = models.DateTimeField(blank=True, null=True, help_text='Date the subscription was/will be ended')
+
+    cancel_at_period_end = models.BooleanField(default=False,
+                                               help_text='If true, the subscription will be cancelled at the end of\
+                                               the current period')
 
     date_changed_plan = models.DateTimeField(blank=True, null=True, help_text='Date the subscription plan was changed')
 
@@ -173,6 +178,9 @@ class SubscriptionOrder(BaseModel):
                                               verbose_name='Stripe subscription ID',
                                               help_text='Stripe subscription ID at the time of the order')
 
+    stripe_json_data = models.JSONField(default=dict, blank=True, null=True, verbose_name='Stripe data',
+                                        help_text='Stripe data at the time of the order')
+
     staff_notes = models.TextField(max_length=1000, blank=True, null=True, verbose_name='Staff notes',
                                    help_text='Notes for the staff and admins, notes are not shown to the users')
 
@@ -186,14 +194,15 @@ class SubscriptionOrder(BaseModel):
 
     def checkout_cancelled(self):
         """Set the status to cancelled and set the date_cancelled field to now."""
-        self.status = self.StatusChoices.CHECKOUT_CANCELLED
         self.is_active = False
+        self.status = StatusChoices.CHECKOUT_CANCELLED
         self.save()
 
     def checkout_success(self):
         """Set the status to paid and set the date_end field to now."""
-        self.status = self.StatusChoices.ACTIVE
-        self.date_start = timezone.now()
+        self.is_active = True
+        self.status = StatusChoices.ACTIVE
+        self.current_period_start_date = timezone.now()
         self.save()
 
     def checkout_error(self):
@@ -201,8 +210,12 @@ class SubscriptionOrder(BaseModel):
         The stripe checkout session returned success, however the returned checkout session data
         did not match what was expected and requires an admin to investigate.
         """
-        self.status = self.StatusChoices.ERROR
-        self.date_start = timezone.now()
+        # If an error occurs during checkout, grant the user an active subscription and an admin will
+        # investigate the issue which may result in the subscription being cancelled and refunded.
+
+        self.is_active = True
+        self.status = StatusChoices.ERROR
+        self.current_period_start_date = timezone.now()
         self.save()
 
     def set_stripe_data(self, stripe_checkout_session_id=None, stripe_product_id=None, stripe_price_id=None,
@@ -226,4 +239,3 @@ class SubscriptionOrder(BaseModel):
     def subscription_payment_interval(self):
         """The subscription period for this subscription order."""
         return self.subscription_period.get_interval_display()
-

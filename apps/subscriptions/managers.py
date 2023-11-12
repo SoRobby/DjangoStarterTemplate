@@ -1,11 +1,7 @@
-import logging
-from datetime import datetime
-
 import stripe
 from django.db import models
 
 from config import settings
-from .choices import StatusChoices
 from .querysets import SubscriptionPlanQuerySet, SubscriptionPeriodQuerySet
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -17,6 +13,18 @@ class SubscriptionPlanManager(models.Manager):
 
     def active(self):
         return self.get_queryset().active()
+
+    def plan_category(self, plan_category):
+        return self.get_queryset().plan_category(plan_category)
+
+    def order_by_price_for_category(self, plan_category):
+        return self.get_queryset().order_by_price_for_category(plan_category)
+
+    def order_by_price_for_category_and_interval(self, plan_category, interval):
+        return self.get_queryset().order_by_price_for_category_and_interval(plan_category, interval)
+
+    def order_by_interval_rank(self):
+        return self.get_queryset().order_by_interval_rank()
 
 
 class SubscriptionPeriodManager(models.Manager):
@@ -39,9 +47,10 @@ class SubscriptionPeriodManager(models.Manager):
         return self.get_queryset().for_subscription_by_category(subscription_plan, plan_category).order_by(
             'price_cents')
 
+    def order_by_interval_rank(self):
+        return self.get_queryset().order_by_interval_rank()
+
 
 class SubscriptionOrderManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset()
-
-

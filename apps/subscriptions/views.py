@@ -1,3 +1,4 @@
+import json
 import logging
 import urllib
 import urllib.parse
@@ -6,6 +7,7 @@ from datetime import datetime
 import stripe
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.db.models import Prefetch
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -17,8 +19,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from apps.core.utils import send_error_notification, send_success_notification
+from .choices import PlanCategories, StatusChoices
 from .models import SubscriptionPlan, SubscriptionPeriod, SubscriptionOrder
-from .choices import PlanCategories, IntervalChoices, StatusChoices
 from .services import SubscriptionService
 
 # Set the api key
@@ -28,53 +30,42 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 # Create your views here.
 def subscription_plans(request):
     context = {}
-    plan_category = PlanCategories.DEFAULT
 
-    subscription_plans = SubscriptionPlan.objects.active().filter(plan_category=plan_category)
-    subscription_terms = SubscriptionPeriod.objects.active().filter(subscription_plan__in=subscription_plans).order_by(
-        'price_cents')
+    if request.user.is_authenticated:
+        user_subscription = SubscriptionOrder.objects.filter(purchaser=request.user, is_active=True)
+        if user_subscription:
+            user_subscription = user_subscription.first()
+            context['user_subscription'] = user_subscription
 
-    monthly_plans = SubscriptionPeriod.objects.active_monthly(plan_category=plan_category)
-    annual_plans = SubscriptionPeriod.objects.active_annual(plan_category=plan_category)
+    sorted_terms_prefetch = Prefetch(
+        'subscription_terms',
+        queryset=SubscriptionPeriod.objects.order_by_interval_rank()
+    )
 
-    context['monthly_plans'] = monthly_plans
-    context['annual_plans'] = annual_plans
-    context['subscription_plans'] = subscription_plans
+    available_plans = SubscriptionPlan.objects.active().order_by_price_for_category(
+        PlanCategories.DEFAULT).prefetch_related(sorted_terms_prefetch)
 
-    logging.debug(f'monthly_plans = {monthly_plans}')
-    logging.debug(f'annual_plans = {annual_plans}')
-    logging.debug(f'subscription_plans = {subscription_plans}')
-
-    # Testing
-
-    # Get the users active subscription
-    user_subscription = SubscriptionOrder.objects.filter(purchaser=request.user,
-                                                         is_active=True).order_by('-date_created')
-
-    if user_subscription:
-        user_subscription = user_subscription.first()
-
-        context['user_subscription'] = user_subscription
-
-        print(f'active_sub = {user_subscription}')
-
-        stripe_subscription_id = user_subscription.stripe_subscription_id
-        try:
-            SubscriptionService.verify_stripe_subscription(user_subscription)
-            # return subscription.status  # possible values are 'active', 'past_due', 'canceled', and others
-        except stripe.error.StripeError as e:
-            logging.error('Error retrieving subscription')
-            logging.error(e)
-            # Handle error
-            pass
+    # Check to see if the current user has a subscription
 
 
-    user_subscription = SubscriptionOrder.objects.filter(purchaser=request.user,
-                                                         is_active=True).order_by('-date_created')
-    if user_subscription:
-        context['user_subscription'] = user_subscription
+    context['available_plans'] = available_plans
 
-    # annual_plans = SubscriptionTerm.objects.active().annual(category_type)
+    # if user_subscription:
+    #     user_subscription = user_subscription.first()
+    #
+    #     context['user_subscription'] = user_subscription
+    #
+    #     # print(f'active_sub = {user_subscription}')
+    #
+    #     stripe_subscription_id = user_subscription.stripe_subscription_id
+    #     try:
+    #         SubscriptionService.verify_stripe_subscription(user_subscription)
+    #         # return subscription.status  # possible values are 'active', 'past_due', 'canceled', and others
+    #     except stripe.error.StripeError as e:
+    #         logging.error('Error retrieving subscription')
+    #         logging.error(e)
+    #         # Handle error
+    #         pass
 
     return render(request, 'subscriptions/plans.html', context)
 
@@ -105,7 +96,7 @@ class CheckoutSessionCreateView(View):
             order = SubscriptionOrder.objects.create(
                 purchaser=purchaser,
                 subscription_period=subscription_period,
-                status=SubscriptionOrder.StatusChoices.PROCESSING,
+                status=StatusChoices.PROCESSING,
             )
 
             # Set the stripe variables
@@ -202,16 +193,20 @@ class CheckoutSessionSuccessView(View):
         # Get the stripe session
         stripe_session = stripe.checkout.Session.retrieve(stripe_session_id)
 
-        stripe_subscription_id = stripe_session.subscription
+        # Save the stripe session data to help preserve data integrity in case of errors
+        order.stripe_json_data = stripe_session.to_dict()
 
+        stripe_subscription_id = stripe_session.subscription
         line_items = stripe.checkout.Session.list_line_items(stripe_session_id)
 
         if len(line_items) == 0:
+            order.checkout_error()
             send_error_notification(request, title='Payment failed',
                                     message='Payment failed, please try again later')
             return redirect('subscriptions:subscription-plans')
 
         elif len(line_items) == 1:
+            logging.debug(f'stripe_line_data =\n{line_items}')
             stripe_product_id = line_items.data[0].price.product
             stripe_price_id = line_items.data[0].price.id
 
@@ -221,20 +216,11 @@ class CheckoutSessionSuccessView(View):
                 stripe_price_id=stripe_price_id,
                 stripe_subscription_id=stripe_subscription_id,
             )
+            SubscriptionService.verify_stripe_subscription(order)
             order.checkout_success()
 
             send_success_notification(request, title='Payment successful',
                                       message='Your account has been successfully upgraded')
-
-        # logging.debug(f'stripe_session = {stripe_session}')
-        # logging.debug(f'line_items = {line_items}')
-        # for item in line_items:
-        #     print(f'item = {item}')
-
-        # Set the order status to paid
-
-        send_success_notification(request, title='Payment successful',
-                                  message='Your account has been successfully upgraded')
 
         return redirect('subscriptions:subscription-plans')
 
@@ -283,14 +269,17 @@ class CancelSubscriptionView(View):
                 # Attempt to retrieve the subscription from Stripe
                 subscription = stripe.Subscription.retrieve(user_subscription.stripe_subscription_id)
 
+                logging.debug(f'subscription =\n{subscription}')
+
                 if subscription.status == 'active':
                     subscription.cancel_at_period_end = True
                     subscription.save()
 
-                    # Update the user_subscription model. Subscription is still active until the end of the period is
-                    # reached
+                    # Update the user_subscription model.
+                    # Subscriptions are still active until the end of the period is reached
                     user_subscription.date_cancelled = datetime.fromtimestamp(subscription.current_period_end)
-                    user_subscription.status = SubscriptionOrder.StatusChoices.CANCELLED
+                    user_subscription.date_ended = datetime.fromtimestamp(subscription.current_period_end)
+                    user_subscription.status = StatusChoices.CANCELLED
                     user_subscription.save()
                     send_success_notification(request, title='Subscription cancelled',
                                               message='Your subscription has been successfully cancelled')
@@ -303,6 +292,8 @@ class CancelSubscriptionView(View):
                 logging.error('Error retrieving subscription')
                 logging.error(e)
 
+            return redirect('profiles:settings-membership')
+
         else:
             # Todo - add better message and handling of this scenario
             send_error_notification(request, title='Error cancelling subscription',
@@ -311,3 +302,4 @@ class CancelSubscriptionView(View):
             # Handle error
 
         return redirect('subscriptions:subscription-plans')
+
