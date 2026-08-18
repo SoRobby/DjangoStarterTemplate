@@ -39,7 +39,7 @@ def login_view(request, *args, **kwargs):
         if form.is_valid():
             password = request.POST['password']
             user = authenticate(email=email, password=password)
-            a = 0/1
+            a = 0 / 1
 
             if user:
                 login(request, user)
@@ -175,22 +175,22 @@ def verify_email(request, token):
         if not user.email_verified:
             user.email_verified = True
             user.save()
-            send_notification(request, tag='success', title='Email verified',
-                              message=f'Your email has been successfully verified')
+            send_success_notification(request, title='Email verified',
+                                      message=f'Your email has been successfully verified')
 
             return redirect('home')
         else:
-            send_notification(request, tag='success', title='Email already verified',
-                              message=f'Your email has already been verified')
+            send_success_notification(request, title='Email already verified',
+                                      message=f'Your email has already been verified')
             return redirect('home')
 
     except (TypeError, ValueError, OverflowError, User.DoesNotExist) as e:
         if request.user.is_staff:
-            send_notification(request, tag='error', title='Invalid verification token',
-                              message=f'The token is has expired and is no longer valid, resend the verification email\nError: {e}')
+            send_error_notification(request, title='Invalid verification token',
+                                    message=f'The token is has expired and is no longer valid, resend the verification email\nError: {e}')
         else:
-            send_notification(request, tag='error', title='Invalid verification token',
-                              message='The token is has expired and is no longer valid, resend the verification email')
+            send_error_notification(request, tag='error', title='Invalid verification token',
+                                    message='The token is has expired and is no longer valid, resend the verification email')
 
         return redirect('home')
 
@@ -204,12 +204,12 @@ def soft_delete_account_view(request):
             current_user.is_marked_for_deletion = True
             current_user.save()
             logout(request)
-            send_notification(request, tag='success', title='Account deleted',
-                              message='Your account is set to be deleted 14 days from now')
+            send_success_notification(request, title='Account deleted',
+                                      message='Your account is set to be deleted 14 days from now')
 
         except User.DoesNotExist:
-            send_notification(request, tag='error', title='Error when deleting account',
-                              message='There was an error when attempting to delete your account')
+            send_error_notification(request, title='Error when deleting account',
+                                    message='There was an error when attempting to delete your account')
             return JsonResponse({"error": "User does not exist."}, status=400)
 
     return redirect('home')

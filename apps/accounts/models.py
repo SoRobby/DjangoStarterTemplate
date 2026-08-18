@@ -54,7 +54,6 @@ class Account(AbstractBaseUser):
                                        help_text='Designates that this user has all permissions without explicitly '
                                                  'assigning them')
 
-    # TODO - Make profile images upload the the uuid of the user.
     profile_image = models.ImageField(upload_to=upload_to_profile_images, blank=True, null=True,
                                       verbose_name='Profile image',
                                       help_text='Profile image or avatar')
@@ -104,8 +103,9 @@ class Account(AbstractBaseUser):
     REQUIRED_FIELDS = ['username']
 
     class Meta:
-        verbose_name_plural = 'Accounts'
+        ordering = ['-date_joined']
         verbose_name = 'Account'
+        verbose_name_plural = 'Accounts'
 
     def __str__(self) -> str:
         return self.username
@@ -187,16 +187,40 @@ class AccountSettings(models.Model):
                                          help_text='Server date and time when the item was last modified')
 
     class Meta:
-        verbose_name_plural = 'Account settings'
+        ordering = ['-date_created']
         verbose_name = 'Account setting'
+        verbose_name_plural = 'Account settings'
 
     def __str__(self) -> str:
         return f"{self.account.username} settings"
 
 
-# class AccountInteraction(models.Model):
-#     account = models.OneToOneField(Account, on_delete=models.CASCADE, verbose_name='Account',
-#                                    related_name='interactions', help_text='Account that is connected to the settings')
+class AccountInteraction(models.Model):
+    account = models.OneToOneField(Account, on_delete=models.CASCADE, verbose_name='Account',
+                                   related_name='interactions', help_text='Account that is connected to the settings')
+
+    followers = models.ManyToManyField(Account, verbose_name='Followers', related_name='following',
+                                       help_text='Accounts that are following this account')
+
+    following = models.ManyToManyField(Account, verbose_name='Following', related_name='followers',
+                                       help_text='Accounts that this account is following')
+
+    uuid = models.UUIDField(default=uuid4, editable=False, unique=True, verbose_name='UUID',
+                            help_text='Unique identifier for the account settings')
+
+    date_created = models.DateTimeField(auto_now_add=True, verbose_name='Date created',
+                                        help_text='Server date and time when the item was created modified')
+
+    date_modified = models.DateTimeField(auto_now=True, verbose_name='Date modified',
+                                         help_text='Server date and time when the item was last modified')
+
+    class Meta:
+        ordering = ['-date_created']
+        verbose_name = 'Account interaction'
+        verbose_name_plural = 'Account interactions'
+
+    def __str__(self) -> str:
+        return f"{self.account.username} interactions"
 
 
 # Model signals
@@ -210,3 +234,4 @@ def pre_save_account_receiver(sender, instance, *args, **kwargs):
 def setup_account_tables(sender, instance, created, **kwargs):
     if created:
         AccountSettings.objects.create(account=instance)
+        AccountInteraction.objects.create(account=instance)

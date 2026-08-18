@@ -18,9 +18,10 @@ class SubscriptionPlan(BaseModel):
     description = models.TextField(max_length=1000, verbose_name='Description',
                                    help_text='Short description of the subscription plan')
 
-    plan_category = models.CharField(max_length=24, choices=PlanCategories.choices, default=PlanCategories.DEFAULT,
-                                     help_text='Allows for multiple subscription plan categories (e.g.,\
-                                     analytics plans, advertising plans, etc.)')
+    plan_category = models.CharField(max_length=24, choices=PlanCategories.choices(),
+                                     default=PlanCategories.DEFAULT.value,
+                                     help_text='Allows for multiple subscription plan categories\
+                                     (e.g., analytics plans, advertising plans, etc.)')
 
     stripe_product_id = models.CharField(max_length=255, blank=True, null=True, verbose_name='Stripe product ID',
                                          help_text='Stripe product API ID (e.g. "prod_1KVqZYGH7I")')

@@ -14,13 +14,13 @@ class SubscriptionPlanManager(models.Manager):
     def active(self):
         return self.get_queryset().active()
 
-    def plan_category(self, plan_category):
+    def plan_category(self, plan_category: str):
         return self.get_queryset().plan_category(plan_category)
 
-    def order_by_price_for_category(self, plan_category):
+    def order_by_price_for_category(self, plan_category: str):
         return self.get_queryset().order_by_price_for_category(plan_category)
 
-    def order_by_price_for_category_and_interval(self, plan_category, interval):
+    def order_by_price_for_category_and_interval(self, plan_category: str, interval: str):
         return self.get_queryset().order_by_price_for_category_and_interval(plan_category, interval)
 
     def order_by_interval_rank(self):

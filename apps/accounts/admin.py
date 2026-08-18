@@ -133,3 +133,5 @@ class AccountSettingsAdmin(admin.ModelAdmin):
                           f'Field name = "<code><small>{db_field.name}</small></code>"<br>' \
                           f'Field type = "<code><small>{field_type}</small></code>"'
         return field
+
+
